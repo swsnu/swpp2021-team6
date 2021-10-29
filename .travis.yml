@@ -10,7 +10,7 @@ jobs:
         sonarcloud:
           organization: swsnu
           token:
-            secure: 'QPezCzWg8eZO4u+AVGaipEq3IjnjcJBd08y10yCclRsD8RvmV4/ooJIQHffd03MqQPffDcnqcVFfqX32AosukSDiSUhwAcDkOrOZX4VcSTmKHLty+yZA29goC7cLHeYPrkIIG2YQYTFHIKmFDd+boPPKS+fROQO14WC1VBPxvZUZ13Y0A/GwIE2hiCxi8jNl1y+CCHvhl/Wa2CiCH4jx+7rvmmm5hzRvKFdp96ONXz7ZiOHSlt5ntKveHym0dEIMbg7Z+Ysv1wYJK7pnqAgpv2ITCkTUz4ggnSIGEOqwTdAP3Z6NGz2rHhBKkNfQP1/DY+cUaHU1uADjGe612GgAyMu06T+bWEwEK8fYowccBZ31KWX/oOJC7eMiEdiwHvUAJRNrIivMQs6phKvaBnQeH+uP3dcafqPkBEz+q7TP5GMw+XUeBFeTZOABE33vHBCNweK0mdVXe7u5IoYSxTwqLkLr5PUa+KN+lBv9eRMFmgDATOrqB4t7tvt/HbM3OMqm3VYB4FBjMIGi69Bnx9VZOxalcSw+VgdYIPgi1RmcrQ2nL6RZWf+4hbpIDksEKArc9Cw1JsYMPuftsMF/jwurpw6hjs3iS4KsAwfQRy9P9vV+yTLDeTVJaUB7MVrYLbjTsi2tg74YWOLMBdwZuShS42PkhFCQGpn5axGN4UGIlDk='
+            secure: 'AUY0ve1fg3nDC1XLHys0kbpnRWYaT9nqtiVfDWONmA33+TzxKDG8tsOoUTcZ1gkhj79EtSMTn8vKOZCPkgSXqd+2hgLv6LTqFX228GYzMv+fAd63yEzkmCV2/qmXt/eUeR1vP16t3HjtEAEL5/PeORcyoXqgY5QHrKVeuzs3cN7qr5gdjcKDU1Sg4uy9B1WRR7witoGY0cj97Bi7twHE/+RyjCSLE8V3tVmyEhoYfULCySTSEoAo/OXGXaDPGZOoVi1tr0VriAhGSxYgfe5xNLrNIcRMTzYIRqmivmMSfB+nL3tcnGubkPxlEl8FujwZxr1n05fCwgNeJ38ubpD/vPb4vV9LDbY4ZQY5qs+5EjbzJft23XjdzF0eT2C/sBZNdzpg3Z/DSeKT0f2iA1F+xeqoGLGPhyfIaZBRut3gvIgr0SLDKk1ka+NAgR1Hqg6zPJT7+tME7YytUZ9KhqBJl0bGETXrWm/KxAjNK8E8yBIE5+nvwU1n3Zl+8tjOokGdwMbAERU6jf2FB+lwPUsYHsFVpMkKL3E7EUtvuyJyGb+vMzdqLwhjllawV8TqTcmC1KsDcafy+voENYQ9s2vbhr8qzQDre5xkOs4fAe34FRCfByO6ktr+vZ73nxEIdfC8pykOx2uhwKxTEUqwuL06gLQYMpmdiyHoB6qn47eXBWs='
       install:
         - cd backend
         - pip install -r requirements.txt
