@@ -26,5 +26,4 @@ jobs:
         - cd frontend
         - yarn install
       script:
-        - ./node_modules/.bin/eslint src
         - yarn test --coverage --watchAll=false
