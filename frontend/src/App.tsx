@@ -1,25 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
+import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
+import Main from './pages/Main';
+import PostNew from './pages/PostNew';
+import PostDetail from './pages/PostDetail';
+import PostEdit from './pages/PostEdit';
+import Profile from './pages/Profile';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <Switch>
+          <Route path="/signin" exact component={SignIn} />
+          <Route path="/signup" exact component={SignUp} />
+          <Route path="/main" exact component={Main} />
+          <Route path="/post/new" exact component={PostNew} />
+          <Route path="/post/:id" exact component={PostDetail} />
+          <Route path="/post/:id/edit" exact component={PostEdit} />
+          <Route path="/profile" exact component={Profile} />
+          <Route path="/profile/:id" exact component={Profile} />
+          <Redirect exact from="/" to="/signin" />
+          <Route render={() => <Redirect to="/signin" />} />
+        </Switch>
+      </div>
+    </BrowserRouter>
   );
 }
 
