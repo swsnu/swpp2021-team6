@@ -33,4 +33,7 @@ const App = ({ history }: Props) => (
   </ConnectedRouter>
 );
 
+  );
+}
+
 export default App;
