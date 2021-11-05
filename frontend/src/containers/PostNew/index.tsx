@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { DatePicker, TimePicker } from 'antd';
+import moment, { Moment } from 'moment';
 import { PostInputDTO } from '../../model/post';
+import 'antd/dist/antd.css';
 
 const PostNew = () => {
   const initialState: PostInputDTO = {
@@ -17,6 +20,18 @@ const PostNew = () => {
     logitude: 0,
   };
   const [newPost, setNewPost] = useState<PostInputDTO>(initialState);
+  const [date, setDate] = useState<Moment | null>(moment());
+  const [time, setTime] = useState<Moment | null>(moment('7:00', 'h:mm a'));
+
+  useEffect(() => {
+    let appointmentTime;
+    if (date && time) {
+      appointmentTime = `${date?.format('YYYY-MM-DD')} ${time?.format(
+        'HH:mm',
+      )}`;
+      setNewPost({ ...newPost, appointmentTime });
+    }
+  }, [date, time]);
 
   const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setNewPost({ ...newPost, exerciseType: Number(e.target.value) });
@@ -43,6 +58,8 @@ const PostNew = () => {
       setNewPost({ ...newPost, maxCapacity: Number(e.target.value) });
     }
   };
+
+  const onChangeTime = () => {};
 
   const onclickSubmit = () => {
     // check if textarea is empty
@@ -79,6 +96,19 @@ const PostNew = () => {
       <input placeholder="제목" onChange={(e) => onChangeTitleInput(e)} />
       <div>
         <div>Date & Time</div>
+        <DatePicker
+          value={date}
+          onChange={(e) => setDate(e)}
+          allowClear={false}
+        />
+        <TimePicker
+          format="h:mm a"
+          minuteStep={10}
+          defaultValue={moment('7:00', 'h:mm a')}
+          allowClear={false}
+          use12Hours
+          onChange={(e) => setTime(e)}
+        />
         <div>Num of People</div>
         <label htmlFor="min-capacity">모집 인원 : 최소 </label>
         <input
@@ -86,7 +116,6 @@ const PostNew = () => {
           type="number"
           min="1"
           max="10"
-          value={newPost.minCapacity}
           onChange={(e) => onChangeMinCapacity(e)}
         />
         <label htmlFor="max-capacity"> 명 ~ 최대 </label>
