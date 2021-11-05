@@ -23,6 +23,7 @@ module.exports = {
     'jsx-a11y/label-has-associated-control': 'off',
     'react/react-in-jsx-scope': 'off',
     'object-curly-newline': 'off',
+    'operator-linebreak': 'off',
     'no-undef': 'off',
     'no-alert': 'off',
     'no-console': 'off',
