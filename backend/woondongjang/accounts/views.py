@@ -3,7 +3,7 @@ from django.http.response import HttpResponse, HttpResponseNotAllowed
 import json
 from .models import Profile, ProxyUser
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 
 @csrf_exempt
@@ -70,3 +70,15 @@ def signin(request):
         return HttpResponse(status=204)
     else:
         return HttpResponseNotAllowed(["POST"])
+
+
+@csrf_exempt
+def signout(request):
+    if request.method == "GET":
+        if not request.user.is_authenticated:
+            return HttpResponse(status=401)
+
+        logout(request)
+        return HttpResponse(status=204)
+    else:
+        return HttpResponseNotAllowed(["GET"])
