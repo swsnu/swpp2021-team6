@@ -15,7 +15,7 @@ jobs:
         - cd backend
         - pip install -r requirements.txt
       script:
-        - pylint woondongjang/**/*.py --load-plugins pylint_django
+        - pylint woondongjang/**/*.py --load-plugins=pylint_django --django-settings-module=woondongjang.settings --disable=imported-auth-user,C,R
         - coverage run --source='.' woondongjang/manage.py test
         - coverage xml
         - cd .. && sonar-scanner
