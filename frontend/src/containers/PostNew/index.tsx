@@ -22,6 +22,90 @@ const PostNew = () => {
   const [newPost, setNewPost] = useState<PostInputDTO>(initialState);
   const [date, setDate] = useState<Moment | null>(moment());
   const [time, setTime] = useState<Moment | null>(moment('7:00', 'h:mm a'));
+  const [lat, setLat] = useState<number>();
+  const [lng, setLng] = useState<number>();
+
+  const { kakao } = window as any;
+
+  // 현재 위치 가져오기
+  useEffect(() => {
+    if ('geolocation' in navigator) {
+      console.log('Available');
+    } else {
+      console.log('Not Available');
+    }
+
+    navigator.geolocation.getCurrentPosition((position) => {
+      setLat(position.coords.latitude);
+      setLng(position.coords.longitude);
+    });
+  }, []);
+
+  // Kakao Map 불러오기
+  useEffect(() => {
+    // 마커를 클릭하면 장소명을 표출할 인포윈도우
+    const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
+    const currentLatLng = new kakao.maps.LatLng(lat, lng);
+
+    const container = document.getElementById('map');
+    const options = {
+      center: currentLatLng,
+      level: 3,
+    };
+    // 지도 생성
+    const map = new kakao.maps.Map(container, options);
+
+    // 장소 검색 객체를 생성합니다
+    const ps = new kakao.maps.services.Places();
+
+    function displayMarker(place: any) {
+      // 마커를 생성하고 지도에 표시합니다
+      const marker = new kakao.maps.Marker({
+        map,
+        position: new kakao.maps.LatLng(place.y, place.x),
+      });
+
+      // 마커에 클릭이벤트를 등록합니다
+      kakao.maps.event.addListener(marker, 'click', () => {
+        // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
+        infowindow.setContent(
+          `<div style="padding:5px;font-size:12px;">${place.place_name}</div>`,
+        );
+        infowindow.open(map, marker);
+      });
+    }
+
+    // 키워드 검색 완료 시 호출되는 콜백함수 입니다
+    function placesSearchCB(data: any, status: any, pagination: any) {
+      if (status === kakao.maps.services.Status.OK) {
+        // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+        // LatLngBounds 객체에 좌표를 추가합니다
+        const bounds = new kakao.maps.LatLngBounds();
+
+        for (let i = 0; i < data.length; i++) {
+          displayMarker(data[i]);
+          bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+        }
+
+        // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+        map.setBounds(bounds);
+      }
+    }
+
+    // 키워드로 장소를 검색합니다
+    ps.keywordSearch('화정체육관', placesSearchCB, {
+      useMapCenter: true,
+      radius: 5000,
+    });
+
+    // TODO: current location marker with custom icon
+    // // 지도 중심좌표에 마커를 생성합니다
+    // const marker = new kakao.maps.Marker({
+    //   position: map.getCenter(),
+    // });
+    // // 지도에 마커를 표시합니다
+    // marker.setMap(map);
+  }, [lat, lng]);
 
   useEffect(() => {
     let appointmentTime;
@@ -59,15 +143,13 @@ const PostNew = () => {
     }
   };
 
-  const onChangeTime = () => {};
-
   const onclickSubmit = () => {
     // check if textarea is empty
   };
 
   return (
     <form>
-      <h1>New Post</h1>
+      <h1>새 포스트 작성하기</h1>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <label htmlFor="exerciseType">종목 : </label>
         <select
@@ -133,6 +215,7 @@ const PostNew = () => {
       <label>카카오톡 오픈채팅 : </label>
       <input placeholder="초대 링크를 입력해주세요" />
       <div>Map API</div>
+      <div id="map" style={{ width: '400px', height: '400px' }} />
       <button>등록하기</button>
     </form>
   );

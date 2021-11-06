@@ -14,6 +14,12 @@ interface Props {
   history: History;
 }
 
+declare global {
+  export interface Window {
+    kakao: any;
+  }
+}
+
 const App = ({ history }: Props) => (
   <ConnectedRouter history={history}>
     <div className="App">
