@@ -25,7 +25,7 @@ const PostCreate = () => {
   const [time, setTime] = useState<Moment | null>(moment('7:00', 'h:mm a'));
   const [searchInput, setSearchInput] = useState<string>();
   const [keyword, setKeyword] = useState<string>();
-  const [selectedPlace, setSelectedPlace] = useState(null);
+  const [selectedPlace, setSelectedPlace] = useState<any>(null);
   const [center, setCenter] = useState({
     La: profile.longitude,
     Ma: profile.latitude,
@@ -258,16 +258,31 @@ const PostCreate = () => {
         placeholder="초대 링크를 입력해주세요"
         onChange={(e) => onChangeKakaotalkLink(e)}
       />
-      <div>
-        <span>Map API</span>
-        <input
-          placeholder="검색어를 입력하세요"
-          onChange={(e) => setSearchInput(e.target.value)}
-        />
-        <button type="button" onClick={onClickSearch}>
-          검색
-        </button>
-        <div id="map" style={{ width: '400px', height: '400px' }} />
+      <div className="map-container" style={{ display: 'flex' }}>
+        <div id="map" style={{ width: '500px', height: '350px' }} />
+        <div
+          className="map-container-right"
+          style={{ display: 'flex', flexDirection: 'column' }}
+        >
+          <div>
+            <input
+              placeholder="검색어를 입력하세요"
+              onChange={(e) => setSearchInput(e.target.value)}
+            />
+            <button type="button" onClick={onClickSearch}>
+              검색
+            </button>
+          </div>
+          {!selectedPlace && <div>검색어를 입력해 장소를 선택해주세요</div>}
+          {selectedPlace && (
+            <div>
+              <p>{selectedPlace.place_name}</p>
+              <p>{selectedPlace.road_address_name}</p>
+              <p>{selectedPlace.phone}</p>
+              <button type="button">확인</button>
+            </div>
+          )}
+        </div>
       </div>
       <button type="button" onClick={onclickSubmit}>
         등록하기
