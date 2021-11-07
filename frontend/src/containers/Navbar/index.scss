@@ -1,0 +1,25 @@
+@font-face {
+  font-family: 'ImcreSoojin';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.3/ImcreSoojin.woff')
+    format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Logo {
+  font-size: 35px;
+  color: green;
+  font-family: 'ImcreSoojin';
+}
+
+span {
+  margin: 20px;
+  font-size: 25px;
+  font-weight: bolder;
+}

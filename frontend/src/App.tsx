@@ -9,6 +9,7 @@ import PostNew from './containers/PostNew';
 import PostDetail from './containers/PostDetail';
 import PostEdit from './containers/PostEdit';
 import Profile from './containers/Profile';
+import Navbar from './containers/Navbar';
 
 interface Props {
   history: History;
@@ -17,6 +18,7 @@ interface Props {
 const App = ({ history }: Props) => (
   <ConnectedRouter history={history}>
     <div className="App">
+      <Navbar history={history} />
       <Switch>
         <Route path="/signin" exact component={SignIn} />
         <Route path="/signup" exact component={SignUp} />
