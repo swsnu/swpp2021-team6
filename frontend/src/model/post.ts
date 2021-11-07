@@ -6,13 +6,13 @@ export interface PostEntity {
   meetAt: string;
   title: string;
   description: string;
-  appointmentTime: string;
   minCapacity: number;
   maxCapacity: number;
   kakaotalkLink: string;
   status: string;
   latitude: number;
   logitude: number;
+  place: string;
 }
 
 export interface PostInputDTO {
@@ -21,11 +21,10 @@ export interface PostInputDTO {
   meetAt: string;
   title: string;
   description: string;
-  appointmentTime: string;
   minCapacity: number;
   maxCapacity: number;
   kakaotalkLink: string;
-  status: string | null;
   latitude: number;
-  logitude: number;
+  longitude: number;
+  place: string;
 }
