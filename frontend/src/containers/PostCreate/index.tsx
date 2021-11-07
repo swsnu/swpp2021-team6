@@ -4,14 +4,12 @@ import moment, { Moment } from 'moment';
 import { PostInputDTO } from '../../model/post';
 import { kakao } from '../../utils/map';
 import 'antd/dist/antd.css';
-// import imageUrl from '../../assets/map/current-location-marker.png';
 import profile from '../../mocks/profile.json';
-import { exerciseType } from '../../model/type';
 
 const PostCreate = () => {
   const initialState: PostInputDTO = {
     exerciseType: '축구',
-    expectedLevel: '하',
+    expectedLevel: '상관 없음',
     meetAt: '',
     title: '',
     description: '',
@@ -25,48 +23,37 @@ const PostCreate = () => {
   const [newPost, setNewPost] = useState<PostInputDTO>(initialState);
   const [date, setDate] = useState<Moment | null>(moment());
   const [time, setTime] = useState<Moment | null>(moment('7:00', 'h:mm a'));
-  const [inputValue, setInputValue] = useState<string>();
+  const [searchInput, setSearchInput] = useState<string>();
   const [keyword, setKeyword] = useState<string>();
-  // const [changedLat, setChangedLat] = useState<number>(profile.latitude);
-  // const [changedLng, setChangedLng] = useState<number>(profile.longitude);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [center, setCenter] = useState({
-    La: profile.latitude,
-    Ma: profile.longitude,
+    La: profile.longitude,
+    Ma: profile.latitude,
   });
-
-  // useEffect(() => {
-  //   if ('geolocation' in navigator) {
-  //     console.log('Available');
-  //   } else {
-  //     console.log('Not Available');
-  //   }
-
-  //   navigator.geolocation.getCurrentPosition((position) => {
-  //     setCurLat(position.coords.latitude);
-  //     setCurLng(position.coords.longitude);
-  //   });
-  // }, []);
-
-  // useEffect(() => {
-  //   setCenter(position.Ma);
-  //   setChangedLng(position.La);
-  //   console.log(changedLat, changedLng);
-  // }, [position]);
-
-  useEffect(() => {
-    console.log(center);
-  }, [center]);
+  const [searchCount, setSearchCount] = useState<number>(0);
 
   useEffect(() => {
     const container = document.getElementById('map');
-    // 유저 프로필에 저장된 위치를 중심으로 하는 지도 생성
-    // const currentLocation = new window.kakao.maps.LatLng(
-    //   profile.latitude,
-    //   profile.longitude,
-    // );
+    // 유저 프로필에 저장된 동네 정보를 기반으로 지도 생성
     const options = {
       center: new window.kakao.maps.LatLng(profile.latitude, profile.longitude),
+      level: 3,
+    };
+
+    const map = new window.kakao.maps.Map(container, options);
+
+    // 지도를 드래그하면 지도 중심부 위치를 저장
+    kakao.maps.event.addListener(map, 'dragend', () => {
+      setCenter(map.getCenter());
+    });
+  }, []);
+
+  console.log(center);
+
+  useEffect(() => {
+    const container = document.getElementById('map');
+    const options = {
+      center: new window.kakao.maps.LatLng(center.Ma, center.La),
       level: 3,
     };
     const map = new window.kakao.maps.Map(container, options);
@@ -75,21 +62,6 @@ const PostCreate = () => {
     kakao.maps.event.addListener(map, 'dragend', () => {
       setCenter(map.getCenter());
     });
-
-    // 커스텀 마커 이미지 세팅
-    // const imageSrc = imageUrl;
-    // const imageSize = new kakao.maps.Size(20, 20);
-    // const imageOption = { offset: new kakao.maps.Point(10, 10) };
-    // const markerImage = new kakao.maps.MarkerImage(
-    //   imageSrc,
-    //   imageSize,
-    //   imageOption,
-    // );
-    // const locationMarker = new window.kakao.maps.Marker({
-    //   position: currentLocation,
-    //   image: markerImage,
-    // });
-    // locationMarker.setMap(map);
 
     // 마커를 클릭하면 장소명을 표출할 인포윈도우
     const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
@@ -145,7 +117,7 @@ const PostCreate = () => {
       radius: 5000,
       sort: 'distance',
     });
-  }, [keyword]);
+  }, [keyword, searchCount]);
 
   useEffect(() => {
     let appointmentTime;
@@ -191,6 +163,11 @@ const PostCreate = () => {
     setNewPost({ ...newPost, kakaotalkLink: e.target.value });
   };
 
+  const onClickSearch = () => {
+    setKeyword(searchInput);
+    setSearchCount(searchCount + 1);
+  };
+
   const onclickSubmit = () => {
     if (!newPost.title) {
       alert('제목을 입력해주세요');
@@ -198,15 +175,13 @@ const PostCreate = () => {
       alert('설명을 입력해주세요');
     } else if (!newPost.kakaotalkLink) {
       alert('카카오톡 오픈채팅방 링크를 입력해주세요');
-      // } else if (newPost.kakaotalkLink) {
-      // TODO: 카톡 링크 regex 확인
+    } else if (!/[open.kakao.com]/.test(newPost.kakaotalkLink)) {
+      alert('올바른 링크를 입력해주세요');
     } else {
       console.log('submitted');
       // 기능 구현 후 button type 삭제하기
     }
   };
-
-  console.log(newPost);
 
   return (
     <form>
@@ -228,11 +203,15 @@ const PostCreate = () => {
           <option value="라이딩">라이딩</option>
         </select>
         <label htmlFor="expectedLevel">모집 실력 : </label>
-        <select name="expectedLevel" id="expectedLevel" defaultValue="low">
-          <option value="high">상</option>
-          <option value="average">중</option>
-          <option value="low">하</option>
-          <option value="low">상관 없음</option>
+        <select
+          name="expectedLevel"
+          id="expectedLevel"
+          defaultValue={newPost.expectedLevel}
+        >
+          <option value="상">상</option>
+          <option value="중">중</option>
+          <option value="하">하</option>
+          <option value="상관 없음">상관 없음</option>
         </select>
       </div>
 
@@ -283,9 +262,9 @@ const PostCreate = () => {
         <span>Map API</span>
         <input
           placeholder="검색어를 입력하세요"
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={(e) => setSearchInput(e.target.value)}
         />
-        <button type="button" onClick={() => setKeyword(inputValue)}>
+        <button type="button" onClick={onClickSearch}>
           검색
         </button>
         <div id="map" style={{ width: '400px', height: '400px' }} />
