@@ -7,4 +7,4 @@ export type exerciseType =
   | '러닝'
   | '라이딩';
 
-export type expectedLevelType = 'high' | 'average' | 'low';
+export type expectedLevelType = '상' | '중' | '하' | '상관 없음';
