@@ -162,18 +162,17 @@ const PostCreate = () => {
   const onChangeKakaotalkLink = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKakaotalkLink(e.target.value);
   };
-
-  const onClickSearch = () => {
-    setKeyword(searchInput);
-    setSearchCount(searchCount + 1);
-  };
-
   const onClickSetPlace = () => {
     setPlaceName(selectedPlace.place_name);
     setLatitude(selectedPlace.x);
     setLongitude(selectedPlace.y);
 
     alert('장소 정보가 입력되었습니다');
+  };
+
+  const onClickSearch = () => {
+    setKeyword(searchInput);
+    setSearchCount(searchCount + 1);
   };
 
   const onclickSubmit = () => {
