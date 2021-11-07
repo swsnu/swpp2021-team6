@@ -24,6 +24,8 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'object-curly-newline': 'off',
     'operator-linebreak': 'off',
+    'implicit-arrow-linebreak': 'off',
+    'react/jsx-curly-newline': 'off',
     'no-undef': 'off',
     'no-alert': 'off',
     'no-console': 'off',
