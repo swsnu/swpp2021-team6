@@ -1,28 +1,36 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { DatePicker, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
-import { PostInputDTO } from '../../model/post';
+import { CreatePostEntity } from '../../model/post';
 import { kakao } from '../../utils/getKakaoMap';
 import 'antd/dist/antd.css';
 import profile from '../../mocks/profile.json';
+import { ExerciseType, ExpectedLevelType } from '../../model/type';
+import * as actionCreators from '../../store/actions';
 
 const PostCreate = () => {
-  const initialState: PostInputDTO = {
-    exerciseType: '축구',
-    expectedLevel: '상관 없음',
-    meetAt: '',
-    title: '',
-    description: '',
-    minCapacity: 1,
-    maxCapacity: 10,
-    kakaotalkLink: '',
-    latitude: 0,
-    longitude: 0,
-    place: '',
-  };
-  const [newPost, setNewPost] = useState<PostInputDTO>(initialState);
+  const [exerciseType, setExerciseType] = useState<ExerciseType | string>(
+    '축구',
+  );
+  const [expectedLevel, setExpectedLevel] = useState<
+    ExpectedLevelType | string
+  >('상관 없음');
   const [date, setDate] = useState<Moment | null>(moment());
   const [time, setTime] = useState<Moment | null>(moment('7:00', 'h:mm a'));
+  const [meetAt, setMeetAt] = useState<string>('');
+  const [title, setTitle] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [minCapacity, setMinCapacity] = useState<number>(1);
+  const [maxCapacity, setMaxCapacity] = useState<number>(10);
+  const [kakaotalkLink, setKakaotalkLink] = useState<string>('');
+
+  // TODO: place 정보 묶기
+  const [placeName, setPlaceName] = useState<string>('');
+  const [latitude, setLatitude] = useState<number>(0);
+  const [longitude, setLongitude] = useState<number>(0);
+
+  // 지도 검색 관련 state
   const [searchInput, setSearchInput] = useState<string>();
   const [keyword, setKeyword] = useState<string>();
   const [selectedPlace, setSelectedPlace] = useState<any>(null);
@@ -31,6 +39,8 @@ const PostCreate = () => {
     Ma: profile.latitude,
   });
   const [searchCount, setSearchCount] = useState<number>(0);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const container = document.getElementById('map');
@@ -111,47 +121,46 @@ const PostCreate = () => {
   }, [keyword, searchCount]);
 
   useEffect(() => {
-    let appointmentTime;
     if (date && time) {
-      appointmentTime = `${date?.format('YYYY-MM-DD')} ${time?.format(
-        'HH:mm',
-      )}`;
-      setNewPost({ ...newPost, meetAt: appointmentTime });
+      setMeetAt(`${date?.format('YYYY-MM-DD')} ${time?.format('HH:mm')}`);
     }
   }, [date, time]);
 
-  const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setNewPost({ ...newPost, exerciseType: e.target.value });
+  const onChangeExerciseType = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setExerciseType(e.target.value);
+  };
+  const onChangeExpectedLevel = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setExpectedLevel(e.target.value);
   };
 
   const onChangeTitleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewPost({ ...newPost, title: e.target.value });
+    setTitle(e.target.value);
   };
 
   const onChangeDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setNewPost({ ...newPost, description: e.target.value });
+    setDescription(e.target.value);
   };
 
   const onChangeMinCapacity = (e: React.ChangeEvent<HTMLInputElement>) => {
     const changedMinCapacity = Number(e.target.value);
-    if (changedMinCapacity > newPost.maxCapacity) {
+    if (changedMinCapacity > maxCapacity) {
       alert('최대 모집 인원을 초과할 수 없습니다');
     } else {
-      setNewPost({ ...newPost, minCapacity: changedMinCapacity });
+      setMinCapacity(changedMinCapacity);
     }
   };
 
   const onChangeMaxCapacity = (e: React.ChangeEvent<HTMLInputElement>) => {
     const changedMaxCapacity = Number(e.target.value);
-    if (changedMaxCapacity < newPost.minCapacity) {
+    if (changedMaxCapacity < minCapacity) {
       alert('최소 모집 인원 미만일 수 없습니다');
     } else {
-      setNewPost({ ...newPost, maxCapacity: Number(e.target.value) });
+      setMaxCapacity(changedMaxCapacity);
     }
   };
 
   const onChangeKakaotalkLink = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewPost({ ...newPost, kakaotalkLink: e.target.value });
+    setKakaotalkLink(e.target.value);
   };
 
   const onClickSearch = () => {
@@ -160,28 +169,39 @@ const PostCreate = () => {
   };
 
   const onClickSetPlace = () => {
-    setNewPost({
-      ...newPost,
-      place: selectedPlace.place_name,
-      latitude: selectedPlace.x,
-      longitude: selectedPlace.y,
-    });
+    setPlaceName(selectedPlace.place_name);
+    setLatitude(selectedPlace.x);
+    setLongitude(selectedPlace.y);
 
     alert('장소 정보가 입력되었습니다');
   };
 
   const onclickSubmit = () => {
-    if (!newPost.title) {
+    if (!title) {
       alert('제목을 입력해주세요');
-    } else if (!newPost.description) {
+    } else if (!description) {
       alert('설명을 입력해주세요');
-    } else if (!newPost.kakaotalkLink) {
+    } else if (!kakaotalkLink) {
       alert('카카오톡 오픈채팅방 링크를 입력해주세요');
-    } else if (!/[open.kakao.com]/.test(newPost.kakaotalkLink)) {
+    } else if (!/[open.kakao.com]/.test(kakaotalkLink)) {
       alert('올바른 링크를 입력해주세요');
     } else {
       alert('submitted');
       // 기능 구현 후 button type 삭제하기
+      const newPost: CreatePostEntity = {
+        exerciseType,
+        expectedLevel,
+        title,
+        description,
+        meetAt,
+        minCapacity,
+        maxCapacity,
+        placeName,
+        latitude,
+        longitude,
+        kakaotalkLink,
+      };
+      dispatch(actionCreators.createPost(newPost));
     }
   };
 
@@ -193,8 +213,8 @@ const PostCreate = () => {
         <select
           name="exerciseType"
           id="exerciseType"
-          value={newPost.exerciseType}
-          onChange={(e) => onChangeSelect(e)}
+          value={exerciseType}
+          onChange={(e) => onChangeExerciseType(e)}
         >
           <option value="축구">축구</option>
           <option value="농구">농구</option>
@@ -208,7 +228,8 @@ const PostCreate = () => {
         <select
           name="expectedLevel"
           id="expectedLevel"
-          defaultValue={newPost.expectedLevel}
+          defaultValue={expectedLevel}
+          onChange={(e) => onChangeExpectedLevel(e)}
         >
           <option value="상">상</option>
           <option value="중">중</option>
@@ -240,7 +261,7 @@ const PostCreate = () => {
           type="number"
           min="1"
           max="10"
-          value={newPost.minCapacity}
+          value={minCapacity}
           onChange={(e) => onChangeMinCapacity(e)}
         />
         <label htmlFor="max-capacity"> 명 ~ 최대 </label>
@@ -249,7 +270,7 @@ const PostCreate = () => {
           type="number"
           min="1"
           max="10"
-          value={newPost.maxCapacity}
+          value={maxCapacity}
           onChange={(e) => onChangeMaxCapacity(e)}
         />
         <span> 명</span>
