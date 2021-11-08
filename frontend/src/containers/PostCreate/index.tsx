@@ -185,9 +185,9 @@ const PostCreate = () => {
       alert('카카오톡 오픈채팅방 링크를 입력해주세요');
     } else if (!/[open.kakao.com]/.test(kakaotalkLink)) {
       alert('올바른 링크를 입력해주세요');
+    } else if (!placeName || !latitude || !longitude) {
+      alert('운동 장소를 설정해주세요');
     } else {
-      alert('submitted');
-      // 기능 구현 후 button type 삭제하기
       const newPost: CreatePostEntity = {
         exerciseType,
         expectedLevel,
