@@ -1,13 +1,13 @@
 import { PostEntity } from '../../model/post';
 
 export type PostState = {
-  articleList: PostEntity[];
-  article: PostEntity | null;
+  postList: PostEntity[];
+  post: PostEntity | null;
 };
 
 const initialState: PostState = {
-  articleList: [],
-  article: null,
+  postList: [],
+  post: null,
 };
 
 const reducer = {};
