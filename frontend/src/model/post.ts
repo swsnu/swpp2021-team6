@@ -1,30 +1,31 @@
-import { exerciseType, expectedLevelType } from './type';
+import { ExerciseType, ExpectedLevelType } from './type';
 
 export interface PostEntity {
-  exerciseType: exerciseType;
-  expectedLevel: expectedLevelType;
-  meetAt: string;
+  // hostId: number;
+  exercise: ExerciseType;
+  expectedLevel: ExpectedLevelType;
   title: string;
   description: string;
-  minCapacity: number;
-  maxCapacity: number;
-  kakaotalkLink: string;
-  status: string;
+  meetAt: string;
+  placeName: string;
   latitude: number;
   logitude: number;
-  place: string;
+  minCapacity: number;
+  maxCapacity: number;
+  status: string;
+  kakaotalkLink: string;
 }
 
-export interface PostInputDTO {
-  exerciseType: exerciseType | string;
-  expectedLevel: expectedLevelType;
-  meetAt: string;
+export interface CreatePostEntity {
+  exerciseType: ExerciseType | string;
+  expectedLevel: ExpectedLevelType | string;
   title: string;
   description: string;
+  meetAt: string;
   minCapacity: number;
   maxCapacity: number;
   kakaotalkLink: string;
+  placeName: string;
   latitude: number;
   longitude: number;
-  place: string;
 }
