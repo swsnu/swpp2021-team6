@@ -1,17 +1,24 @@
-import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
+import { mount } from 'enzyme';
 import App from './App';
 import { getMockStore } from './test-utils/mocks';
 import { history } from './store/store';
 
 const mockStore = getMockStore({});
 
-test('renders learn react link', () => {
-  render(
-    <Provider store={mockStore}>
-      <App history={history} />
-    </Provider>,
-  );
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+describe('App', () => {
+  let app: any;
+
+  beforeEach(() => {
+    app = (
+      <Provider store={mockStore}>
+        <App history={history} />
+      </Provider>
+    );
+  });
+
+  it('renders without errors', () => {
+    const component = mount(app);
+    expect(component.find('.App').length).toBe(1);
+  });
 });
