@@ -189,17 +189,17 @@ const PostCreate = () => {
       alert('운동 장소를 설정해주세요');
     } else {
       const newPost: CreatePostEntity = {
-        exerciseType,
-        expectedLevel,
+        exercise: exerciseType,
+        expected_level: expectedLevel,
         title,
         description,
-        meetAt,
-        minCapacity,
-        maxCapacity,
-        placeName,
+        meet_at: meetAt,
+        min_capacity: minCapacity,
+        max_capacity: maxCapacity,
+        place_name: placeName,
         latitude,
         longitude,
-        kakaotalkLink,
+        kakaotalk_link: kakaotalkLink,
       };
       dispatch(actionCreators.createPost(newPost));
     }
