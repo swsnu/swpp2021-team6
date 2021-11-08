@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { DatePicker, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
 import { PostInputDTO } from '../../model/post';
-import { kakao } from '../../utils/map';
+import { kakao } from '../../utils/getKakaoMap';
 import 'antd/dist/antd.css';
 import profile from '../../mocks/profile.json';
 
@@ -167,18 +167,7 @@ const PostCreate = () => {
       longitude: selectedPlace.y,
     });
 
-    // const container = document.getElementById('map');
-    // const options = {
-    //   center: new window.kakao.maps.LatLng(center.Ma, center.La),
-    //   level: 3,
-    // };
-
-    // const map = new window.kakao.maps.Map(container, options);
-    // // 마커를 생성하고 지도에 표시
-    // const marker = new kakao.maps.Marker({
-    //   map,
-    //   position: new kakao.maps.LatLng(selectedPlace.x, selectedPlace.y),
-    // });
+    alert('장소 정보가 입력되었습니다');
   };
 
   const onclickSubmit = () => {
@@ -191,7 +180,7 @@ const PostCreate = () => {
     } else if (!/[open.kakao.com]/.test(newPost.kakaotalkLink)) {
       alert('올바른 링크를 입력해주세요');
     } else {
-      console.log('submitted');
+      alert('submitted');
       // 기능 구현 후 button type 삭제하기
     }
   };
