@@ -11,7 +11,7 @@ def signup(request):
     def is_request_valid():
         if gender not in Profile.Gender.names:
             return False
-        return False
+        return True
 
     if request.method == "POST":
         try:
