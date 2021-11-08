@@ -48,8 +48,6 @@ const PostCreate = () => {
     });
   }, []);
 
-  console.log(center);
-
   useEffect(() => {
     const container = document.getElementById('map');
     const options = {
@@ -74,13 +72,6 @@ const PostCreate = () => {
 
       // 마커에 클릭 이벤트를 등록
       kakao.maps.event.addListener(marker, 'click', () => {
-        setNewPost({
-          ...newPost,
-          place: place.place_name,
-          latitude: place.x,
-          longitude: place.y,
-        });
-
         // TODO: 선택된 장소 정보를 확인하는 창과 확인 버튼 구현
         setSelectedPlace(place);
 
@@ -166,6 +157,28 @@ const PostCreate = () => {
   const onClickSearch = () => {
     setKeyword(searchInput);
     setSearchCount(searchCount + 1);
+  };
+
+  const onClickSetPlace = () => {
+    setNewPost({
+      ...newPost,
+      place: selectedPlace.place_name,
+      latitude: selectedPlace.x,
+      longitude: selectedPlace.y,
+    });
+
+    // const container = document.getElementById('map');
+    // const options = {
+    //   center: new window.kakao.maps.LatLng(center.Ma, center.La),
+    //   level: 3,
+    // };
+
+    // const map = new window.kakao.maps.Map(container, options);
+    // // 마커를 생성하고 지도에 표시
+    // const marker = new kakao.maps.Marker({
+    //   map,
+    //   position: new kakao.maps.LatLng(selectedPlace.x, selectedPlace.y),
+    // });
   };
 
   const onclickSubmit = () => {
@@ -279,7 +292,9 @@ const PostCreate = () => {
               <p>{selectedPlace.place_name}</p>
               <p>{selectedPlace.road_address_name}</p>
               <p>{selectedPlace.phone}</p>
-              <button type="button">확인</button>
+              <button type="button" onClick={onClickSetPlace}>
+                확인
+              </button>
             </div>
           )}
         </div>
