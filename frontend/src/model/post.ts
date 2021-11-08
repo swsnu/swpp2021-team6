@@ -16,7 +16,7 @@ export interface PostEntity {
 }
 
 export interface PostInputDTO {
-  exerciseType: exerciseType;
+  exerciseType: exerciseType | string;
   expectedLevel: expectedLevelType;
   meetAt: string;
   title: string;
