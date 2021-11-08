@@ -31,6 +31,7 @@ module.exports = {
     'no-console': 'off',
     'no-use-before-define': 'off',
     'no-plusplus': 'off',
+    'no-underscore-dangle': 'off',
     '@typescript-eslint/no-use-before-define': ['error'],
     'react/jsx-props-no-spreading': 'off',
     'react/require-default-props': 'off',
