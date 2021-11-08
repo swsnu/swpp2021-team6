@@ -176,17 +176,6 @@ const PostCreate = () => {
     setSearchCount(searchCount + 1);
   };
 
-  const onClickSetPlace = () => {
-    setNewPost({
-      ...newPost,
-      place: selectedPlace.place_name,
-      latitude: selectedPlace.x,
-      longitude: selectedPlace.y,
-    });
-
-    alert('장소 정보가 입력되었습니다');
-  };
-
   const onclickSubmit = () => {
     if (!title) {
       alert('제목을 입력해주세요');
