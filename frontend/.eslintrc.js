@@ -33,6 +33,7 @@ module.exports = {
     'no-use-before-define': 'off',
     'no-plusplus': 'off',
     'no-underscore-dangle': 'off',
+    'react/jsx-one-expression-per-line': 'off',
     '@typescript-eslint/no-use-before-define': ['error'],
     'react/jsx-props-no-spreading': 'off',
     'react/require-default-props': 'off',
