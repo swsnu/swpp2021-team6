@@ -31,7 +31,7 @@ const PostDetail = ({ title, description, host_id, status, ...rest }: any) => {
       <h2>{mockPost.title}</h2>
       <p>{mockPost.description}</p>
       <Card>
-        <p>종목 : {mockPost.exercise_type}</p>
+        <p>종목 : {mockPost.exercise}</p>
         <p>기대 실력 : {mockPost.expected_level}</p>
         <p>
           모집 인원 : 최소 {mockPost.min_capacity}명 ~ 최대{' '}
