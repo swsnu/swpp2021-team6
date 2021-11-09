@@ -19,6 +19,14 @@ declare global {
   }
 }
 
+export const { kakao } = window as any;
+
+declare global {
+  interface Window {
+    kakao: any;
+  }
+}
+
 interface Props {
   history: History;
 }
