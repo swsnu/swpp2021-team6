@@ -1,4 +1,4 @@
-export type exerciseType =
+export type ExerciseType =
   | '축구'
   | '농구'
   | '배드민턴'
@@ -7,4 +7,4 @@ export type exerciseType =
   | '러닝'
   | '라이딩';
 
-export type expectedLevelType = '상' | '중' | '하' | '상관 없음';
+export type ExpectedLevelType = '상' | '중' | '하' | '상관 없음';
