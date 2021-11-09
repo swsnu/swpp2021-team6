@@ -3,11 +3,11 @@ import { useDispatch } from 'react-redux';
 import { DatePicker, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
 import { CreatePostEntity } from '../../model/post';
-import { kakao } from '../../utils/getKakaoMap';
 import 'antd/dist/antd.css';
 import profile from '../../mocks/profile.json';
 import { ExerciseType, ExpectedLevelType } from '../../model/type';
 import * as actionCreators from '../../store/actions';
+import { kakao } from '../../App';
 
 const PostCreate = () => {
   const [exerciseType, setExerciseType] = useState<ExerciseType | string>(
