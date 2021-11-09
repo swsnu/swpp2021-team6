@@ -1,0 +1,21 @@
+{
+  "id": 1,
+  "host_id": 1,
+  "exercise_type": "축구",
+  "title": "용산구 가볍게 축구 즐기실 분~",
+  "description": "안녕하세요 4명 정도 생각하고 있습니다",
+  "status": 1,
+  "meet_at": "2021-11-09 19:00",
+  "expected_level": "상관 없음",
+  "latitude": 37.534767,
+  "longitude": 126.966161,
+  "gu": "용산구",
+  "dong": "신계동",
+  "place_name": "용산공업고등학교",
+  "min_capacity": 4,
+  "max_capacity": 8,
+  "member_count": 1,
+  "kakaotalk_link": "",
+  "created_at": "",
+  "updated_at": ""
+}
