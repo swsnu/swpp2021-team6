@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
   "post_id": 1,
   "host_id": 1,
   "exercise_name": "축구",
@@ -22,27 +21,4 @@
   "kakaotalk_link": "https://open.kakao.com/o/stl6nIeb",
   "status": "모집 중",
   "keywords": ["뒤풀이", "MBTI E", "이번 주말"]
-=======
-  "id": 1,
-  "host_id": 1,
-  "exercise_type": "축구",
-  "title": "용산구 가볍게 축구 즐기실 분~",
-  "description": "안녕하세요 4명 정도 생각하고 있습니다",
-  "status": 1,
-  "meet_at": "2021-11-09 19:00",
-  "expected_level": "상관 없음",
-  "latitude": 37.52403678277785,
-  "longitude": 126.96798158904244,
-  "gu": "용산구",
-  "dong": "신계동",
-  "place_name": "용산공업고등학교",
-  "phone_number": "02-6905-7777",
-  "address": "서울특별시 용산구 한강로3가 서빙고로 24",
-  "min_capacity": 4,
-  "max_capacity": 8,
-  "member_count": 0,
-  "kakaotalk_link": "https://open.kakao.com/o/stl6nIeb",
-  "created_at": "",
-  "updated_at": ""
->>>>>>> 58f2d9842fd757de5291654eb084aa2b83ce2e05
 }

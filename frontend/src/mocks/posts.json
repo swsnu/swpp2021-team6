@@ -1,6 +1,5 @@
 [
   {
-<<<<<<< HEAD
     "post_id": 1,
     "host_id": 1,
     "exercise_name": "축구",
@@ -23,68 +22,5 @@
     "kakaotalk_link": "https://open.kakao.com/o/stl6nIeb",
     "status": "모집 중",
     "keywords": ["뒤풀이", "MBTI E", "이번 주말"]
-=======
-    "id": 1,
-    "host_id": 1,
-    "exercise_type": "축구",
-    "title": "포스트 테스트 1",
-    "description": "",
-    "meet_at": "",
-    "expected_level": "",
-    "latitude": 1,
-    "longitude": 1,
-    "gu": "",
-    "dong": "",
-    "place_name": "잠실종합운동장",
-    "min_capacity": 1,
-    "max_capacity": 1,
-    "member_count": 1,
-    "kakaotalk_link": "",
-    "status": "",
-    "created_at": "",
-    "updated_at": ""
-  },
-  {
-    "id": 2,
-    "host_id": 1,
-    "exercise_type": "축구",
-    "title": "포스트 테스트 2",
-    "description": "",
-    "meet_at": "",
-    "expected_level": "",
-    "latitude": 1,
-    "longitude": 1,
-    "gu": "",
-    "dong": "",
-    "place_name": "잠실종합운동장",
-    "min_capacity": 1,
-    "max_capacity": 1,
-    "member_count": 1,
-    "kakaotalk_link": "",
-    "status": "",
-    "created_at": "",
-    "updated_at": ""
-  },
-  {
-    "id": 3,
-    "host_id": 1,
-    "exercise_type": "축구",
-    "title": "포스트 테스트 3",
-    "description": "",
-    "meet_at": "",
-    "expected_level": "",
-    "latitude": 1,
-    "longitude": 1,
-    "gu": "",
-    "dong": "",
-    "place_name": "잠실종합운동장",
-    "min_capacity": 1,
-    "max_capacity": 1,
-    "member_count": 1,
-    "kakaotalk_link": "",
-    "status": "",
-    "created_at": "",
-    "updated_at": ""
->>>>>>> 58f2d9842fd757de5291654eb084aa2b83ce2e05
   }
 ]
