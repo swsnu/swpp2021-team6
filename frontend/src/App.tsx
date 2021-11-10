@@ -1,7 +1,6 @@
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
 import { History } from 'history';
-import './App.scss';
 import SignIn from './containers/SignIn';
 import SignUp from './containers/SignUp';
 import Main from './containers/Main';
@@ -26,22 +25,19 @@ interface Props {
 
 const App = ({ history }: Props) => (
   <ConnectedRouter history={history}>
-    <div className="App">
-      <Navbar history={history} />
-      <Switch>
-        <Route path="/signin" exact component={SignIn} />
-        <Route path="/signup" exact component={SignUp} />
-        <Route path="/main" exact component={Main} />
-        <Route path="/post/new" exact component={PostCreate} />
-        <Route path="/post/:id" exact component={PostDetail} />
-        <Route path="/post/:id/edit" exact component={PostEdit} />
-        <Route path="/profile" exact component={Profile} />
-        <Route path="/profile/edit" exact component={ProfileEdit} />
-        <Route path="/profile/:id" exact component={Profile} />
-        <Redirect exact from="/" to="/signin" />
-        <Route render={() => <Redirect to="/signin" />} />
-      </Switch>
-    </div>
+    <Navbar history={history} />
+    <Switch>
+      <Route path="/signin" exact component={SignIn} />
+      <Route path="/signup" exact component={SignUp} />
+      <Route path="/main" exact component={Main} />
+      <Route path="/post/new" exact component={PostCreate} />
+      <Route path="/post/:id" exact component={PostDetail} />
+      <Route path="/post/:id/edit" exact component={PostEdit} />
+      <Route path="/profile" exact component={Profile} />
+      <Route path="/profile/:id" exact component={Profile} />
+      <Redirect exact from="/" to="/signin" />
+      <Route render={() => <Redirect to="/signin" />} />
+    </Switch>
   </ConnectedRouter>
 );
 

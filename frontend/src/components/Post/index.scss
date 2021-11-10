@@ -1,0 +1,63 @@
+.post {
+  margin: 10px;
+  width: 300px;
+  height: 285px;
+  border: solid 1px #e9ecef;
+
+  .level-label {
+    position: relative;
+    left: 10px;
+    bottom: 47px;
+  }
+
+  .thumbnail {
+    width: 300px;
+    height: 150px;
+    object-fit: cover;
+    margin-bottom: 14px;
+  }
+
+  .post-body {
+    display: flex;
+    height: 90px;
+    position: relative;
+    bottom: 22px;
+
+    .user-icon {
+      margin: 0 10px 0 10px;
+      width: 24px;
+    }
+
+    p {
+      margin: 0;
+      color: black;
+    }
+
+    .title {
+      max-height: 2.3em;
+      font-weight: 700;
+      margin-right: 10px;
+      margin-bottom: 3px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      word-wrap: break-word;
+      line-height: 1.2em;
+    }
+  }
+
+  .post-footer {
+    height: 20px;
+    text-align: right;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    position: relative;
+    bottom: 22px;
+
+    .anticon-user {
+      margin-right: 5px;
+    }
+  }
+}

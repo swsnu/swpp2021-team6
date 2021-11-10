@@ -1,4 +1,4 @@
-import { PostEntity } from '../../model/post';
+import { PostEntity } from '../../types/post';
 import { DefaultAction } from '../actions/index';
 import { PostAction } from '../actions/post';
 import * as actionTypes from '../actions/actionType';
@@ -13,20 +13,25 @@ const initialState: PostState = {
   post: null,
 };
 
-const reducer = (
+const postReducer = (
   state: PostState = initialState,
   action: PostAction | DefaultAction = { type: 'default' },
 ) => {
   switch (action.type) {
+    case actionTypes.GET_POSTS:
+      return {
+        ...state,
+        posts: action.payload,
+      };
     case actionTypes.ADD_POST:
       return {
         ...state,
-        posts: [...state.posts, action.newPost],
-        post: action.newPost,
+        posts: [...state.posts, action.payload],
+        post: action.payload,
       };
     default:
       return state;
   }
 };
 
-export default reducer;
+export default postReducer;
