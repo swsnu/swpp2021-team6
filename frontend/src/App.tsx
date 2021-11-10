@@ -10,6 +10,14 @@ import PostDetail from './containers/PostDetail';
 import PostEdit from './containers/PostEdit';
 import Profile from './containers/Profile';
 
+export const { kakao } = window as any;
+
+declare global {
+  interface Window {
+    kakao: any;
+  }
+}
+
 interface Props {
   history: History;
 }

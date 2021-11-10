@@ -1,16 +1,10 @@
-export const { kakao } = window as any;
-
-declare global {
-  interface Window {
-    kakao: any;
-  }
-}
+import { kakao } from '../App';
 
 export const getKakaoMap = (lat: number, lng: number) => {
   const container = document.getElementById('map');
   const options = {
-    center: new window.kakao.maps.LatLng(lat, lng),
+    center: new kakao.maps.LatLng(lat, lng),
     level: 3,
   };
-  const map = new window.kakao.maps.Map(container, options);
+  const map = new kakao.maps.Map(container, options);
 };
