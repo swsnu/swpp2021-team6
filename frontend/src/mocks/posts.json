@@ -188,7 +188,45 @@
     "member_count": 1,
     "kakaotalk_link": "",
     "status": "",
-    "created_at": "",
-    "updated_at": ""
+    "createdAt": "",
+    "updatedAt": ""
+  },
+  {
+    "id": 2,
+    "hostId": 1,
+    "title": "포스트 테스트 2",
+    "description": "",
+    "meetAt": "",
+    "expectedLevel": "",
+    "latitude": 1,
+    "logitude": 1,
+    "gu": "",
+    "dong": "",
+    "place": "잠실종합운동장",
+    "capacity": 1,
+    "memberCount": 1,
+    "kakaotalkLink": "",
+    "status": "",
+    "createdAt": "",
+    "updatedAt": ""
+  },
+  {
+    "id": 3,
+    "hostId": 1,
+    "title": "포스트 테스트 3",
+    "description": "",
+    "meetAt": "",
+    "expectedLevel": "",
+    "latitude": 1,
+    "logitude": 1,
+    "gu": "",
+    "dong": "",
+    "place": "잠실종합운동장",
+    "capacity": 1,
+    "memberCount": 1,
+    "kakaotalkLink": "",
+    "status": "",
+    "createdAt": "",
+    "updatedAt": ""
   }
 ]
