@@ -90,7 +90,7 @@ const PostDetail = ({
         </div>
       </div>
       <div className="kakaotalk-link">
-        <span>카카오톡 참가 링크 : </span>
+        <span>오픈채팅방 링크 : </span>
         <a href={mockPost.kakaotalk_link} target="_blank" rel="noreferrer">
           {mockPost.kakaotalk_link}
         </a>
