@@ -9,8 +9,10 @@ from django.contrib.auth import authenticate, login, logout
 @csrf_exempt
 def signup(request):
     def is_request_valid():
+        print(Profile.Gender.names)
         if gender not in Profile.Gender.names:
             return False
+        print("debug")
         return True
 
     if request.method == "POST":

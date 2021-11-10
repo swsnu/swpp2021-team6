@@ -3,10 +3,11 @@ from django.http import (
     HttpResponseNotAllowed,
     JsonResponse,
 )
-from .models import Post, Exercise, Comment
+from .models import Post, Exercise, Comment, Post_Keyword
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.db import transaction
+from .ml.ibmCloud import keyword_extraction_ML
 
 
 @csrf_exempt
@@ -26,6 +27,9 @@ def posts(request):
                     "meet_at": post.meet_at,
                     "host": post.host.id,
                     "capacity": post.capacity,
+                    "keyword1": Post_Keyword.objects.get(post_id=post.id).keyword1,
+                    "keyword2": Post_Keyword.objects.get(post_id=post.id).keyword2,
+                    "keyword3": Post_Keyword.objects.get(post_id=post.id).keyword3,
                     "member_count": post.member_count,
                     "status": post.status,
                     "place": post.place,
@@ -54,6 +58,9 @@ def posts(request):
             capacity = req_data["capacity"]
             kakaotalk_link = req_data["kakaotalk_link"]
 
+            # machine learning code 아직 모델에 안넣었음.
+            keyword_list = keyword_extraction_ML(description)
+
             new_exercise = Exercise.objects.get(name=exercise_name)
 
             new_post = Post(
@@ -71,6 +78,14 @@ def posts(request):
                 kakaotalk_link=kakaotalk_link,
             )
             new_post.save()
+
+            new_post_keyword = Post_Keyword(
+                post=new_post,
+                keyword1=keyword_list[0],
+                keyword2=keyword_list[1],
+                keyword3=keyword_list[2],
+            )
+            new_post_keyword.save()
 
             response_dict = {
                 "post_id": new_post.id,
@@ -102,11 +117,15 @@ def post_detail(request, post_id=0):
             # 있으면 Json Response
             else:
                 post = Post.objects.get(id=post_id)
+                post_keyword = Post_Keyword.objects.get(post_id=post.id)
                 response_dict = {
                     "host_id": post.host.id,
                     "exercise": post.exercise.name,
                     "title": post.title,
                     "description": post.description,
+                    "keyword1": post_keyword.keyword1,
+                    "keyword2": post_keyword.keyword2,
+                    "keyword3": post_keyword.keyword3,
                     "meet_at": post.meet_at,
                     "place": post.place,
                     "latitude": post.latitude,
