@@ -34,6 +34,7 @@ const App = ({ history }: Props) => (
       <Route path="/post/:id" exact component={PostDetail} />
       <Route path="/post/:id/edit" exact component={PostEdit} />
       <Route path="/profile" exact component={Profile} />
+      <Route path="/profile/edit" exact component={ProfileEdit} />
       <Route path="/profile/:id" exact component={Profile} />
       <Redirect exact from="/" to="/signin" />
       <Route render={() => <Redirect to="/signin" />} />
