@@ -52,7 +52,7 @@ def signup(request):
         preferred_exercise = req_dict["preferred_exercise"]
         user = User.objects.get(username=username)
         for each in preferred_exercise:
-            exercise = Exercise.objects.get(name=each["exercise"])
+            exercise = Exercise.objects.get(name=each["exercise_name"])
             new_user_exercise = User_Exercise(
                 user=user, exercise=exercise, skill_level=each["skill_level"]
             )
