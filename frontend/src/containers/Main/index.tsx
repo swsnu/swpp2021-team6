@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Post from '../../components/Post';
-import Filter from '../../components/Filter';
 import mockPosts from '../../mocks/posts.json';
+import Filter from '../Filter';
 
 const Main = () => {
   const [posts, setPosts] = useState(mockPosts);
