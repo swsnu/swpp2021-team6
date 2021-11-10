@@ -29,6 +29,10 @@ const PostCreate = () => {
   const [placeName, setPlaceName] = useState<string>('');
   const [latitude, setLatitude] = useState<number>(0);
   const [longitude, setLongitude] = useState<number>(0);
+  const [address, setAddress] = useState<string>('');
+  const [telephone, setTelephone] = useState<string>('');
+  const [gu, setGu] = useState<string>('서울시');
+  const [dong, setDong] = useState<string>('관악구');
 
   // 지도 검색 관련 state
   const [searchInput, setSearchInput] = useState<string>();
@@ -96,8 +100,6 @@ const PostCreate = () => {
     // 키워드 검색 완료 시 호출되는 콜백함수
     function placesSearchCB(data: any, status: any, pagination: any) {
       if (status === kakao.maps.services.Status.OK) {
-        console.log(data);
-
         const bounds = new kakao.maps.LatLngBounds();
         for (let i = 0; i < data.length; i++) {
           displayMarker(data[i]);
@@ -164,9 +166,12 @@ const PostCreate = () => {
   };
 
   const onClickSetPlace = () => {
+    // TODO: 비구조화 할당으로 place 정보 묶기
     setPlaceName(selectedPlace.place_name);
     setLatitude(selectedPlace.x);
     setLongitude(selectedPlace.y);
+    setAddress(selectedPlace.road_address_name);
+    setTelephone(selectedPlace.phone);
 
     alert('장소 정보가 입력되었습니다');
   };
@@ -189,16 +194,22 @@ const PostCreate = () => {
       alert('운동 장소를 설정해주세요');
     } else {
       const newPost: CreatePostEntity = {
-        exercise: exerciseType,
+        exercise_name: exerciseType,
         expected_level: expectedLevel,
         title,
         description,
         meet_at: meetAt,
         min_capacity: minCapacity,
         max_capacity: maxCapacity,
-        place_name: placeName,
-        latitude,
-        longitude,
+        place: {
+          name: placeName,
+          latitude,
+          longitude,
+          address,
+          telephone,
+          gu,
+          dong,
+        },
         kakaotalk_link: kakaotalkLink,
       };
       dispatch(actionCreators.createPost(newPost));
