@@ -1,0 +1,31 @@
+// background
+$gray0: #f8f9fa;
+// border
+$gray1: #e9ecef;
+// light gray
+$gray2: #adb5bd;
+// text gray
+$gray3: #868e96;
+
+.filter {
+  width: 200px;
+  height: 200px;
+  border: solid 1px $gray1;
+  border-radius: 5px;
+  padding: 10px;
+
+  select {
+    outline: 0;
+    background-color: $gray0;
+    border: solid 1px $gray1;
+    padding: 2px 4px;
+  }
+
+  h2 {
+    font-weight: 700;
+  }
+
+  .sort-select {
+    margin-bottom: 15px;
+  }
+}
