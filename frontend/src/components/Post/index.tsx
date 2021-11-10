@@ -19,7 +19,7 @@ const Post = ({ post }: Props) => {
   useEffect(() => {
     const idx = Math.floor(Math.random() * 4);
     let imgArray;
-    switch (post.exercise) {
+    switch (post.exercise_name) {
       case '축구':
         // type = 'soccer';
         imgArray = thumbnails.soccer;
@@ -68,7 +68,7 @@ const Post = ({ post }: Props) => {
   const dateTime = dateToString(post.meet_at);
 
   return (
-    <Link to={`/post/${post.id}`} className="post">
+    <Link to={`/post/${post.post_id}`} className="post">
       <img className="thumbnail" src={imgSrc} alt="" />
       <Label className="level-label" color={labelColor}>
         실력 : {post.expected_level}
@@ -80,7 +80,7 @@ const Post = ({ post }: Props) => {
         <div>
           <p className="title">{post.title}</p>
           <p className="place">
-            {post.gu} {post.dong}
+            {post.place.gu} {post.place.dong}
           </p>
           <p className="date">{dateTime}</p>
         </div>
