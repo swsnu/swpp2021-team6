@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { History } from 'history';
+import { useDispatch } from 'react-redux';
+
+import { signin } from '../../store/actions/index';
 
 interface SignInProps {
   history: History;
@@ -9,7 +12,7 @@ const SignIn = ({ history }: SignInProps) => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   // dispatch 구현하고 만들어야 함
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const onClickLogin = () => {
     if (!username) {
@@ -17,7 +20,7 @@ const SignIn = ({ history }: SignInProps) => {
     } else if (!password) {
       alert('비밀번호를 입력해주세요');
     } else {
-      console.log('s');
+      dispatch(signin({ username, password }));
     }
   };
 
