@@ -1,18 +1,21 @@
 from json.decoder import JSONDecodeError
-from django.http.response import HttpResponse, HttpResponseNotAllowed
+from django.http.response import HttpResponse, HttpResponseNotAllowed, JsonResponse
 import json
+import sys
 from .models import Profile, ProxyUser
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+
+sys.path.append("..")
+from posts.models import User_Exercise, Exercise
 
 
 @csrf_exempt
 def signup(request):
     def is_request_valid():
-        print(Profile.Gender.names)
         if gender not in Profile.Gender.names:
             return False
-        print("debug")
         return True
 
     if request.method == "POST":
@@ -27,6 +30,7 @@ def signup(request):
             dong = req_dict["dong"]
             gender = req_dict["gender"]
             introduction = req_dict["introduction"]
+
         except (KeyError, JSONDecodeError):
             return HttpResponse(status=400)
 
@@ -44,6 +48,16 @@ def signup(request):
             gender,
             introduction,
         )
+
+        preferred_exercise = req_dict["preferred_exercise"]
+        user = User.objects.get(username=username)
+        for each in preferred_exercise:
+            exercise = Exercise.objects.get(name=each["exercise"])
+            new_user_exercise = User_Exercise(
+                user=user, exercise=exercise, skill_level=each["skill_level"]
+            )
+            new_user_exercise.save()
+
         return HttpResponse(status=201)
     else:
         return HttpResponseNotAllowed(["POST"])
@@ -69,7 +83,18 @@ def signin(request):
             return HttpResponse(status=401)
 
         login(request, user)
-        return HttpResponse(status=204)
+        response_dict = {
+            "id": user.id,
+            "nickname": user.profile.nickname,
+            "latitude": user.profile.latitude,
+            "longitude": user.profile.longitude,
+            "gu": user.profile.gu,
+            "dong": user.profile.dong,
+            "gender": user.profile.gender,
+        }
+        # return HttpResponse(status=204)
+        return JsonResponse(response_dict, status=204)
+
     else:
         return HttpResponseNotAllowed(["POST"])
 
@@ -84,3 +109,23 @@ def signout(request):
         return HttpResponse(status=204)
     else:
         return HttpResponseNotAllowed(["GET"])
+
+
+# @csrf_exempt
+# def user_detail(request, user_id=0):
+#     if request.method == "GET":
+#         if not request.user.is_authenticated:
+#             return HttpResponse(status=401)
+#         user = User.objects.get(id=user_id)
+
+#         request_dict = {
+#             "user_id": user.id,
+#             "nickname": user.profile.nickname,
+#             "gu": user.profile.gu,
+#             "dong": user.profile.dong,
+#             "gender": user.profile.gender,
+#             "introduction": user.profile.introduction,
+#             "user_exercise": user_exercise,
+#             "participating_post": participating_post,
+#             "hosting_post": hosting_post,
+#         }

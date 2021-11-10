@@ -61,7 +61,7 @@ class Participation(models.Model):
 class User_Exercise(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
-    skill_level = models.IntegerField()
+    skill_level = models.CharField(max_length=20)
 
 
 class Comment(models.Model):
