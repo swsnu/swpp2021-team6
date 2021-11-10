@@ -19,9 +19,9 @@
     "updated_at": ""
   },
   {
-    "id": 1,
+    "id": 2,
     "host_id": 1,
-    "title": "포스트 테스트",
+    "title": "포스트 테스트2",
     "description": "",
     "meet_at": "",
     "expected_level": "",
@@ -38,9 +38,9 @@
     "updated_at": ""
   },
   {
-    "id": 1,
+    "id": 3,
     "host_id": 1,
-    "title": "포스트 테스트",
+    "title": "포스트 테스트3",
     "description": "",
     "meet_at": "",
     "expected_level": "",

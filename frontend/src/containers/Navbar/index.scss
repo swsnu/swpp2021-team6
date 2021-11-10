@@ -10,16 +10,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  span {
+    margin: 20px;
+    font-size: 25px;
+    font-weight: bolder;
+  }
 }
 
 .Logo {
   font-size: 35px;
   color: green;
   font-family: 'ImcreSoojin';
-}
-
-span {
-  margin: 20px;
-  font-size: 25px;
-  font-weight: bolder;
 }
