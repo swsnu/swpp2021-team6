@@ -73,7 +73,7 @@ const PostDetail = ({
       <Label color={mockPost.status ? 'green' : 'pink'}>{statusText}</Label>
       <Label color="yellow">현재 {mockPost.member_count}명</Label>
       <Card>
-        <p>종목 : {mockPost.exercise_type}</p>
+        <p>종목 : {mockPost.exercise}</p>
         <p>기대 실력 : {mockPost.expected_level}</p>
         <p>
           모집 인원 : 최소 {mockPost.min_capacity}명 ~ 최대{' '}
@@ -90,7 +90,7 @@ const PostDetail = ({
         </div>
       </div>
       <div className="kakaotalk-link">
-        <span>카카오톡 참가 링크 : </span>
+        <span>오픈채팅방 링크 : </span>
         <a href={mockPost.kakaotalk_link} target="_blank" rel="noreferrer">
           {mockPost.kakaotalk_link}
         </a>

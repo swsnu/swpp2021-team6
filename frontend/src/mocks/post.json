@@ -1,7 +1,7 @@
 {
   "id": 1,
   "host_id": 1,
-  "exercise_type": "축구",
+  "exercise": "축구",
   "title": "용산구 가볍게 축구 즐기실 분~",
   "description": "안녕하세요 4명 정도 생각하고 있습니다",
   "status": 1,

@@ -1,4 +1,4 @@
-import { UserEntity } from '../../model/user';
+import { UserEntity } from '../../types/user';
 
 export type InitialState = {
   user: UserEntity | null;

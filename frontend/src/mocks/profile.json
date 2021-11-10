@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "id": 1,
   "user_id": 1,
   "nickname": "농구가하고싶어요선생님",
@@ -18,4 +19,14 @@
       "skill_level": "중급"
     }
   ]
+=======
+  "userId": 1,
+  "nickname": "juyoung",
+  "latitude": 37.526833,
+  "longitude": 126.894801,
+  "gu": "영등포구",
+  "dong": "당산동",
+  "gender": "여",
+  "introduction": "안녕하세요"
+>>>>>>> 7f773b6 (chore: Change mock files)
 }
