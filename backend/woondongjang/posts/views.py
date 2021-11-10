@@ -7,6 +7,8 @@ from .models import Post, Exercise, Comment
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.db import transaction
+from ibmCloud import keyword_extraction_ML
+
 
 
 @csrf_exempt
@@ -53,6 +55,10 @@ def posts(request):
             dong = req_data["dong"]
             capacity = req_data["capacity"]
             kakaotalk_link = req_data["kakaotalk_link"]
+            
+            # machine learning code 아직 모델에 안넣었음.
+            keyword_list = keyword_extraction_ML(description)
+
 
             new_exercise = Exercise.objects.get(name=exercise_name)
 
