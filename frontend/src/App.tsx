@@ -5,12 +5,20 @@ import './App.scss';
 import SignIn from './containers/SignIn';
 import SignUp from './containers/SignUp';
 import Main from './containers/Main';
-import PostNew from './containers/PostNew';
+import PostCreate from './containers/PostCreate';
 import PostDetail from './containers/PostDetail';
 import PostEdit from './containers/PostEdit';
 import Profile from './containers/Profile';
 import ProfileEdit from './containers/ProfileEdit';
 import Navbar from './containers/Navbar';
+
+export const { kakao } = window as any;
+
+declare global {
+  interface Window {
+    kakao: any;
+  }
+}
 
 interface Props {
   history: History;
@@ -24,7 +32,7 @@ const App = ({ history }: Props) => (
         <Route path="/signin" exact component={SignIn} />
         <Route path="/signup" exact component={SignUp} />
         <Route path="/main" exact component={Main} />
-        <Route path="/post/new" exact component={PostNew} />
+        <Route path="/post/new" exact component={PostCreate} />
         <Route path="/post/:id" exact component={PostDetail} />
         <Route path="/post/:id/edit" exact component={PostEdit} />
         <Route path="/profile" exact component={Profile} />
