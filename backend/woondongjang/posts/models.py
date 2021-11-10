@@ -17,6 +17,7 @@ class Post(models.Model):
     host = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.TextField(default="")
     description = models.TextField(default="")
+    expected_level = models.CharField(max_length=20)
     meet_at = models.DateTimeField()
     latitude = models.DecimalField(max_digits=19, decimal_places=16)
     longitude = models.DecimalField(max_digits=19, decimal_places=16)
