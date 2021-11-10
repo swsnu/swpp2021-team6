@@ -18,7 +18,7 @@ export const signin = (user: UserSignInInputDTO) => {
       window.localStorage.setItem('userInfo', JSON.stringify(currentUser));
       dispatch(signin_(currentUser));
       dispatch(push('/main'));
-    } catch (e) {
+    } catch (e: any) {
       if (e?.response && e.response.status === 404) {
         alert('존재하지 않는 아이디입니다');
       } else if (e?.response && e.response.status === 401) {
