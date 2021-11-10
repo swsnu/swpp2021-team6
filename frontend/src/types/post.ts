@@ -1,15 +1,28 @@
-import { ExerciseType, ExpectedLevelType } from './type';
+export type ExerciseType =
+  | '축구'
+  | '농구'
+  | '배드민턴'
+  | '테니스'
+  | '탁구'
+  | '러닝'
+  | '라이딩';
+
+export type ExpectedLevelType = '상' | '중' | '하' | '상관 없음';
 
 export interface PostEntity {
+  id: number;
   // hostId: number;
-  exercise: ExerciseType;
-  expected_level: ExpectedLevelType;
+  exercise: ExerciseType | string;
+  expected_level: ExpectedLevelType | string;
   title: string;
   description: string;
   meet_at: string;
   place_name: string;
+  gu: string;
+  dong: string;
   latitude: number;
-  logitude: number;
+  longitude: number;
+  member_count: number;
   min_capacity: number;
   max_capacity: number;
   status: string;
