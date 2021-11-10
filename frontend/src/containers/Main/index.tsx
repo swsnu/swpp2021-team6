@@ -14,12 +14,15 @@ interface Props {
 }
 
 const Main = ({ history }: Props) => {
-  // const [posts, setPosts] = useState(mockPosts);
   const posts = useSelector((state: AppState) => state.post?.posts);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(actionCreators.getPosts());
   }, []);
+
+  const onClickChangeSelectedPost = (postId: number) => {
+    dispatch(actionCreators.selectPost(postId));
+  };
 
   return (
     <div className="main">
@@ -28,7 +31,11 @@ const Main = ({ history }: Props) => {
       </div>
       <div className="post-container">
         {posts.map((post: PostEntity) => (
-          <Post key={post.post_id} post={post} />
+          <Post
+            key={post.post_id}
+            post={post}
+            onClickChangeSelectedPost={onClickChangeSelectedPost}
+          />
         ))}
       </div>
       <AddButton history={history} />

@@ -13,10 +13,35 @@ export const getPosts_ = (posts: PostEntity[]) => ({
 export const getPosts = () => async (dispatch: Dispatch<any>) => {
   try {
     const response = await axios.get('/posts/');
+    console.log(response.data);
     dispatch(getPosts_(response.data));
   } catch {
     console.log('error');
   }
+};
+
+export const getPost_ = (post: PostEntity) => ({
+  type: actionTypes.GET_POSTS,
+  post,
+});
+
+export const getPost = (postId: number) => async (dispatch: Dispatch<any>) => {
+  try {
+    const response = await axios.get(`/posts/${postId}`);
+    console.log(response);
+    dispatch(getPost_(response.data));
+  } catch {
+    console.log('error');
+  }
+};
+
+export const selectPost_ = (postId: number) => ({
+  type: actionTypes.SELECT_POST,
+  postId,
+});
+
+export const selectPost = (postId: number) => (dispatch: Dispatch<any>) => {
+  dispatch(selectPost_(postId));
 };
 
 export const createPost_ = (post: PostEntity) => ({
@@ -33,4 +58,5 @@ export const createPost =
 
 export type PostAction =
   | ReturnType<typeof getPosts_>
+  | ReturnType<typeof getPost_>
   | ReturnType<typeof createPost_>;

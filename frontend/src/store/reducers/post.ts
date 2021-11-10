@@ -20,6 +20,20 @@ const postReducer = (state: PostState = initialState, action: any) => {
         ...state,
         posts: action.posts,
       };
+    case actionTypes.GET_POST:
+      return {
+        ...state,
+        post: action.post,
+      };
+    case actionTypes.SELECT_POST:
+      // eslint-disable-next-line no-case-declarations
+      const selectedPost = state.posts.filter(
+        (post) => post.post_id === action.postId,
+      );
+      return {
+        ...state,
+        post: selectedPost,
+      };
     case actionTypes.ADD_POST:
       return {
         ...state,

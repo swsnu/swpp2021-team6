@@ -22,6 +22,7 @@ def posts(request):
         else:
             post_list = [
                 {
+                    "post_id": post.id,
                     "host_id": post.host.id,
                     "exercise_name": post.exercise.name,
                     "expected_level": post.expected_level,

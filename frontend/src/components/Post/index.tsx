@@ -11,9 +11,10 @@ import * as labelColors from '../../constants/labelColors';
 
 interface Props {
   post: PostEntity;
+  onClickChangeSelectedPost: (arg0: number) => void | undefined;
 }
 
-const Post = ({ post }: Props) => {
+const Post = ({ post, onClickChangeSelectedPost }: Props) => {
   const [imgSrc, setImgSrc] = useState<string>('');
   const [labelColor, setLabelColor] = useState<string>('');
   useEffect(() => {
@@ -21,28 +22,26 @@ const Post = ({ post }: Props) => {
     let imgArray;
     switch (post.exercise_name) {
       case '축구':
-        // type = 'soccer';
         imgArray = thumbnails.soccer;
         break;
       case '농구':
-        // type = 'basketball';
         imgArray = thumbnails.basketball;
         break;
       // case '배드민턴':
-      //   // type = 'badminton';
-      //   break;
+      // imgArray = thumbnails.soccer;
+      // break;
       // case '테니스':
-      //   // type = 'tennis';
-      //   break;
+      // imgArray = thumbnails.soccer;
+      // break;
       // case '탁구':
-      //   // type = 'tabletennis';
-      //   break;
+      // type = 'tabletennis';
+      // break;
       // case '러닝':
-      //   // type = 'running';
-      //   break;
+      // type = 'running';
+      // break;
       // case '라이딩':
-      //   // type = 'riding';
-      //   break;
+      // type = 'riding';
+      // break;
       default:
         imgArray = thumbnails.soccer;
     }
@@ -68,7 +67,11 @@ const Post = ({ post }: Props) => {
   const dateTime = dateToString(post.meet_at);
 
   return (
-    <Link to={`/post/${post.post_id}`} className="post">
+    <Link
+      to={`/post/${post.post_id}`}
+      className="post"
+      onClick={() => onClickChangeSelectedPost(post.post_id)}
+    >
       <img className="thumbnail" src={imgSrc} alt="" />
       <Label className="level-label" color={labelColor}>
         실력 : {post.expected_level}
