@@ -1,10 +1,14 @@
 export interface UserEntity {
-  id: string;
-  name: string;
+  user_id: string;
+  nickname: string;
   latitude: number;
   longitude: number;
   gu: string;
   dong: string;
   gender: string;
-  introduction: string;
+}
+
+export interface UserSignInInputDTO {
+  username: string;
+  password: string;
 }
