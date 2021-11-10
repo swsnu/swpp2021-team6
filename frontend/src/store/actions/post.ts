@@ -28,7 +28,7 @@ export const createPost =
   (post: CreatePostEntity) => async (dispatch: Dispatch<any>) => {
     const response = await axios.post('/posts/', post);
     dispatch(createPost_(response.data));
-    dispatch(push(`/post/${response.data.id}`));
+    dispatch(push(`/post/${response.data.post_id}`));
   };
 
 export type PostAction =
