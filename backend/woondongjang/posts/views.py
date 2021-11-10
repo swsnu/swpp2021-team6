@@ -19,26 +19,37 @@ def posts(request):
         # 만약에 로그인이 되어 있지 않은 user면 401
         if not request.user.is_authenticated:
             return HttpResponse(status=401)
-
         else:
             post_list = [
                 {
+                    "host_id": post.host.id,
+                    "exercise_name": post.exercise.name,
                     "title": post.title,
+                    "description": post.description,
                     "meet_at": post.meet_at,
-                    "host": post.host.id,
-                    "capacity": post.capacity,
-                    "keyword1": Post_Keyword.objects.get(post_id=post.id).keyword1,
-                    "keyword2": Post_Keyword.objects.get(post_id=post.id).keyword2,
-                    "keyword3": Post_Keyword.objects.get(post_id=post.id).keyword3,
+                    "place": {
+                        "latitude": post.latitude,
+                        "longitude": post.longitude,
+                        "gu": post.gu,
+                        "dong": post.dong,
+                        "name": post.place_name,
+                        "address": post.place_address,
+                        "telephone": post.place_telephone,
+                    },
+                    "min_capacity": post.min_capacity,
+                    "max_capacity": post.max_capacity,
                     "member_count": post.member_count,
+                    "kakaotalk_link": post.kakaotalk_link,
                     "status": post.status,
-                    "place_name": post.place_name,
-                    "place_address": post.place_address,
-                    "place_telephone": post.place_telephone,
-                    "exercise": post.exercise.name,
+                    "keywords": [
+                        Post_Keyword.objects.get(post_id=post.id).keyword1,
+                        Post_Keyword.objects.get(post_id=post.id).keyword2,
+                        Post_Keyword.objects.get(post_id=post.id).keyword3,
+                    ],
                 }
                 for post in Post.objects.all()
             ]
+
             return JsonResponse(post_list, safe=False, status=200)
 
     # POST : 새로운 post 생성
@@ -51,15 +62,17 @@ def posts(request):
             exercise_name = req_data["exercise_name"]
             title = req_data["title"]
             description = req_data["description"]
+            expected_level = req_data["expected_level"]
             meet_at = req_data["meet_at"]
-            place_name = req_data["place_name"]
-            place_address = req_data["place_address"]
-            place_telephone = req_data["place_telephone"]
-            latitude = req_data["latitude"]
-            longitude = req_data["longitude"]
-            gu = req_data["gu"]
-            dong = req_data["dong"]
-            capacity = req_data["capacity"]
+            latitude = req_data["place"]["latitude"]
+            longitude = req_data["place"]["longitude"]
+            gu = req_data["place"]["gu"]
+            dong = req_data["place"]["dong"]
+            place_name = req_data["place"]["name"]
+            place_address = req_data["place"]["address"]
+            place_telephone = req_data["place"]["telephone"]
+            min_capacity = req_data["min_capacity"]
+            max_capacity = req_data["max_capacity"]
             kakaotalk_link = req_data["kakaotalk_link"]
 
             # machine learning code 아직 모델에 안넣었음.
@@ -68,19 +81,21 @@ def posts(request):
             new_exercise = Exercise.objects.get(name=exercise_name)
 
             new_post = Post(
-                exercise=new_exercise,
                 host=host,
+                exercise=new_exercise,
                 title=title,
                 description=description,
+                expected_level=expected_level,
                 meet_at=meet_at,
-                place_name=place_name,
-                place_address=place_address,
-                place_telephone=place_telephone,
                 latitude=latitude,
                 longitude=longitude,
                 gu=gu,
                 dong=dong,
-                capacity=capacity,
+                place_name=place_name,
+                place_address=place_address,
+                place_telephone=place_telephone,
+                min_capacity=min_capacity,
+                max_capacity=max_capacity,
                 kakaotalk_link=kakaotalk_link,
             )
             new_post.save()
@@ -96,18 +111,26 @@ def posts(request):
             response_dict = {
                 "post_id": new_post.id,
                 "host_id": new_post.host.id,
+                "exercise_name": new_post.exercise.name,
                 "title": new_post.title,
                 "description": new_post.description,
+                "expected_level": new_post.expected_level,
                 "meet_at": new_post.meet_at,
-                "place_name": new_post.place_name,
-                "place_address": new_post.place_address,
-                "place_telephone": new_post.place_telephone,
-                "latitude": new_post.latitude,
-                "longitude": new_post.longitude,
-                "gu": new_post.gu,
-                "dong": new_post.dong,
-                "capacity": new_post.capacity,
+                "place": {
+                    "latitude": new_post.latitude,
+                    "longitude": new_post.longitude,
+                    "gu": new_post.gu,
+                    "dong": new_post.dong,
+                    "name": new_post.place_name,
+                    "address": new_post.place_address,
+                    "telephone": new_post.place_telephone,
+                },
+                "max_capacity": new_post.max_capacity,
+                "min_capacity": new_post.min_capacity,
+                "member_count": new_post.member_count,
                 "kakaotalk_link": new_post.kakaotalk_link,
+                "status": new_post.status,
+                "keywords": keyword_list,
             }
             return JsonResponse(response_dict, status=201)
     else:
@@ -128,24 +151,29 @@ def post_detail(request, post_id=0):
                 post_keyword = Post_Keyword.objects.get(post_id=post.id)
                 response_dict = {
                     "host_id": post.host.id,
-                    "exercise": post.exercise.name,
+                    "exercise_name": post.exercise.name,
                     "title": post.title,
                     "description": post.description,
-                    "keyword1": post_keyword.keyword1,
-                    "keyword2": post_keyword.keyword2,
-                    "keyword3": post_keyword.keyword3,
                     "meet_at": post.meet_at,
-                    "place_name": post.place_name,
-                    "place_address": post.place_address,
-                    "place_telephone": post.place_telephone,
-                    "latitude": post.latitude,
-                    "longitude": post.longitude,
-                    "gu": post.gu,
-                    "dong": post.dong,
-                    "capacity": post.capacity,
+                    "max_capacity": post.max_capacity,
+                    "min_capacity": post.min_capacity,
                     "member_count": post.member_count,
-                    "status": post.status,
+                    "place": {
+                        "latitude": post.latitude,
+                        "longitude": post.longitude,
+                        "gu": post.gu,
+                        "dong": post.dong,
+                        "name": post.place_name,
+                        "address": post.place_address,
+                        "telephone": post.place_telephone,
+                    },
                     "kakaotalk_link": post.kakaotalk_link,
+                    "status": post.status,
+                    "keywords": [
+                        post_keyword.keyword1,
+                        post_keyword.keyword2,
+                        post_keyword.keyword3,
+                    ],
                 }
                 return JsonResponse(response_dict, status=200)
         else:
