@@ -111,21 +111,46 @@ def signout(request):
         return HttpResponseNotAllowed(["GET"])
 
 
-# @csrf_exempt
-# def user_detail(request, user_id=0):
-#     if request.method == "GET":
-#         if not request.user.is_authenticated:
-#             return HttpResponse(status=401)
-#         user = User.objects.get(id=user_id)
+@csrf_exempt
+def user_detail(request, user_id=0):
+    if request.method == "GET":
+        if not request.user.is_authenticated:
+            return HttpResponse(status=401)
+        user = User.objects.get(id=user_id)
+        user_exercise = [
+            {
+                "exercise_name": each_exercise.exercise.name,
+                "skill_level": each_exercise.skill_level,
+            }
+            for each_exercise in User_Exercise.objects.filter(user=user)
+        ]
 
-#         request_dict = {
-#             "user_id": user.id,
-#             "nickname": user.profile.nickname,
-#             "gu": user.profile.gu,
-#             "dong": user.profile.dong,
-#             "gender": user.profile.gender,
-#             "introduction": user.profile.introduction,
-#             "user_exercise": user_exercise,
-#             "participating_post": participating_post,
-#             "hosting_post": hosting_post,
-#         }
+        # participating_post = [
+        #         {
+        #             "exercise_name": each_exercise.exercise.name,
+        #             "skill_level": each_exercise.skill_level
+        #         }
+        #         for each_exercise in User_Exercise.objects.filter(user=user)]
+
+        # hosting_post = [
+        #         {
+        #             "exercise_name": each_exercise.exercise.name,
+        #             "skill_level": each_exercise.skill_level
+        #         }
+        #         for each_exercise in User_Exercise.objects.filter(user=user)]
+
+        request_dict = {
+            "user_id": user.id,
+            "nickname": user.profile.nickname,
+            "gu": user.profile.gu,
+            "dong": user.profile.dong,
+            "gender": user.profile.gender,
+            "introduction": user.profile.introduction,
+            "user_exercise": user_exercise,
+            # "participating_post": participating_post,
+            # "hosting_post": hosting_post,
+        }
+        print(request_dict)
+        return HttpResponse(status=204)
+    else:
+        return HttpResponseNotAllowed(["GET"])
