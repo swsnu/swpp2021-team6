@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
 sys.path.append("..")
-from posts.models import User_Exercise, Exercise, Post
+from posts.models import User_Exercise, Exercise, Post, Participation
 
 
 @csrf_exempt
@@ -116,7 +116,7 @@ def user_detail(request, user_id=0):
     if request.method == "GET":
         if not request.user.is_authenticated:
             return HttpResponse(status=401)
-        
+
         user = User.objects.get(id=user_id)
         user_exercise = [
             {
@@ -127,24 +127,26 @@ def user_detail(request, user_id=0):
         ]
 
         participating_post = [
-                {
-                    "post_id": each_participation.post.id,
-                    "title" :each_participation.post.title
-                    "meet_at" : each_participation.post.meet_at,
-                    "place_name" :each_participation.post.place_name,
-                    "status" :each_participation.post.status
-                }
-                for each_participation in Participant.objects.filter(user=user)]
+            {
+                "post_id": each_participation.post.id,
+                "title": each_participation.post.title,
+                "meet_at": each_participation.post.meet_at,
+                "place_name": each_participation.post.place_name,
+                "status": each_participation.post.status,
+            }
+            for each_participation in Participation.objects.filter(user=user)
+        ]
 
         hosting_post = [
-                {
-                    "post_id": each_hosting_post.id,
-                    "title" : each_hosting_post.title,
-                    "meet_at" : each_hosting_post.meet_at,
-                    "place_name" : each_hosting_post.place_name,
-                    "status" : each_hosting_post.status
-                }
-                for each_hosting_post in Post.objects.filter(host=user)]
+            {
+                "post_id": each_hosting_post.id,
+                "title": each_hosting_post.title,
+                "meet_at": each_hosting_post.meet_at,
+                "place_name": each_hosting_post.place_name,
+                "status": each_hosting_post.status,
+            }
+            for each_hosting_post in Post.objects.filter(host=user)
+        ]
 
         response_dict = {
             "user_id": user.id,
