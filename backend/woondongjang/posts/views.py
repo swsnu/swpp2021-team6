@@ -21,7 +21,6 @@ def posts(request):
             return HttpResponse(status=401)
 
         else:
-            # 일단, place를 보내주는걸로!!
             post_list = [
                 {
                     "title": post.title,
@@ -33,7 +32,9 @@ def posts(request):
                     "keyword3": Post_Keyword.objects.get(post_id=post.id).keyword3,
                     "member_count": post.member_count,
                     "status": post.status,
-                    "place": post.place,
+                    "place_name": post.place_name,
+                    "place_address": post.place_address,
+                    "place_telephone": post.place_telephone,
                     "exercise": post.exercise.name,
                 }
                 for post in Post.objects.all()
@@ -51,7 +52,9 @@ def posts(request):
             title = req_data["title"]
             description = req_data["description"]
             meet_at = req_data["meet_at"]
-            place = req_data["place"]
+            place_name = req_data["place_name"]
+            place_address = req_data["place_address"]
+            place_telephone = req_data["place_telephone"]
             latitude = req_data["latitude"]
             longitude = req_data["longitude"]
             gu = req_data["gu"]
@@ -70,7 +73,9 @@ def posts(request):
                 title=title,
                 description=description,
                 meet_at=meet_at,
-                place=place,
+                place_name=place_name,
+                place_address=place_address,
+                place_telephone=place_telephone,
                 latitude=latitude,
                 longitude=longitude,
                 gu=gu,
@@ -94,7 +99,9 @@ def posts(request):
                 "title": new_post.title,
                 "description": new_post.description,
                 "meet_at": new_post.meet_at,
-                "place": new_post.place,
+                "place_name": new_post.place_name,
+                "place_address": new_post.place_address,
+                "place_telephone": new_post.place_telephone,
                 "latitude": new_post.latitude,
                 "longitude": new_post.longitude,
                 "gu": new_post.gu,
@@ -128,7 +135,9 @@ def post_detail(request, post_id=0):
                     "keyword2": post_keyword.keyword2,
                     "keyword3": post_keyword.keyword3,
                     "meet_at": post.meet_at,
-                    "place": post.place,
+                    "place_name": post.place_name,
+                    "place_address": post.place_address,
+                    "place_telephone": post.place_telephone,
                     "latitude": post.latitude,
                     "longitude": post.longitude,
                     "gu": post.gu,
