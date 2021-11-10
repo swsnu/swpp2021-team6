@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
 sys.path.append("..")
-from posts.models import User_Exercise, Exercise
+from posts.models import User_Exercise, Exercise, Post
 
 
 @csrf_exempt
@@ -127,17 +127,23 @@ def user_detail(request, user_id=0):
 
         # participating_post = [
         #         {
-        #             "exercise_name": each_exercise.exercise.name,
-        #             "skill_level": each_exercise.skill_level
+        #             "post_id": each_exercise.exercise.name,
+        #             "title" :
+        #             "meet_at" :
+        #             "place_name" :
+        #             "status" :
         #         }
-        #         for each_exercise in User_Exercise.objects.filter(user=user)]
+        #         for each_participation in Participant.objects.filter(user=user)]
 
         # hosting_post = [
         #         {
-        #             "exercise_name": each_exercise.exercise.name,
-        #             "skill_level": each_exercise.skill_level
+        #             "post_id": each_hosting_post.id,
+        #             "title" : each_hosting_post.title,
+        #             "meet_at" : each_hosting_post.meet_at,
+        #             "place_name" : each_hosting_post.place_name,
+        #             "status" : each_hosting_post.status
         #         }
-        #         for each_exercise in User_Exercise.objects.filter(user=user)]
+        #         for each_hosting_post in Post.objects.filter(host=user)]
 
         request_dict = {
             "user_id": user.id,
