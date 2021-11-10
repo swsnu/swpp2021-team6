@@ -1,0 +1,65 @@
+- model: accounts.proxyuser
+  pk: 1
+  fields:
+    username: 박은만
+    password: 박은만
+- model: accounts.proxyuser
+  pk: 2
+  fields:
+    username: 배주영
+    password: 배주영
+- model: accounts.proxyuser
+  pk: 3
+  fields:
+    username: 백승렬
+    password: 백승렬
+- model: accounts.proxyuser
+  pk: 4
+  fields:
+    username: 이경원
+    password: 이경원
+
+- model: accounts.profile
+  pk: 1
+  fields:
+    user: 1
+    nickname: silvermanseoul
+    latitude: 37.11111111111111
+    longitude: 126.11111111111111
+    gu: 관악구
+    dong: 봉천동
+    gender: M
+    introduction: 안녕하세요. 박은만입니다.
+- model: accounts.profile
+  pk: 2
+  fields:
+    user_id: 2
+    nickname: 9ummy
+    latitude: 37.22222222222222
+    longitude: 126.22222222222222
+    gu: 영등포구
+    dong: 당산동
+    gender: F
+    introduction: 안녕하세요. 배주영입니다.
+- model: accounts.profile
+  pk: 3
+  fields:
+    user_id: 3
+    nickname: SunnyBaik
+    latitude: 37.33333333333333
+    longitude: 126.33333333333333
+    gu: 관악구
+    dong: 봉천동
+    gender: M
+    introduction: 안녕하세요. 백승렬입니다.
+- model: accounts.profile
+  pk: 4
+  fields:
+    user_id: 4
+    nickname: kyungwon-lee
+    latitude: 37.44444444444444
+    longitude: 126.44444444444444
+    gu: 서초구
+    dong: 서초동
+    gender: F
+    introduction: 안녕하세요. 이경원입니다.

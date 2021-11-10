@@ -1,4 +1,4 @@
-export { getPosts, createPost } from './post';
+export { getPosts, getPost, selectPost, createPost } from './post';
 
 export { signin, signout } from './user';
 
