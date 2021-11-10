@@ -116,6 +116,7 @@ def user_detail(request, user_id=0):
     if request.method == "GET":
         if not request.user.is_authenticated:
             return HttpResponse(status=401)
+        
         user = User.objects.get(id=user_id)
         user_exercise = [
             {
@@ -125,27 +126,27 @@ def user_detail(request, user_id=0):
             for each_exercise in User_Exercise.objects.filter(user=user)
         ]
 
-        # participating_post = [
-        #         {
-        #             "post_id": each_exercise.exercise.name,
-        #             "title" :
-        #             "meet_at" :
-        #             "place_name" :
-        #             "status" :
-        #         }
-        #         for each_participation in Participant.objects.filter(user=user)]
+        participating_post = [
+                {
+                    "post_id": each_participation.post.id,
+                    "title" :each_participation.post.title
+                    "meet_at" : each_participation.post.meet_at,
+                    "place_name" :each_participation.post.place_name,
+                    "status" :each_participation.post.status
+                }
+                for each_participation in Participant.objects.filter(user=user)]
 
-        # hosting_post = [
-        #         {
-        #             "post_id": each_hosting_post.id,
-        #             "title" : each_hosting_post.title,
-        #             "meet_at" : each_hosting_post.meet_at,
-        #             "place_name" : each_hosting_post.place_name,
-        #             "status" : each_hosting_post.status
-        #         }
-        #         for each_hosting_post in Post.objects.filter(host=user)]
+        hosting_post = [
+                {
+                    "post_id": each_hosting_post.id,
+                    "title" : each_hosting_post.title,
+                    "meet_at" : each_hosting_post.meet_at,
+                    "place_name" : each_hosting_post.place_name,
+                    "status" : each_hosting_post.status
+                }
+                for each_hosting_post in Post.objects.filter(host=user)]
 
-        request_dict = {
+        response_dict = {
             "user_id": user.id,
             "nickname": user.profile.nickname,
             "gu": user.profile.gu,
@@ -153,10 +154,9 @@ def user_detail(request, user_id=0):
             "gender": user.profile.gender,
             "introduction": user.profile.introduction,
             "user_exercise": user_exercise,
-            # "participating_post": participating_post,
-            # "hosting_post": hosting_post,
+            "participating_post": participating_post,
+            "hosting_post": hosting_post,
         }
-        print(request_dict)
-        return HttpResponse(status=204)
+        return JsonResponse(response_dict, status=200)
     else:
         return HttpResponseNotAllowed(["GET"])
