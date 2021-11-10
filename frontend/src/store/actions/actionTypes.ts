@@ -7,6 +7,11 @@ export const GET_COMMENTS = 'GET_COMMENTS';
 export const ADD_COMMENT = 'ADD_COMMENT';
 export const EDIT_COMMENT = 'EDIT_COMMENT';
 export const DELETE_COMMENT = 'DELETE_COMMENT';
+
+export const SIGNIN = 'SIGNIN';
+export const SIGNOUT = 'SIGNOUT';
+
+
 // export const SIGNIN_USER = 'SIGNIN_USER';
 // export const SIGNOUT_USER = 'SIGNOUT_USER';
 // export const GET_USRS = 'GET_USERS';

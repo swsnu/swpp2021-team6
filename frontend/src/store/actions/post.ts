@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Dispatch } from 'redux';
 import { push } from 'connected-react-router';
-import * as actionTypes from './actionType';
+import * as actionTypes from './actionTypes';
 import { PostEntity, CreatePostEntity } from '../../types/post';
 
 export const getPosts_ = (posts: PostEntity[]) => ({
