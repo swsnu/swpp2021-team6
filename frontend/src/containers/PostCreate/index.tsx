@@ -2,11 +2,8 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { DatePicker, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
-import {
-  CreatePostEntity,
-  ExerciseType,
-  ExpectedLevelType,
-} from '../../types/post';
+import { CreatePostEntity } from '../../types/post';
+import { ExerciseType, ExpectedLevelType } from '../../types/exercise';
 import 'antd/dist/antd.css';
 import profile from '../../mocks/profile.json';
 import * as actionCreators from '../../store/actions';
