@@ -24,6 +24,7 @@ def posts(request):
                 {
                     "host_id": post.host.id,
                     "exercise_name": post.exercise.name,
+                    "expected_level": post.expected_level,
                     "title": post.title,
                     "description": post.description,
                     "meet_at": post.meet_at,
@@ -154,6 +155,7 @@ def post_detail(request, post_id=0):
                     "exercise_name": post.exercise.name,
                     "title": post.title,
                     "description": post.description,
+                    "expected_level": post.expected_level,
                     "meet_at": post.meet_at,
                     "max_capacity": post.max_capacity,
                     "min_capacity": post.min_capacity,
