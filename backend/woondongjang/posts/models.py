@@ -9,6 +9,10 @@ class Exercise(models.Model):
 
 # Create your models here.
 class Post(models.Model):
+    class Status(models.TextChoices):
+        RECRUITING = "모집 중"
+        RECRUITED = "모집 완료"
+
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
     host = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.TextField(default="")
@@ -24,7 +28,9 @@ class Post(models.Model):
     capacity = models.IntegerField()
     member_count = models.IntegerField(default=0)
     kakaotalk_link = models.CharField(max_length=256)
-    status = models.CharField(max_length=20, default="Recruiting")
+    status = models.CharField(
+        max_length=5, choices=Status.choices, default=Status.RECRUITING
+    )
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
