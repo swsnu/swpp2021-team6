@@ -25,7 +25,8 @@ class Post(models.Model):
     place_name = models.CharField(max_length=32)
     place_address = models.CharField(max_length=64)
     place_telephone = models.CharField(max_length=20)
-    capacity = models.IntegerField()
+    min_capacity = models.IntegerField()
+    max_capacity = models.IntegerField()
     member_count = models.IntegerField(default=0)
     kakaotalk_link = models.CharField(max_length=256)
     status = models.CharField(
