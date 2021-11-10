@@ -9,6 +9,8 @@ import PostCreate from './containers/PostCreate';
 import PostDetail from './containers/PostDetail';
 import PostEdit from './containers/PostEdit';
 import Profile from './containers/Profile';
+import ProfileEdit from './containers/ProfileEdit';
+import Navbar from './containers/Navbar';
 
 export const { kakao } = window as any;
 
@@ -25,6 +27,7 @@ interface Props {
 const App = ({ history }: Props) => (
   <ConnectedRouter history={history}>
     <div className="App">
+      <Navbar history={history} />
       <Switch>
         <Route path="/signin" exact component={SignIn} />
         <Route path="/signup" exact component={SignUp} />
@@ -33,6 +36,7 @@ const App = ({ history }: Props) => (
         <Route path="/post/:id" exact component={PostDetail} />
         <Route path="/post/:id/edit" exact component={PostEdit} />
         <Route path="/profile" exact component={Profile} />
+        <Route path="/profile/edit" exact component={ProfileEdit} />
         <Route path="/profile/:id" exact component={Profile} />
         <Redirect exact from="/" to="/signin" />
         <Route render={() => <Redirect to="/signin" />} />

@@ -1,0 +1,50 @@
+{ "participating_post": [
+  {
+    "id": 1,
+    "title": "포스트 테스트1",
+    "meet_at": "내일",
+    "place": "잠실종합운동장",
+    "status": "참가중"
+  },
+  {
+    "id": 2,
+    "title": "포스트 테스트2",
+    "meet_at": "모레",
+    "place": "서울대학교 대운동장",
+    "status": "승인 대기중"
+  },
+  {
+    "id": 3,
+    "title": "포스트 테스트3",
+    "meet_at": "글피",
+    "place": "우리집 운동장",
+    "status": "승인 대기중"
+  }
+],
+"hosting_post": [
+  {
+    "id": 4,
+    "title": "포스트 테스트4",
+    "meet_at": "내일",
+    "place": "잠실종합운동장",
+    "status": "모집 완료"
+  },
+  {
+    "id": 5,
+    "title": "포스트 테스트5",
+    "meet_at": "모레",
+    "place": "서울대학교 대운동장",
+    "status": "모집중"
+  },
+  {
+    "id": 6,
+    "title": "포스트 테스트6",
+    "meet_at": "글피",
+    "place": "우리집 운동장",
+    "status": "모집중"
+  }
+]
+
+
+}
+
