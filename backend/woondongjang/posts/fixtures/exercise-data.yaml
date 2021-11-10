@@ -1,0 +1,28 @@
+- model: posts.exercise
+  pk: 1
+  fields:
+    name: 축구
+- model: posts.exercise
+  pk: 2
+  fields:
+    name: 농구
+- model: posts.exercise
+  pk: 3
+  fields:
+    name: 배드민턴
+- model: posts.exercise
+  pk: 4
+  fields:
+    name: 테니스
+- model: posts.exercise
+  pk: 5
+  fields:
+    name: 탁구
+- model: posts.exercise
+  pk: 6
+  fields:
+    name: 러닝
+- model: posts.exercise
+  pk: 7
+  fields:
+    name: 라이딩
