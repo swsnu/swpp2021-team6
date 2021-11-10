@@ -26,6 +26,7 @@ module.exports = {
     'operator-linebreak': 'off',
     'implicit-arrow-linebreak': 'off',
     'react/jsx-curly-newline': 'off',
+    'react/no-array-index-key': 'off',
     camelcase: 'off',
     'no-undef': 'off',
     'no-alert': 'off',

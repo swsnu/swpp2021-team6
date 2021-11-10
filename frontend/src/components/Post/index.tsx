@@ -86,8 +86,17 @@ const Post = ({ post }: Props) => {
         </div>
       </div>
       <div className="post-footer">
-        <UserOutlined />
-        {post.member_count} / {post.max_capacity}
+        <div className="keyword-container">
+          {post.keywords.map((keyword, idx) => (
+            <Label key={idx} color="#3B5BDB">
+              {keyword}
+            </Label>
+          ))}
+        </div>
+        <div className="post-capacity">
+          <UserOutlined />
+          {post.member_count} / {post.max_capacity}
+        </div>
       </div>
     </Link>
   );
