@@ -13,21 +13,18 @@ const initialState: PostState = {
   post: null,
 };
 
-const postReducer = (
-  state: PostState = initialState,
-  action: PostAction | DefaultAction = { type: 'default' },
-) => {
+const postReducer = (state: PostState = initialState, action: any) => {
   switch (action.type) {
     case actionTypes.GET_POSTS:
       return {
         ...state,
-        posts: action.payload,
+        posts: action.posts,
       };
     case actionTypes.ADD_POST:
       return {
         ...state,
-        posts: [...state.posts, action.payload],
-        post: action.payload,
+        posts: [...state.posts, action.post],
+        post: action.post,
       };
     default:
       return state;

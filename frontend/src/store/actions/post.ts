@@ -6,14 +6,14 @@ import { PostEntity, CreatePostEntity } from '../../types/post';
 
 export const getPosts_ = (posts: PostEntity[]) => ({
   type: actionTypes.GET_POSTS,
-  payload: posts,
+  posts,
 });
 
 // TODO: 필터를 어떻게 보낼지? 별도의 함수? or 파라미터에 query? 포함해서?
 export const getPosts = () => async (dispatch: Dispatch<any>) => {
   try {
     const response = await axios.get('/posts/');
-    dispatch(getPosts_);
+    dispatch(getPosts_(response.data));
   } catch {
     console.log('error');
   }
@@ -21,7 +21,7 @@ export const getPosts = () => async (dispatch: Dispatch<any>) => {
 
 export const createPost_ = (post: PostEntity) => ({
   type: actionTypes.ADD_POST,
-  payload: post,
+  post,
 });
 
 export const createPost =
