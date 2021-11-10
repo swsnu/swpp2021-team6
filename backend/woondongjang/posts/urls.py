@@ -12,4 +12,9 @@ urlpatterns = [
         views.accept,
         name="accept",
     ),
+    path(
+        "<int:post_id>/participants/<int:participant_id>/decline",
+        views.decline,
+        name="decline",
+    ),
 ]

@@ -352,3 +352,29 @@ def accept(request, post_id, participant_id):
         return HttpResponse(status=204)
     else:
         return HttpResponseNotAllowed(["POST"])
+
+
+@csrf_exempt
+def decline(request, post_id, participant_id):
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
+
+    # Post 조회
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return HttpResponse(status=404)
+
+    # User(participant) 조회
+    try:
+        participant = User.objects.get(id=participant_id)
+    except User.DoesNotExist:
+        return HttpResponse(status=404)
+
+    if request.method == "POST":
+        Participation.objects.filter(user=participant, post=post).update(
+            status=Participation.Status.DECLINED
+        )
+        return HttpResponse(status=204)
+    else:
+        return HttpResponseNotAllowed(["POST"])
