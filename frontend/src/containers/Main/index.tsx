@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { History } from 'history';
 import Post from '../../components/Post';
-import mockPosts from '../../mocks/posts.json';
 import Filter from '../Filter';
 import * as actionCreators from '../../store/actions';
 import './index.scss';
 import { AppState } from '../../store/store';
 import { PostEntity } from '../../types/post';
+import AddButton from '../../components/AddButton';
 
-const Main = () => {
+interface Props {
+  history: History;
+}
+
+const Main = ({ history }: Props) => {
   // const [posts, setPosts] = useState(mockPosts);
   const posts = useSelector((state: AppState) => state.post?.posts);
   const dispatch = useDispatch();
@@ -27,6 +31,7 @@ const Main = () => {
           <Post key={post.post_id} post={post} />
         ))}
       </div>
+      <AddButton history={history} />
     </div>
   );
 };
