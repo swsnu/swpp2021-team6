@@ -9,20 +9,30 @@ class Exercise(models.Model):
 
 # Create your models here.
 class Post(models.Model):
+    class Status(models.TextChoices):
+        RECRUITING = "모집 중"
+        RECRUITED = "모집 완료"
+
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
     host = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.TextField(default="")
     description = models.TextField(default="")
+    expected_level = models.CharField(max_length=20)
     meet_at = models.DateTimeField()
     latitude = models.DecimalField(max_digits=19, decimal_places=16)
     longitude = models.DecimalField(max_digits=19, decimal_places=16)
     gu = models.CharField(max_length=20)
     dong = models.CharField(max_length=20)
-    place = models.CharField(max_length=20)
-    capacity = models.IntegerField()
+    place_name = models.CharField(max_length=32)
+    place_address = models.CharField(max_length=64)
+    place_telephone = models.CharField(max_length=20)
+    min_capacity = models.IntegerField()
+    max_capacity = models.IntegerField()
     member_count = models.IntegerField(default=0)
     kakaotalk_link = models.CharField(max_length=256)
-    status = models.CharField(max_length=20, default="Recruiting")
+    status = models.CharField(
+        max_length=5, choices=Status.choices, default=Status.RECRUITING
+    )
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
