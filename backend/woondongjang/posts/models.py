@@ -34,7 +34,7 @@ class Post_Keyword(models.Model):
     keyword3 = models.TextField(default="")
 
 
-class Participant(models.Model):
+class Participation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     status = models.CharField(max_length=20)
