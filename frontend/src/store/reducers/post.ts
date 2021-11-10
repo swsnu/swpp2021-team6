@@ -1,7 +1,7 @@
 import { PostEntity } from '../../types/post';
 import { DefaultAction } from '../actions/index';
 import { PostAction } from '../actions/post';
-import * as actionTypes from '../actions/actionType';
+import * as actionTypes from '../actions/actionTypes';
 
 export type PostState = {
   posts: PostEntity[];
