@@ -351,7 +351,6 @@ def comment_detail(request, comment_id=0):
 def apply(request, post_id):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
-
     # Post 조회
     try:
         post = Post.objects.get(id=post_id)
@@ -359,6 +358,9 @@ def apply(request, post_id):
         return HttpResponse(status=404)
 
     if request.method == "POST":
+        # host이면 apply가 안되게끔!!
+        if request.user.id == post.host.id:
+            return HttpResponse(status=403)
         Participation.objects.create(user=request.user, post=post)
         return HttpResponse(status=204)
     else:
