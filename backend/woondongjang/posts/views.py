@@ -1,9 +1,10 @@
+from django.contrib.auth.models import User
 from django.http import (
     HttpResponse,
     HttpResponseNotAllowed,
     JsonResponse,
 )
-from .models import Post, Exercise, Comment, Post_Keyword
+from .models import Post, Exercise, Comment, Post_Keyword, Participation
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.db import transaction
@@ -307,3 +308,73 @@ def comment_detail(request, comment_id=0):
 
     else:
         return HttpResponseNotAllowed(["GET", "PATCH", "DELETE"])
+
+
+@csrf_exempt
+def apply(request, post_id):
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
+
+    # Post 조회
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return HttpResponse(status=404)
+
+    if request.method == "POST":
+        Participation.objects.create(user=request.user, post=post)
+        return HttpResponse(status=204)
+    else:
+        return HttpResponseNotAllowed(["POST"])
+
+
+@csrf_exempt
+def accept(request, post_id, participant_id):
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
+
+    # Post 조회
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return HttpResponse(status=404)
+
+    # User(participant) 조회
+    try:
+        participant = User.objects.get(id=participant_id)
+    except User.DoesNotExist:
+        return HttpResponse(status=404)
+
+    if request.method == "POST":
+        Participation.objects.filter(user=participant, post=post).update(
+            status=Participation.Status.ACCEPTED
+        )
+        return HttpResponse(status=204)
+    else:
+        return HttpResponseNotAllowed(["POST"])
+
+
+@csrf_exempt
+def decline(request, post_id, participant_id):
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
+
+    # Post 조회
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return HttpResponse(status=404)
+
+    # User(participant) 조회
+    try:
+        participant = User.objects.get(id=participant_id)
+    except User.DoesNotExist:
+        return HttpResponse(status=404)
+
+    if request.method == "POST":
+        Participation.objects.filter(user=participant, post=post).update(
+            status=Participation.Status.DECLINED
+        )
+        return HttpResponse(status=204)
+    else:
+        return HttpResponseNotAllowed(["POST"])
