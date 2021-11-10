@@ -20,7 +20,7 @@ const Main = () => {
       </div>
       <div className="post-container">
         {posts.map((post) => (
-          <Post key={post.id} post={post} />
+          <Post key={post.post_id} post={post} />
         ))}
       </div>
     </div>
