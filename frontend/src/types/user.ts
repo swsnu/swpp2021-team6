@@ -1,5 +1,5 @@
 export interface UserEntity {
-  user_id: string;
+  id: string;
   nickname: string;
   latitude: number;
   longitude: number;

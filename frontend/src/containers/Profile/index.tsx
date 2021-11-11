@@ -1,28 +1,29 @@
 /* eslint-disable react/jsx-wrap-multilines */
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import 'antd/dist/antd.css';
 import { Tabs, Card, Descriptions, Badge } from 'antd';
-import mockProfile from '../../mocks/profile.json';
-import mockAppointments from '../../mocks/appointments.json';
+import { AppState } from '../../store/store';
+import { getUserInfo } from '../../store/actions/index';
+import userInfo from '../../mocks/userInfo.json';
 
 const MyAppointment = ({
-  appointment: { id, title, place, meet_at, status, ...rest },
+  appointment: { post_id, title, place_name, meet_at, status, ...rest },
 }: any) => (
   <Card
     size="small"
     title={title}
     extra={
-      <Link key={id} to={`/post/${id}`}>
+      <Link key={post_id} to={`/post/${post_id}`}>
         자세히
       </Link>
     }
     style={{ margin: 10, height: 160, width: 250 }}
   >
     <p>{meet_at}</p>
-    <p>{place}</p>
-    {status === '참가중' ? (
+    <p>{place_name}</p>
+    {status === '참가 중' ? (
       <div
         style={{
           paddingBottom: 10,
@@ -31,7 +32,7 @@ const MyAppointment = ({
           justifyContent: 'right',
         }}
       >
-        <Badge status="processing" text="참가중" />
+        <Badge status="processing" text="참가 중" />
       </div>
     ) : (
       <div
@@ -42,28 +43,28 @@ const MyAppointment = ({
           justifyContent: 'right',
         }}
       >
-        <Badge status="warning" text="승인 대기중" />
+        <Badge status="warning" text="승인 대기 중" />
       </div>
     )}
   </Card>
 );
 
 const HostingAppointment = ({
-  appointment: { id, title, place, meet_at, status, ...rest },
+  appointment: { post_id, title, place_name, meet_at, status, ...rest },
 }: any) => (
   <Card
     size="small"
     title={title}
     extra={
-      <Link key={id} to={`/post/${id}`}>
+      <Link key={post_id} to={`/post/${post_id}`}>
         자세히
       </Link>
     }
     style={{ margin: 10, height: 160, width: 250 }}
   >
     <p>{meet_at}</p>
-    <p>{place}</p>
-    {status === '모집중' ? (
+    <p>{place_name}</p>
+    {status === '모집 중' ? (
       <div
         style={{
           paddingBottom: 10,
@@ -72,7 +73,7 @@ const HostingAppointment = ({
           justifyContent: 'right',
         }}
       >
-        <Badge status="warning" text="모집중" />
+        <Badge status="warning" text="모집 중" />
       </div>
     ) : (
       <div
@@ -90,17 +91,20 @@ const HostingAppointment = ({
 );
 
 const Profile = () => {
-  const [profile, setProfile] = useState(mockProfile);
-  useEffect(() => {
-    // dispatch
-    // dispatch result -> setPosts
-  }, []);
+  // const userInfo = useSelector((state: AppState) => state.user.userInfo);
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state: AppState) => state.user?.user);
+  // const userInfo = currentUser;
+  // const userId = match.params.id === null ? currentUser.id : match.params.id;
 
-  const currentUser = {
-    id: 1,
-  };
+  // useEffect(() => {
+  //   console.log(window.localStorage.getItem('userInfo'));
+  //   dispatch(getUserInfo(currentUser.id));
+  // }, []);
 
-  const isLoggedInUser = mockProfile.user_id === currentUser.id;
+  // const isLoggedInUser = currentUser.id === userInfo.user_id;
+
+  const isLoggedInUser = true;
 
   const { TabPane } = Tabs;
 
@@ -114,22 +118,22 @@ const Profile = () => {
         bordered
       >
         <Descriptions.Item label="닉네임" span={3}>
-          {mockProfile.nickname}
+          {userInfo.nickname}
         </Descriptions.Item>
         <Descriptions.Item label="성별" span={1}>
-          {mockProfile.gender}
+          {userInfo.gender}
         </Descriptions.Item>
         <Descriptions.Item label="인증한 동네" span={2}>
-          {mockProfile.gu} {mockProfile.dong}
+          {userInfo.gu} {userInfo.dong}
         </Descriptions.Item>
         <Descriptions.Item label="소개" span={3}>
-          {mockProfile.introduction}
+          {userInfo.introduction}
         </Descriptions.Item>
       </Descriptions>
       <br />
       <Descriptions title="좋아하는 운동" bordered>
-        {mockProfile.user_exercise.map((preferredExercise) => (
-          <Descriptions.Item label={preferredExercise.exercise} span={3}>
+        {userInfo.user_exercise.map((preferredExercise: any) => (
+          <Descriptions.Item label={preferredExercise.exercise_name} span={3}>
             {preferredExercise.skill_level}
           </Descriptions.Item>
         ))}
@@ -139,7 +143,7 @@ const Profile = () => {
           className="button-section"
           style={{ display: 'flex', justifyContent: 'right' }}
         >
-          <Link to="/signin">
+          <Link to="/signout">
             <button
               className="signout-button"
               style={{
@@ -171,14 +175,14 @@ const Profile = () => {
         <Tabs defaultActiveKey="1">
           <TabPane tab="참가 신청한 모임" key="1">
             <div>
-              {mockAppointments.participating_post.map((appointment: any) => (
+              {userInfo.participating_post.map((appointment: any) => (
                 <MyAppointment appointment={appointment} />
               ))}
             </div>
           </TabPane>
           <TabPane tab="내가 만든 모임" key="2">
             <div>
-              {mockAppointments.hosting_post.map((appointment: any) => (
+              {userInfo.hosting_post.map((appointment: any) => (
                 <HostingAppointment appointment={appointment} />
               ))}
             </div>
