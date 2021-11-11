@@ -82,7 +82,6 @@ def signin(request):
         if user is None:
             return HttpResponse(status=401)
 
-        login(request, user)
         response_dict = {
             "id": user.id,
             "nickname": user.profile.nickname,
@@ -93,7 +92,8 @@ def signin(request):
             "gender": user.profile.gender,
         }
         # return HttpResponse(status=204)
-        return JsonResponse(response_dict, status=204)
+        login(request, user)
+        return JsonResponse(response_dict,safe=False, status=200)
 
     else:
         return HttpResponseNotAllowed(["POST"])

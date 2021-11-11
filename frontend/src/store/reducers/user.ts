@@ -4,11 +4,13 @@ import { UserAction } from '../actions/user';
 import { DefaultAction } from '../actions/index';
 
 export type InitialState = {
-  user: UserEntity | null;
+  user: any | null;
+  userInfo: any | null;
 };
 
 const UserState: InitialState = {
   user: JSON.parse(window.localStorage.getItem('userInfo')!),
+  userInfo: null,
 };
 
 function userReducer(
@@ -23,6 +25,9 @@ function userReducer(
     /* LOGOUT */
     case actionTypes.SIGNOUT:
       return { ...state, user: null };
+
+    case actionTypes.GET_USER_INFO:
+      return { ...state, userInfo: action.userInfo };
 
     default:
       return state;
