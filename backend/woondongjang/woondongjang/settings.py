@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import json
+import os
 from pathlib import Path
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -148,3 +151,24 @@ LOGGING = {
         },
     },
 }
+
+
+secrets_file = os.path.join(BASE_DIR, "secrets.json")
+try:
+    with open(secrets_file, encoding="UTF-8") as f:
+        secrets = json.loads(f.read())
+except FileNotFoundError:
+    # secrets.json이 없으면 runserver와 pylint가 안 됨
+    # Travis CI build fail 방지
+    secrets = {}
+
+
+def get_secret(key):
+    try:
+        return secrets[key]
+    except KeyError:
+        return ""
+
+
+IBM_AUTHENTICATOR = get_secret("ibm_authenticator")
+IBM_SERVICE_URL = get_secret("ibm_service_url")

@@ -2,11 +2,14 @@ import json
 from ibm_watson import NaturalLanguageUnderstandingV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_watson.natural_language_understanding_v1 import Features, KeywordsOptions
-import os
+from django.conf import settings
+
+
+AUTHENTICATOR = getattr(settings, "IBM_AUTHENTICATOR")
+SERVICE_URL = getattr(settings, "IBM_SERVICE_URL")
+
 
 def keyword_extraction_ML(text):
-    AUTHENTICATOR = os.environ.get("AUTHENTICATOR")
-    SERVICE_URL = os.environ.get("SERVICE_URL")
     authenticator = IAMAuthenticator(AUTHENTICATOR)
     natural_language_understanding = NaturalLanguageUnderstandingV1(
         version="2021-08-01", authenticator=authenticator
