@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import json
+import os
 from pathlib import Path
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -148,3 +151,11 @@ LOGGING = {
         },
     },
 }
+
+
+secrets_file = os.path.join(BASE_DIR, "secrets.json")
+with open(secrets_file, encoding="UTF-8") as f:
+    secrets = json.loads(f.read())
+
+IBM_AUTHENTICATOR = secrets["ibm_authenticator"]
+IBM_SERVICE_URL = secrets["ibm_service_url"]
