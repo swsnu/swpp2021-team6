@@ -34,26 +34,32 @@ const SignIn = ({ history }: SignInProps) => {
     <div id="signin" className="intro-container">
       <h1>Sign In</h1>
       <input
+        id="username"
         placeholder="username"
         onChange={(e) => setUsername(e.target.value)}
         onKeyPress={onKeyPress}
       />
       <input
+        id="password"
         placeholder="password"
         type="password"
         onChange={(e) => setPassword(e.target.value)}
         onKeyPress={onKeyPress}
       />
       <div className="button-container">
-        <button type="button" onClick={() => history.push('/signup')}>
+        <button
+          id="signup-button"
+          type="button"
+          onClick={() => history.push('/signup')}
+        >
           Sign Up
         </button>
-        <button type="button" onClick={onClickLogin}>
+        <button id="local-signin-button" type="button" onClick={onClickLogin}>
           Sign In
         </button>
       </div>
       <span>or</span>
-      <button>Sign In With Kakao</button>
+      <button id="social-signin-button">Sign In With Kakao</button>
     </div>
   );
 };

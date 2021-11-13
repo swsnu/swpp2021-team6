@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { History } from 'history';
 import { Link } from 'react-router-dom';
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
@@ -10,16 +11,16 @@ import Label from '../Label';
 import * as labelColors from '../../constants/labelColors';
 
 interface Props {
+  history: History;
   post: PostEntity;
-  onClickChangeSelectedPost: (arg0: number) => void | undefined;
 }
 
-const Post = ({ post, onClickChangeSelectedPost }: Props) => {
-  const [imgSrc, setImgSrc] = useState<string>('');
-  const [labelColor, setLabelColor] = useState<string>('');
+const Post = ({ history, post }: Props) => {
+  const [imgSrc, setImgSrc] = useState<string>(thumbnails.soccer[0]);
+  const [labelColor, setLabelColor] = useState<string>(labelColors.blue);
   useEffect(() => {
     const idx = Math.floor(Math.random() * 4);
-    let imgArray;
+    let imgArray = thumbnails.soccer;
     switch (post.exercise_name) {
       case '축구':
         imgArray = thumbnails.soccer;
@@ -43,7 +44,7 @@ const Post = ({ post, onClickChangeSelectedPost }: Props) => {
       // type = 'riding';
       // break;
       default:
-        imgArray = thumbnails.soccer;
+        window.alert('잘못된 데이터입니다');
     }
     setImgSrc(imgArray[idx]);
 
@@ -61,17 +62,17 @@ const Post = ({ post, onClickChangeSelectedPost }: Props) => {
         setLabelColor(labelColors.blue);
         break;
       default:
-        setLabelColor(labelColors.blue);
+        window.alert('잘못된 데이터입니다');
     }
   }, []);
   const dateTime = dateToString(post.meet_at);
 
+  const onClickPost = (postId: number) => {
+    history.push(`/post/${postId}`);
+  };
+
   return (
-    <Link
-      to={`/post/${post.post_id}`}
-      className="post"
-      onClick={() => onClickChangeSelectedPost(post.post_id)}
-    >
+    <button className="post" onClick={() => onClickPost(post.post_id)}>
       <img className="thumbnail" src={imgSrc} alt="" />
       <Label className="level-label" color={labelColor}>
         실력 : {post.expected_level}
@@ -101,7 +102,7 @@ const Post = ({ post, onClickChangeSelectedPost }: Props) => {
           {post.member_count} / {post.max_capacity}
         </div>
       </div>
-    </Link>
+    </button>
   );
 };
 

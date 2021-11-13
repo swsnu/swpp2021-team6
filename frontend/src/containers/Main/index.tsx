@@ -20,10 +20,6 @@ const Main = ({ history }: Props) => {
     dispatch(actionCreators.getPosts());
   }, []);
 
-  const onClickChangeSelectedPost = (postId: number) => {
-    dispatch(actionCreators.selectPost(postId));
-  };
-
   return (
     <div className="main">
       <div className="filter-container">
@@ -31,11 +27,7 @@ const Main = ({ history }: Props) => {
       </div>
       <div className="post-container">
         {posts.map((post: PostEntity) => (
-          <Post
-            key={post.post_id}
-            post={post}
-            onClickChangeSelectedPost={onClickChangeSelectedPost}
-          />
+          <Post key={post.post_id} post={post} history={history} />
         ))}
       </div>
       <AddButton history={history} />

@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { History } from 'history';
 import 'antd/dist/antd.css';
 import { Tabs, Card, Descriptions, Badge } from 'antd';
 import { AppState } from '../../store/store';
@@ -9,15 +10,14 @@ import { getUserInfo } from '../../store/actions/index';
 import userInfo from '../../mocks/userInfo.json';
 
 const MyAppointment = ({
+  history,
   appointment: { post_id, title, place_name, meet_at, status, ...rest },
 }: any) => (
   <Card
     size="small"
     title={title}
     extra={
-      <Link key={post_id} to={`/post/${post_id}`}>
-        자세히
-      </Link>
+      <button onClick={() => history.push(`/post/${post_id}`)}>자세히</button>
     }
     style={{ margin: 10, height: 160, width: 250 }}
   >
@@ -50,15 +50,14 @@ const MyAppointment = ({
 );
 
 const HostingAppointment = ({
+  history,
   appointment: { post_id, title, place_name, meet_at, status, ...rest },
 }: any) => (
   <Card
     size="small"
     title={title}
     extra={
-      <Link key={post_id} to={`/post/${post_id}`}>
-        자세히
-      </Link>
+      <button onClick={() => history.push(`/post/${post_id}`)}>자세히</button>
     }
     style={{ margin: 10, height: 160, width: 250 }}
   >
@@ -90,10 +89,14 @@ const HostingAppointment = ({
   </Card>
 );
 
-const Profile = () => {
+interface ProfileProps {
+  history: History;
+}
+
+const Profile = ({ history }: ProfileProps) => {
   // const userInfo = useSelector((state: AppState) => state.user.userInfo);
   const dispatch = useDispatch();
-  const currentUser = useSelector((state: AppState) => state.user?.user);
+  const userState = useSelector((state: AppState) => state.user);
   // const userInfo = currentUser;
   // const userId = match.params.id === null ? currentUser.id : match.params.id;
 
@@ -143,32 +146,31 @@ const Profile = () => {
           className="button-section"
           style={{ display: 'flex', justifyContent: 'right' }}
         >
-          <Link to="/signout">
-            <button
-              className="signout-button"
-              style={{
-                marginTop: 10,
-                marginRight: 5,
-                paddingLeft: 3,
-                paddingRight: 3,
-              }}
-            >
-              로그아웃
-            </button>
-          </Link>
-          <Link to="/profile/edit">
-            <button
-              className="edit-profile-button"
-              style={{
-                marginTop: 10,
-                marginRight: 5,
-                paddingLeft: 3,
-                paddingRight: 3,
-              }}
-            >
-              프로필 수정
-            </button>
-          </Link>
+          <button
+            className="signout-button"
+            onClick={() => history.push('/signout')}
+            style={{
+              marginTop: 10,
+              marginRight: 5,
+              paddingLeft: 3,
+              paddingRight: 3,
+            }}
+          >
+            로그아웃
+          </button>
+
+          <button
+            className="edit-profile-button"
+            onClick={() => history.push('/profile/edit')}
+            style={{
+              marginTop: 10,
+              marginRight: 5,
+              paddingLeft: 3,
+              paddingRight: 3,
+            }}
+          >
+            프로필 수정
+          </button>
         </div>
       )}
       {isLoggedInUser === true && (
@@ -176,14 +178,17 @@ const Profile = () => {
           <TabPane tab="참가 신청한 모임" key="1">
             <div>
               {userInfo.participating_post.map((appointment: any) => (
-                <MyAppointment appointment={appointment} />
+                <MyAppointment history={history} appointment={appointment} />
               ))}
             </div>
           </TabPane>
           <TabPane tab="내가 만든 모임" key="2">
             <div>
               {userInfo.hosting_post.map((appointment: any) => (
-                <HostingAppointment appointment={appointment} />
+                <HostingAppointment
+                  history={history}
+                  appointment={appointment}
+                />
               ))}
             </div>
           </TabPane>
