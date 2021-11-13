@@ -4,9 +4,8 @@ import { history, middlewares } from '../store/store';
 
 const getMockArticleReducer = jest.fn(
   (initialState) =>
-    (state = initialState, action) => {
-      return state;
-    }
+    (state = initialState, action) =>
+      state,
 );
 
 export const getMockStore = (initialState) => {
@@ -19,7 +18,7 @@ export const getMockStore = (initialState) => {
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   const mockStore = createStore(
     rootReducer,
-    composeEnhancers(applyMiddleware(...middlewares))
+    composeEnhancers(applyMiddleware(...middlewares)),
   );
   return mockStore;
 };
