@@ -23,14 +23,10 @@ const Navbar = ({ history }: NavbarProps) => {
         </span>
       </div>
       <div>
-        <span className="notification" aria-hidden="true" onClick={onClickNoti}>
+        <span aria-hidden="true" onClick={onClickNoti}>
           알림
         </span>
-        <span
-          className="mypage"
-          aria-hidden="true"
-          onClick={() => history.push('/profile')}
-        >
+        <span aria-hidden="true" onClick={() => history.push('/profile')}>
           마이페이지
         </span>
       </div>
