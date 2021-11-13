@@ -5,15 +5,19 @@
 ## How to run
 
 ### Backend
+```
 cd backend
 pip install -r requirements.txt
 cd woondongjang
 coverage run --source='.' manage.py test
 python manage.py migrate
 python manage.py runserver
+```
 
 ### Frontend
+```
 cd frontend
 yarn install
 yarn test
 yarn start
+```
