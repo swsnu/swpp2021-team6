@@ -33,9 +33,8 @@ jobs:
         - python manage.py migrate accounts
         - python manage.py migrate
         - coverage run --source='.' manage.py test
-        - cd ..
         - coverage xml
-        - cd ..
+        - cd ../..
         - sonar-scanner
-        - cd backend
+        - cd backend/woondongjang
         - coveralls --merge=../frontend/coverage.json
