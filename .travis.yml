@@ -4,26 +4,38 @@ dist: bionic
 # Job Configurations
 jobs:
   include:
-    - language: python
-      python: "3.7.9"
+
       addons:
         sonarcloud:
           organization: swsnu
           token:
             secure: "AUY0ve1fg3nDC1XLHys0kbpnRWYaT9nqtiVfDWONmA33+TzxKDG8tsOoUTcZ1gkhj79EtSMTn8vKOZCPkgSXqd+2hgLv6LTqFX228GYzMv+fAd63yEzkmCV2/qmXt/eUeR1vP16t3HjtEAEL5/PeORcyoXqgY5QHrKVeuzs3cN7qr5gdjcKDU1Sg4uy9B1WRR7witoGY0cj97Bi7twHE/+RyjCSLE8V3tVmyEhoYfULCySTSEoAo/OXGXaDPGZOoVi1tr0VriAhGSxYgfe5xNLrNIcRMTzYIRqmivmMSfB+nL3tcnGubkPxlEl8FujwZxr1n05fCwgNeJ38ubpD/vPb4vV9LDbY4ZQY5qs+5EjbzJft23XjdzF0eT2C/sBZNdzpg3Z/DSeKT0f2iA1F+xeqoGLGPhyfIaZBRut3gvIgr0SLDKk1ka+NAgR1Hqg6zPJT7+tME7YytUZ9KhqBJl0bGETXrWm/KxAjNK8E8yBIE5+nvwU1n3Zl+8tjOokGdwMbAERU6jf2FB+lwPUsYHsFVpMkKL3E7EUtvuyJyGb+vMzdqLwhjllawV8TqTcmC1KsDcafy+voENYQ9s2vbhr8qzQDre5xkOs4fAe34FRCfByO6ktr+vZ73nxEIdfC8pykOx2uhwKxTEUqwuL06gLQYMpmdiyHoB6qn47eXBWs="
-      install:
-        - cd backend
-        - pip install -r requirements.txt
-      script:
-        - pylint woondongjang/**/*.py --load-plugins=pylint_django --django-settings-module=woondongjang.settings --disable=imported-auth-user,C,R
-        - coverage run --source='.' woondongjang/manage.py test
-        - coverage xml
-        - cd .. && sonar-scanner
 
     - language: node_js
       node_js: 14
       install:
         - cd frontend
         - yarn install
+        - yarn global add coveralls
+        - gem install coveralls-lcov
       script:
         - yarn test --coverage --watchAll=false
+        - coveralls-lcov -v -n coverage/lcov.info > coverage.json
+
+    
+    - language: python
+      python: "3.7.9"
+
+      install:
+        - cd backend
+        - source ~/django-env/bin/activate
+        - pip install -r requirements.txt
+        - pip install coveralls
+
+      script:
+        - pylint woondongjang/**/*.py --load-plugins=pylint_django --django-settings-module=woondongjang.settings --disable=imported-auth-user,C,R
+        - coverage run --source='.' woondongjang/manage.py test
+        - coverage xml
+        - cd .. && sonar-scanner
+        - cd backend
+        - coveralls --merge=../frontend/coverage.json
