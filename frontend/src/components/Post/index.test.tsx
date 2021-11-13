@@ -1,6 +1,4 @@
-import { Provider } from 'react-redux';
-import { mount, shallow } from 'enzyme';
-import mockPost from '../../mocks/post.json';
+import { mount } from 'enzyme';
 import Post from '.';
 import { history } from '../../store/store';
 
