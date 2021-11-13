@@ -117,27 +117,4 @@ describe('signin', () => {
     inputList.find('#username').simulate('keypress', { key: 'backspace' });
     expect(spyLoginAction).toBeCalledTimes(0);
   });
-
-  // it('naengpa button should push to fridge page', () => {
-  // 	const component = mount(login);
-  // 	const logoButton = component.find('button#naengpa');
-
-  // 	logoButton.simulate('click');
-  // 	expect(spyHistoryPush).toBeCalledTimes(1);
-  // 	expect(spyHistoryPush).toBeCalledWith('/fridge');
-  // });
-
-  // it('onkeypress - function runs', () => {
-  // 	const component = mount(login);
-  // 	const inputList = component.find('div#input-list').find('input');
-  // 	inputList.find('#username').simulate('change', { target: { value: mockUser.username } }); // username
-  // 	inputList.find('#password').simulate('change', { target: { value: mockUser.password } }); // password
-
-  // 	component.find('input#username').simulate('keypress', { key: 'Enter' });
-  // 	expect(spyLoginAction).toBeCalledTimes(1);
-  // 	expect(spyLoginAction).toBeCalledWith(mockUser);
-
-  // 	component.find('input#password').simulate('keypress', { key: 'not Enter' });
-  // 	expect(spyLoginAction).toBeCalledTimes(1);
-  // });
 });
