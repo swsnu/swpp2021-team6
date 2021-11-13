@@ -4,7 +4,6 @@ import './index.scss';
 // import axios from 'axios';
 import { Provider } from 'react-redux';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
 import store, { history } from './store/store';
 
 // CSRF TOKEN
