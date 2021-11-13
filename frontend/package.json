@@ -79,7 +79,10 @@
       "!src/serviceWorker.ts",
       "!src/utils/*",
       "!src/mocks/*",
-      "!src/constants/*"
+      "!src/constants/*",
+      "!src/store/**/*",
+      "!src/containers/PostCreate/*",
+      "!src/containers/PostDetail/*"
     ]
   }
 }
