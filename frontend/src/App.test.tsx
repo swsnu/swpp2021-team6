@@ -18,6 +18,6 @@ describe('App', () => {
 
   it('renders without errors', () => {
     const component = mount(app);
-    expect(component.find('.App').length).toBe(1);
+    expect(component.find('.intro-container').length).toBe(1);
   });
 });
