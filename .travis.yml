@@ -26,6 +26,12 @@ jobs:
         - cd ../backend
         - pylint woondongjang/**/*.py --load-plugins=pylint_django --django-settings-module=woondongjang.settings --disable=imported-auth-user,C,R
         - cd woondongjang
+        - python manage.py makemigrations posts
+        - python manage.py makemigrations accounts
+        - python manage.py makemigrations
+        - python manage.py migrate posts
+        - python manage.py migrate accounts
+        - python manage.py migrate
         - coverage run --source='.' manage.py test
         - cd ..
         - coverage xml
