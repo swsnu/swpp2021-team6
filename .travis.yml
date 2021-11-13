@@ -26,4 +26,4 @@ jobs:
         - cd frontend
         - yarn install
       script:
-        - yarn test --coverage --watchAll=false
+        - yarn test
