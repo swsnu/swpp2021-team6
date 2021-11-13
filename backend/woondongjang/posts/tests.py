@@ -1,12 +1,11 @@
 from django.test import TestCase, Client
 import json
-from .models import Participation, Post, Exercise, Post_Keyword, User_Exercise, Comment
-from django.contrib.auth.models import User
+from .models import Participation, Post, Exercise, Post_Keyword, Comment
 import sys
 from django.utils import timezone
 
 sys.path.append("..")
-from accounts.models import Profile, ProxyUser
+from accounts.models import ProxyUser
 
 
 class BlogTestCase(TestCase):
@@ -93,16 +92,14 @@ class BlogTestCase(TestCase):
             max_capacity=5,
             kakaotalk_link="kakaotalk link 2",
         )
-        test_participant1 = Participation.objects.create(
-            user=test_user1, post=test_post2
-        )
-        test_post1_keyword = Post_Keyword.objects.create(
+        Participation.objects.create(user=test_user1, post=test_post2)
+        Post_Keyword.objects.create(
             post=test_post1,
             keyword1="test_keyword1",
             keyword2="test_keyword2",
             keyword3="test_keyword3",
         )
-        test_post2_keyword = Post_Keyword.objects.create(
+        Post_Keyword.objects.create(
             post=test_post2,
             keyword1="test_keyword1",
             keyword2="test_keyword2",

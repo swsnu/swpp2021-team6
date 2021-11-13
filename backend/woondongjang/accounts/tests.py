@@ -1,13 +1,11 @@
 from django.test import TestCase, Client
 import json
-from django.contrib.auth.models import User
-from django.utils import timezone
-from .models import Profile, ProxyUser
+from .models import ProxyUser
 
 import sys
 
 sys.path.append("..")
-from posts.models import User_Exercise, Exercise
+from posts.models import Exercise
 
 
 class AccountsTestCase(TestCase):
@@ -31,7 +29,7 @@ class AccountsTestCase(TestCase):
     )
 
     def setUp(self):
-        test_user1 = ProxyUser.objects.create_user_and_profile(
+        ProxyUser.objects.create_user_and_profile(
             username="username1",
             password="password1",
             nickname="닉네임1",
@@ -42,7 +40,7 @@ class AccountsTestCase(TestCase):
             gender="MALE",
             introduction="안녕하세요 user1입니다.",
         )
-        test_user2 = ProxyUser.objects.create_user_and_profile(
+        ProxyUser.objects.create_user_and_profile(
             username="username2",
             password="password2",
             nickname="닉네임2",
@@ -53,7 +51,7 @@ class AccountsTestCase(TestCase):
             gender="FEMALE",
             introduction="안녕하세요 user2입니다.",
         )
-        test_exercise = Exercise.objects.create(name="축구")
+        Exercise.objects.create(name="축구")
 
     def test_signup(self):
         client = Client()
