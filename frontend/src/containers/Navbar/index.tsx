@@ -1,5 +1,6 @@
-import { useState } from 'react';
 import { History } from 'history';
+import logo from '../../assets/logo.png';
+import noti from '../../assets/icon/notification.png';
 import './index.scss';
 
 interface NavbarProps {
@@ -13,18 +14,14 @@ const Navbar = ({ history }: NavbarProps) => {
 
   return (
     <div className="nav-bar">
-      <div>
-        <span
-          className="Logo"
-          aria-hidden="true"
-          onClick={() => history.push('/main')}
-        >
-          운동장
-        </span>
-      </div>
-      <div>
+      <button className="logo" onClick={() => history.push('/main')}>
+        <img src={logo} alt="woondongjang logo" />
+      </button>
+      <div className="button-container">
         <span className="notification" aria-hidden="true" onClick={onClickNoti}>
           알림
+          {/* TODO: 평소에는 visibility: hidden 이다가 알람 있을 경우 visibility: visible */}
+          <img src={noti} alt="notification" />
         </span>
         <span
           className="mypage"
