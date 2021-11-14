@@ -135,8 +135,12 @@ const Profile = ({ history }: ProfileProps) => {
       </Descriptions>
       <br />
       <Descriptions title="좋아하는 운동" bordered>
-        {userInfo.user_exercise.map((preferredExercise: any) => (
-          <Descriptions.Item label={preferredExercise.exercise_name} span={3}>
+        {userInfo.user_exercise.map((preferredExercise: any, idx: number) => (
+          <Descriptions.Item
+            key={idx}
+            label={preferredExercise.exercise_name}
+            span={3}
+          >
             {preferredExercise.skill_level}
           </Descriptions.Item>
         ))}
