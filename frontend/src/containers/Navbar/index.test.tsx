@@ -19,7 +19,7 @@ describe('<Navbar /', () => {
     // const mockClickHome = jest.fn();
     const spyHistoryPush = jest.spyOn(history, 'push').mockImplementation();
     const component = shallow(<Navbar history={history} />);
-    const wrapper = component.find('.Logo');
+    const wrapper = component.find('.logo');
     wrapper.simulate('click');
     expect(spyHistoryPush).toBeCalledTimes(1);
   });
