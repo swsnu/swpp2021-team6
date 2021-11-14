@@ -29,7 +29,6 @@ describe('Main', () => {
       .mockImplementation();
     window.matchMedia =
       window.matchMedia ||
-      // eslint-disable-next-line func-names
       function () {
         return {
           matches: false,

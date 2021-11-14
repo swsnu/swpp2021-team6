@@ -20,6 +20,8 @@ module.exports = {
       2,
       { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
     ],
+    'func-names': 'off',
+    'no-case-declarations': 'off',
     'jsx-a11y/label-has-associated-control': 'off',
     'react/react-in-jsx-scope': 'off',
     'object-curly-newline': 'off',

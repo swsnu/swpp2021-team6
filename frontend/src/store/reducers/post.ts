@@ -26,7 +26,6 @@ const postReducer = (state: PostState = initialState, action: any) => {
         post: action.post,
       };
     case actionTypes.SELECT_POST:
-      // eslint-disable-next-line no-case-declarations
       const selectedPost = state.posts.filter(
         (post) => post.post_id === action.postId,
       );
