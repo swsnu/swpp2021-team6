@@ -9,9 +9,16 @@
 cd backend
 pip install -r requirements.txt
 cd woondongjang
-coverage run --source='.' manage.py test
+python manage.py makemigrations posts
+python manage.py makemigrations accounts
+python manage.py makemigrations
+python manage.py migrate posts
+python manage.py migrate acounts
 python manage.py migrate
+python manage.py loaddata exercise-data
 python manage.py runserver
+coverage run --source='.' manage.py test
+
 ```
 
 ### Frontend
