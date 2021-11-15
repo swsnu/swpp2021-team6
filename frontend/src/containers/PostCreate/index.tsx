@@ -7,6 +7,7 @@ import 'antd/dist/antd.css';
 import profile from '../../mocks/profile.json';
 import * as actionCreators from '../../store/actions';
 import { kakao } from '../../App';
+import getGuDong from '../../utils/getGuDong';
 
 const initialPostState: CreatePostEntity = {
   exerciseName: '축구',
@@ -168,19 +169,22 @@ const PostCreate = () => {
   };
 
   const onClickSetPlace = () => {
-    // TODO: gu, dong with API
-
     const { place_name, x, y, road_address_name, phone } = selectedPlace;
-    setPost({
-      ...post,
-      place: {
-        ...post.place,
-        name: place_name,
-        latitude: x,
-        longitude: y,
-        address: road_address_name,
-        telephone: phone,
-      },
+    getGuDong(x, y).then((value) => {
+      const { gu, dong } = value;
+      setPost({
+        ...post,
+        place: {
+          ...post.place,
+          gu,
+          dong,
+          name: place_name,
+          latitude: x,
+          longitude: y,
+          address: road_address_name,
+          telephone: phone,
+        },
+      });
     });
 
     alert('장소 정보가 입력되었습니다');
