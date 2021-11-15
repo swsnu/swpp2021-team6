@@ -27,7 +27,7 @@ const postReducer = (state: PostState = initialState, action: any) => {
       };
     case actionTypes.SELECT_POST:
       const selectedPost = state.posts.filter(
-        (post) => post.post_id === action.postId,
+        (post) => post.postId === action.postId,
       );
       return {
         ...state,

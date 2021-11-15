@@ -1,6 +1,6 @@
 import { ExerciseType, ExpectedLevelType } from './exercise';
 
-export type placeType = {
+export type PlaceType = {
   name: string;
   latitude: number;
   longitude: number;
@@ -11,30 +11,30 @@ export type placeType = {
 };
 
 export interface PostEntity {
-  post_id: number;
-  host_id: number;
-  exercise_name: ExerciseType | string;
-  expected_level: ExpectedLevelType | string;
+  postId: number;
+  hostId: number;
+  exerciseName: ExerciseType | string;
+  expectedLevel: ExpectedLevelType | string;
   title: string;
   description: string;
-  meet_at: string;
-  min_capacity: number;
-  max_capacity: number;
-  member_count: number;
-  place: placeType;
-  kakaotalk_link: string;
+  meetAt: string;
+  minCapacity: number;
+  maxCapacity: number;
+  memberCount: number;
+  place: PlaceType;
+  kakaotalkLink: string;
   status: string;
   keywords: string[];
 }
 
 export interface CreatePostEntity {
-  exercise_name: ExerciseType | string;
-  expected_level: ExpectedLevelType | string;
+  exerciseName: ExerciseType | string;
+  expectedLevel: ExpectedLevelType | string;
   title: string;
   description: string;
-  meet_at: string;
-  min_capacity: number;
-  max_capacity: number;
-  place: placeType;
-  kakaotalk_link: string;
+  meetAt: string;
+  minCapacity: number;
+  maxCapacity: number;
+  place: PlaceType;
+  kakaotalkLink: string;
 }

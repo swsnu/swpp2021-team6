@@ -21,7 +21,7 @@ const Post = ({ history, post }: Props) => {
   useEffect(() => {
     const idx = Math.floor(Math.random() * 4);
     let imgArray = thumbnails.soccer;
-    switch (post.exercise_name) {
+    switch (post.exerciseName) {
       case '축구':
         imgArray = thumbnails.soccer;
         break;
@@ -48,7 +48,7 @@ const Post = ({ history, post }: Props) => {
     }
     setImgSrc(imgArray[idx]);
 
-    switch (post.expected_level) {
+    switch (post.expectedLevel) {
       case '상':
         setLabelColor(labelColors.red);
         break;
@@ -65,17 +65,17 @@ const Post = ({ history, post }: Props) => {
         window.alert('잘못된 데이터입니다');
     }
   }, []);
-  const dateTime = dateToString(post.meet_at);
+  const dateTime = dateToString(post.meetAt);
 
   const onClickPost = (postId: number) => {
     history.push(`/post/${postId}`);
   };
 
   return (
-    <button className="post" onClick={() => onClickPost(post.post_id)}>
+    <button className="post" onClick={() => onClickPost(post.postId)}>
       <img className="thumbnail" src={imgSrc} alt="" />
       <Label className="level-label" color={labelColor}>
-        실력 : {post.expected_level}
+        실력 : {post.expectedLevel}
       </Label>
       <div className="post-body">
         <div>
@@ -99,7 +99,7 @@ const Post = ({ history, post }: Props) => {
         </div>
         <div className="post-capacity">
           <UserOutlined />
-          {post.member_count} / {post.max_capacity}
+          {post.memberCount} / {post.maxCapacity}
         </div>
       </div>
     </button>

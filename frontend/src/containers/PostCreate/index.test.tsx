@@ -17,7 +17,6 @@ describe('PostCreate', () => {
       .mockImplementation();
     window.matchMedia =
       window.matchMedia ||
-      // eslint-disable-next-line func-names
       function () {
         return {
           matches: false,
@@ -29,6 +28,6 @@ describe('PostCreate', () => {
 
   it('should render without error', () => {
     const component = shallow(postCreate);
-    // expect(component.find('form').length).toBe(1);
+    expect(component.find('form').length).toBe(1);
   });
 });
