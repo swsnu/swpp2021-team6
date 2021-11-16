@@ -8,8 +8,10 @@ from .models import Post, Exercise, Comment, Post_Keyword, Participation
 import json
 from django.db import transaction
 from .ml.ibmCloud import keyword_extraction_ML
+from django.views.decorators.http import require_POST, require_http_methods
 
 
+@require_http_methods(["GET", "POST"])
 @transaction.atomic
 def posts(request):
     # GET : 모든 post의 list 반환
@@ -133,10 +135,9 @@ def posts(request):
                 "keywords": keyword_list,
             }
             return JsonResponse(response_dict, status=201)
-    else:
-        return HttpResponseNotAllowed(["GET", "POST"])
 
 
+@require_http_methods(["GET", "PATCH", "DELETE"])
 def post_detail(request, post_id=0):
     # GET : 특정 id의 post의 정보를 반환
     if request.method == "GET":
@@ -231,10 +232,9 @@ def post_detail(request, post_id=0):
         # 로그인이 되어 있지 않은 user면 401
         else:
             return HttpResponse(status=401)
-    else:
-        return HttpResponseNotAllowed(["GET", "PATCH", "DELETE"])
 
 
+@require_http_methods(["GET", "POST"])
 def comments(request, post_id=0):
     # Get comments of specified article
     if request.method == "GET":
@@ -281,10 +281,9 @@ def comments(request, post_id=0):
         # 로그인하지 않은 user일 때
         else:
             return HttpResponse(status=401)
-    else:
-        return HttpResponseNotAllowed(["GET", "POST"])
 
 
+@require_http_methods(["GET", "PATCH", "DELETE"])
 def comment_detail(request, comment_id=0):
     # Get specified comment
     if request.method == "GET":
@@ -341,10 +340,8 @@ def comment_detail(request, comment_id=0):
         else:
             return HttpResponse(status=401)
 
-    else:
-        return HttpResponseNotAllowed(["GET", "PATCH", "DELETE"])
 
-
+@require_POST
 def apply(request, post_id):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
@@ -354,16 +351,14 @@ def apply(request, post_id):
     except Post.DoesNotExist:
         return HttpResponse(status=404)
 
-    if request.method == "POST":
-        # host이면 apply가 안되게끔!!
-        if request.user.id == post.host.id:
-            return HttpResponse(status=403)
-        Participation.objects.create(user=request.user, post=post)
-        return HttpResponse(status=204)
-    else:
-        return HttpResponseNotAllowed(["POST"])
+    # host이면 apply가 안되게끔!!
+    if request.user.id == post.host.id:
+        return HttpResponse(status=403)
+    Participation.objects.create(user=request.user, post=post)
+    return HttpResponse(status=204)
 
 
+@require_POST
 def accept(request, post_id, participant_id):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
@@ -380,15 +375,13 @@ def accept(request, post_id, participant_id):
     except User.DoesNotExist:
         return HttpResponse(status=404)
 
-    if request.method == "POST":
-        Participation.objects.filter(user=participant, post=post).update(
-            status=Participation.Status.ACCEPTED
-        )
-        return HttpResponse(status=204)
-    else:
-        return HttpResponseNotAllowed(["POST"])
+    Participation.objects.filter(user=participant, post=post).update(
+        status=Participation.Status.ACCEPTED
+    )
+    return HttpResponse(status=204)
 
 
+@require_POST
 def decline(request, post_id, participant_id):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
@@ -405,10 +398,7 @@ def decline(request, post_id, participant_id):
     except User.DoesNotExist:
         return HttpResponse(status=404)
 
-    if request.method == "POST":
-        Participation.objects.filter(user=participant, post=post).update(
-            status=Participation.Status.DECLINED
-        )
-        return HttpResponse(status=204)
-    else:
-        return HttpResponseNotAllowed(["POST"])
+    Participation.objects.filter(user=participant, post=post).update(
+        status=Participation.Status.DECLINED
+    )
+    return HttpResponse(status=204)
