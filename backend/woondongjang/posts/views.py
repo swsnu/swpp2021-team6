@@ -5,13 +5,11 @@ from django.http import (
     JsonResponse,
 )
 from .models import Post, Exercise, Comment, Post_Keyword, Participation
-from django.views.decorators.csrf import csrf_exempt
 import json
 from django.db import transaction
 from .ml.ibmCloud import keyword_extraction_ML
 
 
-@csrf_exempt
 @transaction.atomic
 def posts(request):
     # GET : 모든 post의 list 반환
@@ -139,7 +137,6 @@ def posts(request):
         return HttpResponseNotAllowed(["GET", "POST"])
 
 
-@csrf_exempt
 def post_detail(request, post_id=0):
     # GET : 특정 id의 post의 정보를 반환
     if request.method == "GET":
@@ -238,7 +235,6 @@ def post_detail(request, post_id=0):
         return HttpResponseNotAllowed(["GET", "PATCH", "DELETE"])
 
 
-@csrf_exempt
 def comments(request, post_id=0):
     # Get comments of specified article
     if request.method == "GET":
@@ -289,7 +285,6 @@ def comments(request, post_id=0):
         return HttpResponseNotAllowed(["GET", "POST"])
 
 
-@csrf_exempt
 def comment_detail(request, comment_id=0):
     # Get specified comment
     if request.method == "GET":
@@ -350,7 +345,6 @@ def comment_detail(request, comment_id=0):
         return HttpResponseNotAllowed(["GET", "PATCH", "DELETE"])
 
 
-@csrf_exempt
 def apply(request, post_id):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
@@ -370,7 +364,6 @@ def apply(request, post_id):
         return HttpResponseNotAllowed(["POST"])
 
 
-@csrf_exempt
 def accept(request, post_id, participant_id):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
@@ -396,7 +389,6 @@ def accept(request, post_id, participant_id):
         return HttpResponseNotAllowed(["POST"])
 
 
-@csrf_exempt
 def decline(request, post_id, participant_id):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)

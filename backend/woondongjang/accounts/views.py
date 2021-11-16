@@ -3,7 +3,6 @@ from django.http.response import HttpResponse, HttpResponseNotAllowed, JsonRespo
 import json
 import sys
 from .models import Profile, ProxyUser
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
@@ -11,7 +10,6 @@ sys.path.append("..")
 from posts.models import User_Exercise, Exercise, Post, Participation
 
 
-@csrf_exempt
 def signup(request):
     def is_request_valid():
         if gender not in Profile.Gender.names:
@@ -63,7 +61,6 @@ def signup(request):
         return HttpResponseNotAllowed(["POST"])
 
 
-@csrf_exempt
 def signin(request):
     if request.method == "POST":
         try:
@@ -99,7 +96,6 @@ def signin(request):
         return HttpResponseNotAllowed(["POST"])
 
 
-@csrf_exempt
 def signout(request):
     if request.method == "GET":
         if not request.user.is_authenticated:
@@ -111,7 +107,6 @@ def signout(request):
         return HttpResponseNotAllowed(["GET"])
 
 
-@csrf_exempt
 def user_detail(request, user_id=0):
     if request.method == "GET":
         if not request.user.is_authenticated:
