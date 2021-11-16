@@ -29,7 +29,7 @@ jobs:
         - python manage.py makemigrations posts
         - python manage.py makemigrations accounts
         - python manage.py migrate
-        - coverage run --source='.' manage.py test
+        - coverage run --source='.' --omit=manage.py,woondongjang/asgi.py,woondongjang/wsgi.py,woondongjang/settings.py manage.py test
         - coverage xml
         - cd ../..
         - sonar-scanner
