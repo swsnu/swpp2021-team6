@@ -93,7 +93,7 @@ def signin(request):
         }
         # return HttpResponse(status=204)
         login(request, user)
-        return JsonResponse(response_dict,safe=False, status=200)
+        return JsonResponse(response_dict, safe=False, status=200)
 
     else:
         return HttpResponseNotAllowed(["POST"])
@@ -118,6 +118,7 @@ def user_detail(request, user_id=0):
             return HttpResponse(status=401)
 
         user = User.objects.get(id=user_id)
+
         user_exercise = [
             {
                 "exercise_name": each_exercise.exercise.name,
