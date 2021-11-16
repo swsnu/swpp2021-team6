@@ -7,10 +7,15 @@ from .models import Post, Exercise, Comment, Post_Keyword, Participation
 import json
 from django.db import transaction
 from .ml.ibmCloud import keyword_extraction_ML
-from django.views.decorators.http import require_POST, require_http_methods
+from django.views.decorators.http import (
+    require_GET,
+    require_POST,
+    require_http_methods,
+)
 
 
-@require_http_methods(["GET", "POST"])
+@require_GET
+@require_POST
 @transaction.atomic
 def posts(request):
     # GET : 모든 post의 list 반환
@@ -136,7 +141,8 @@ def posts(request):
             return JsonResponse(response_dict, status=201)
 
 
-@require_http_methods(["GET", "PATCH", "DELETE"])
+@require_GET
+@require_http_methods(["PATCH", "DELETE"])
 def post_detail(request, post_id=0):
     # GET : 특정 id의 post의 정보를 반환
     if request.method == "GET":
@@ -233,6 +239,8 @@ def post_detail(request, post_id=0):
             return HttpResponse(status=401)
 
 
+@require_GET
+@require_POST
 @require_http_methods(["GET", "POST"])
 def comments(request, post_id=0):
     # Get comments of specified article
@@ -282,7 +290,8 @@ def comments(request, post_id=0):
             return HttpResponse(status=401)
 
 
-@require_http_methods(["GET", "PATCH", "DELETE"])
+@require_GET
+@require_http_methods(["PATCH", "DELETE"])
 def comment_detail(request, comment_id=0):
     # Get specified comment
     if request.method == "GET":
