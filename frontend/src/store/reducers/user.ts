@@ -3,20 +3,17 @@ import { UserEntity } from '../../types/user';
 import { UserAction } from '../actions/user';
 import { DefaultAction } from '../actions/index';
 
-export type InitialState = {
-  user: any | null;
+export type UserState = {
+  user: UserEntity | null;
   userInfo: any | null;
 };
 
-const UserState: InitialState = {
+const InitialState: UserState = {
   user: JSON.parse(window.localStorage.getItem('userInfo')!),
   userInfo: null,
 };
 
-function userReducer(
-  state: InitialState = UserState,
-  action: any,
-): InitialState {
+function userReducer(state: UserState = InitialState, action: any): UserState {
   switch (action.type) {
     /* LOGIN */
     case actionTypes.SIGNIN:
