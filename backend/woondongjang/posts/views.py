@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from django.http import (
     HttpResponse,
-    HttpResponseNotAllowed,
     JsonResponse,
 )
 from .models import Post, Exercise, Comment, Post_Keyword, Participation
