@@ -1,5 +1,5 @@
 from json.decoder import JSONDecodeError
-from django.http.response import HttpResponse, HttpResponseNotAllowed, JsonResponse
+from django.http.response import HttpResponse, JsonResponse
 import json
 import sys
 from .models import Profile, ProxyUser
