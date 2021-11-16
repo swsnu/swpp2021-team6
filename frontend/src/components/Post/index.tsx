@@ -21,6 +21,7 @@ const Post = ({ history, post }: Props) => {
   useEffect(() => {
     const idx = Math.floor(Math.random() * 4);
     let imgArray = thumbnails.soccer;
+
     switch (post.exerciseName) {
       case '축구':
         imgArray = thumbnails.soccer;
@@ -28,23 +29,23 @@ const Post = ({ history, post }: Props) => {
       case '농구':
         imgArray = thumbnails.basketball;
         break;
-      // case '배드민턴':
-      // imgArray = thumbnails.soccer;
-      // break;
-      // case '테니스':
-      // imgArray = thumbnails.soccer;
-      // break;
-      // case '탁구':
-      // type = 'tabletennis';
-      // break;
-      // case '러닝':
-      // type = 'running';
-      // break;
-      // case '라이딩':
-      // type = 'riding';
-      // break;
+      case '배드민턴':
+        imgArray = thumbnails.soccer;
+        break;
+      case '테니스':
+        imgArray = thumbnails.soccer;
+        break;
+      case '탁구':
+        imgArray = thumbnails.tabletennis;
+        break;
+      case '러닝':
+        imgArray = thumbnails.running;
+        break;
+      case '라이딩':
+        imgArray = thumbnails.riding;
+        break;
       default:
-        window.alert('잘못된 데이터입니다');
+        window.alert('운동 타입이 잘못 설정되었습니다');
     }
     setImgSrc(imgArray[idx]);
 
@@ -62,7 +63,7 @@ const Post = ({ history, post }: Props) => {
         setLabelColor(labelColors.blue);
         break;
       default:
-        window.alert('잘못된 데이터입니다');
+        window.alert(' 데이터입니다');
     }
   }, []);
   const dateTime = dateToString(post.meetAt);
