@@ -27,7 +27,7 @@ const PostDetail = ({ history }: Props) => {
   console.log(storedPost);
   const post = mockPost;
   // const post = storedPost;
-  const meetAtText = changeDateFormat(post.meet_at);
+  const meetAtText = changeDateFormat(post.meetAt);
   // const lat = post.place.latitude;
   // const lng = post.place.longitude;
 
