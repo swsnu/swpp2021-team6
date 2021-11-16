@@ -136,10 +136,10 @@ class BlogTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         # 201 test (post)
-        # response = client.post(
-        #     "/posts/", self.new_article, content_type="application/json"
-        # )
-        # self.assertEqual(response.status_code, 201)
+        response = client.post(
+            "/posts/", self.new_article, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 201)
 
     def test_post_detail(self):
         client = Client()

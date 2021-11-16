@@ -4,7 +4,6 @@ from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_watson.natural_language_understanding_v1 import Features, KeywordsOptions
 from django.conf import settings
 
-
 AUTHENTICATOR = getattr(settings, "IBM_AUTHENTICATOR")
 SERVICE_URL = getattr(settings, "IBM_SERVICE_URL")
 
