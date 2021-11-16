@@ -1,14 +1,20 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { connectRouter } from 'connected-react-router';
-import { history, middlewares } from '../store/store';
+import { history, middlewares, AppState } from '../store/store';
 
 const getMockArticleReducer = jest.fn(
   (initialState) =>
-    (state = initialState, action) =>
+    (state = initialState, action: any) =>
       state,
 );
 
-export const getMockStore = (initialState) => {
+declare global {
+  interface Window {
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
+  }
+}
+
+export const getMockStore = (initialState: any) => {
   const mockArticleReducer = getMockArticleReducer(initialState);
   const rootReducer = combineReducers({
     art: mockArticleReducer,

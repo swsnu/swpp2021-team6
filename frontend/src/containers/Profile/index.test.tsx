@@ -30,7 +30,6 @@ describe('profile', () => {
     spyHistoryPush = jest.spyOn(history, 'push').mockImplementation(jest.fn());
     window.matchMedia =
       window.matchMedia ||
-      // eslint-disable-next-line func-names
       function () {
         return {
           matches: false,

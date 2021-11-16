@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Dispatch } from 'redux';
 import { push } from 'connected-react-router';
+import humps from 'humps';
 import * as actionTypes from './actionTypes';
 import { PostEntity, CreatePostEntity } from '../../types/post';
 
@@ -9,12 +10,11 @@ export const getPosts_ = (posts: PostEntity[]) => ({
   posts,
 });
 
-// TODO: 필터를 어떻게 보낼지? 별도의 함수? or 파라미터에 query? 포함해서?
 export const getPosts = () => async (dispatch: Dispatch<any>) => {
   try {
     const response = await axios.get('/posts/');
-    console.log(response.data);
-    dispatch(getPosts_(response.data));
+    const data = humps.camelizeKeys(response.data) as unknown as PostEntity[];
+    dispatch(getPosts_(data));
   } catch {
     console.log('error');
   }
@@ -28,7 +28,6 @@ export const getPost_ = (post: PostEntity) => ({
 export const getPost = (postId: number) => async (dispatch: Dispatch<any>) => {
   try {
     const response = await axios.get(`/posts/${postId}`);
-    console.log(response);
     dispatch(getPost_(response.data));
   } catch {
     console.log('error');
@@ -51,9 +50,10 @@ export const createPost_ = (post: PostEntity) => ({
 
 export const createPost =
   (post: CreatePostEntity) => async (dispatch: Dispatch<any>) => {
-    const response = await axios.post('/posts/', post);
-    dispatch(createPost_(response.data));
-    dispatch(push(`/post/${response.data.post_id}`));
+    const response = await axios.post('/posts/', humps.decamelizeKeys(post));
+    const data = humps.camelizeKeys(response.data) as unknown as PostEntity;
+    dispatch(createPost_(data));
+    dispatch(push(`/post/${data.postId}`));
   };
 
 export type PostAction =

@@ -5,7 +5,6 @@ import AddButton from '.';
 describe('Add Button', () => {
   window.matchMedia =
     window.matchMedia ||
-    // eslint-disable-next-line func-names
     function () {
       return {
         matches: false,

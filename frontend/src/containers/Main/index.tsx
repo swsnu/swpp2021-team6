@@ -27,7 +27,7 @@ const Main = ({ history }: Props) => {
       </div>
       <div className="post-container">
         {posts.map((post: PostEntity) => (
-          <Post key={post.post_id} post={post} history={history} />
+          <Post key={post.postId} post={post} history={history} />
         ))}
       </div>
       <AddButton history={history} />
