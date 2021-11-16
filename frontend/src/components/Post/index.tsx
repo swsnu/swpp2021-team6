@@ -45,7 +45,7 @@ const Post = ({ history, post }: Props) => {
         imgArray = thumbnails.riding;
         break;
       default:
-        window.alert('운동 타입이 잘못 설정되었습니다');
+        window.alert('운동 타입이 잘못 설정된 데이터가 있습니다.');
     }
     setImgSrc(imgArray[idx]);
 
@@ -63,7 +63,7 @@ const Post = ({ history, post }: Props) => {
         setLabelColor(labelColors.blue);
         break;
       default:
-        window.alert(' 데이터입니다');
+        window.alert('기대 실력이 잘못 설정된 데이터가 있습니다.');
     }
   }, []);
   const dateTime = dateToString(post.meetAt);

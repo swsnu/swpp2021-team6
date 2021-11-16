@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, RouteComponentProps } from 'react-router-dom';
 import axios from 'axios';
-
+import humps from 'humps';
 import { PostEntity } from '../../types/post';
-import PostDetail from '../../components/Post/Detail';
+import PostDetail from '../../components/PostDetail';
 import { AppState } from '../../store/store';
 
 /* TODO
@@ -25,7 +25,9 @@ const PostDetailContainer = ({
     const getPost = async ({ id }: { id: string }): Promise<PostEntity> =>
       (await axios.get(`/posts/${id}`)).data;
 
-    getPost({ id: postId }).then((p) => setPost(p));
+    getPost({ id: postId }).then((value) =>
+      setPost(humps.camelizeKeys(value) as PostEntity),
+    );
   }, [postId]);
 
   const { user } = useSelector((state: AppState) => state.user);
@@ -37,7 +39,7 @@ const PostDetailContainer = ({
 
   // Render Component
   if (post === undefined) return null;
-  return <PostDetail post={post} isHost={user?.id === post.host_id} />;
+  return <PostDetail post={post} isHost={user?.id === post.hostId} />;
 };
 
 export default PostDetailContainer;
