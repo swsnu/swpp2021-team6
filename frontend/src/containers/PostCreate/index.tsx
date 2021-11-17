@@ -53,8 +53,6 @@ const PostCreate = ({ history }: Props) => {
 
   const dispatch = useDispatch();
 
-  console.log(user);
-
   useEffect(() => {
     if (user === null) history.push('/signin');
     else {
