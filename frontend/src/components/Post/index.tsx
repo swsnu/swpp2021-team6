@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { History } from 'history';
-import { Link } from 'react-router-dom';
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { PostEntity } from '../../types/post';

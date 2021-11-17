@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Avatar, Card, Divider, Button, Input } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { kakao } from '../../App';
+import { getKakaoMapWithMarker } from '../../utils/getKakaoMap';
 import Label from '../Label';
 import { PostEntity } from '../../types/post';
 import changeDateFormat from '../../utils/dateToString';
@@ -17,19 +17,7 @@ interface Props {
 const Detail: React.FC<Props> = ({ post, isHost = false }) => {
   useEffect(() => {
     const container = document.getElementById('map');
-    const options = {
-      center: new kakao.maps.LatLng(post.place.latitude, post.place.longitude),
-      level: 3,
-    };
-    const map = new kakao.maps.Map(container, options);
-
-    const marker = new kakao.maps.Marker({
-      map,
-      position: new kakao.maps.LatLng(
-        post.place.latitude,
-        post.place.longitude,
-      ),
-    });
+    getKakaoMapWithMarker(container, post.place.latitude, post.place.longitude);
   }, []);
 
   const meetAtText = changeDateFormat(post.meetAt);

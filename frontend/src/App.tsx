@@ -12,14 +12,6 @@ import Profile from './containers/Profile';
 import ProfileEdit from './containers/ProfileEdit';
 import Navbar from './containers/Navbar';
 
-export const { kakao } = window as any;
-
-declare global {
-  interface Window {
-    kakao: any;
-  }
-}
-
 interface Props {
   history: History;
 }
