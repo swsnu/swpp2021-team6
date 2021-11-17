@@ -2,8 +2,7 @@ import React, { useEffect } from 'react';
 import { Avatar, Card, Divider, Button, Input } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-
-import { kakao } from '../../App';
+import { getKakaoMapWithMarker } from '../../utils/getKakaoMap';
 import Label from '../Label';
 import { PostEntity } from '../../types/post';
 import changeDateFormat from '../../utils/dateToString';
@@ -18,22 +17,10 @@ interface Props {
 const Detail: React.FC<Props> = ({ post, isHost = false }) => {
   useEffect(() => {
     const container = document.getElementById('map');
-    const options = {
-      center: new kakao.maps.LatLng(post.place.latitude, post.place.longitude),
-      level: 3,
-    };
-    const map = new kakao.maps.Map(container, options);
-
-    const marker = new kakao.maps.Marker({
-      map,
-      position: new kakao.maps.LatLng(
-        post.place.latitude,
-        post.place.longitude,
-      ),
-    });
+    getKakaoMapWithMarker(container, post.place.latitude, post.place.longitude);
   }, []);
 
-  const meetAtText = changeDateFormat(post.meet_at);
+  const meetAtText = changeDateFormat(post.meetAt);
   const button = isHost ? (
     <>
       <Button>수정하기</Button>
@@ -47,7 +34,7 @@ const Detail: React.FC<Props> = ({ post, isHost = false }) => {
     <div>
       <h1>Post Detail Page</h1>
       <Card>
-        <Link to={`/profile/${post.host_id}`}>
+        <Link to={`/profile/${post.hostId}`}>
           <Avatar size="small" icon={<UserOutlined />} />
           <span>TODO: host name with host id</span>
         </Link>
@@ -56,12 +43,12 @@ const Detail: React.FC<Props> = ({ post, isHost = false }) => {
       <p>{post.description}</p>
       {/* post status에 맞게 color 수정 */}
       <Label color="pink">{post.status}</Label>
-      <Label color="yellow">현재 {post.member_count}명</Label>
+      <Label color="yellow">현재 {post.memberCount}명</Label>
       <Card>
-        <p>종목 : {post.exercise_name}</p>
-        <p>기대 실력 : {post.expected_level}</p>
+        <p>종목 : {post.exerciseName}</p>
+        <p>기대 실력 : {post.expectedLevel}</p>
         <p>
-          모집 인원 : 최소 {post.min_capacity}명 ~ 최대 {post.max_capacity}명
+          모집 인원 : 최소 {post.minCapacity}명 ~ 최대 {post.maxCapacity}명
         </p>
         <p>날짜 및 시간 : {meetAtText}</p>
       </Card>
@@ -75,8 +62,8 @@ const Detail: React.FC<Props> = ({ post, isHost = false }) => {
       </div>
       <div className="kakaotalk-link">
         <span>오픈채팅방 링크 : </span>
-        <a href={post.kakaotalk_link} target="_blank" rel="noreferrer">
-          {post.kakaotalk_link}
+        <a href={post.kakaotalkLink} target="_blank" rel="noreferrer">
+          {post.kakaotalkLink}
         </a>
       </div>
       {button}

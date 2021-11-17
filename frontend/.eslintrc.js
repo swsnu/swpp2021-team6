@@ -21,6 +21,7 @@ module.exports = {
       { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
     ],
     'func-names': 'off',
+    'function-paren-newline': 'off',
     'no-case-declarations': 'off',
     'jsx-a11y/label-has-associated-control': 'off',
     'react/react-in-jsx-scope': 'off',

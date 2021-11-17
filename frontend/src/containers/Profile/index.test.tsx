@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 import * as userActionCreators from '../../store/actions/user';
 import Profile from './index';
 import mockStore, { history } from '../../store/store';
-import currentUser from '../../mocks/users.json';
+import currentUser from '../../mocks/user.json';
 import userInfo from '../../mocks/userInfo.json';
 
 const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
