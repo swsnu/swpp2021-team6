@@ -1,21 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useParams, RouteComponentProps } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { History } from 'history';
 import axios from 'axios';
 import humps from 'humps';
 import { PostEntity } from '../../types/post';
 import PostDetail from '../../components/PostDetail';
 import { AppState } from '../../store/store';
 
-/* TODO
-post interface 만들기
-*/
+interface Props {
+  history: History;
+}
 
-const PostDetailContainer = ({
-  history,
-}: {
-  history: RouteComponentProps['history'];
-}) => {
+const PostDetailContainer = ({ history }: Props) => {
   const postId = useParams<{ id: string }>().id;
   const [post, setPost] = useState<PostEntity>();
 
