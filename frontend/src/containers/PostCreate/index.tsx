@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { DatePicker, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
+import { History } from 'history';
 import { CreatePostEntity } from '../../types/post';
 import 'antd/dist/antd.css';
-import profile from '../../mocks/profile.json';
 import * as actionCreators from '../../store/actions';
 import { kakao } from '../../App';
 import getGuDong from '../../utils/getGuDong';
+import { AppState } from '../../store/store';
 
 const initialPostState: CreatePostEntity = {
   exerciseName: '축구',
@@ -29,7 +30,13 @@ const initialPostState: CreatePostEntity = {
   kakaotalkLink: '',
 };
 
-const PostCreate = () => {
+interface Props {
+  history: History;
+}
+
+const PostCreate = ({ history }: Props) => {
+  const { user } = useSelector((state: AppState) => state.user);
+
   const [post, setPost] = useState<CreatePostEntity>(initialPostState);
   const [date, setDate] = useState<Moment | null>(moment());
   const [time, setTime] = useState<Moment | null>(moment('7:00', 'h:mm a'));
@@ -39,28 +46,33 @@ const PostCreate = () => {
   const [keyword, setKeyword] = useState<string>();
   const [selectedPlace, setSelectedPlace] = useState<any>(null);
   const [center, setCenter] = useState({
-    La: profile.longitude,
-    Ma: profile.latitude,
+    La: user?.longitude,
+    Ma: user?.latitude,
   });
   const [searchCount, setSearchCount] = useState<number>(0);
 
   const dispatch = useDispatch();
 
+  console.log(user);
+
   useEffect(() => {
-    const container = document.getElementById('map');
-    // 유저 프로필에 저장된 동네 정보를 기반으로 지도 생성
-    const options = {
-      center: new window.kakao.maps.LatLng(profile.latitude, profile.longitude),
-      level: 3,
-    };
+    if (user === null) history.push('/signin');
+    else {
+      const container = document.getElementById('map');
+      // 유저 프로필에 저장된 동네 정보를 기반으로 지도 생성
+      const options = {
+        center: new window.kakao.maps.LatLng(user.latitude, user.longitude),
+        level: 3,
+      };
 
-    const map = new window.kakao.maps.Map(container, options);
+      const map = new window.kakao.maps.Map(container, options);
 
-    // 지도를 드래그하면 지도 중심부 위치를 저장
-    kakao.maps.event.addListener(map, 'dragend', () => {
-      setCenter(map.getCenter());
-    });
-  }, []);
+      // 지도를 드래그하면 지도 중심부 위치를 저장
+      kakao.maps.event.addListener(map, 'dragend', () => {
+        setCenter(map.getCenter());
+      });
+    }
+  }, [user]);
 
   useEffect(() => {
     const container = document.getElementById('map');
@@ -108,18 +120,22 @@ const PostCreate = () => {
 
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정
         map.setBounds(bounds);
+      } else if (status === 'ZERO_RESULT') {
+        alert('검색 결과가 없습니다. 다른 키워드로 검색해주세요.');
       }
     }
 
     // 새로운 장소 검색 개체 생성
-    const ps = new kakao.maps.services.Places();
     // 키워드로 장소를 검색합니다
-    ps.keywordSearch(keyword, placesSearchCB, {
-      x: center.La,
-      y: center.Ma,
-      radius: 5000,
-      sort: 'distance',
-    });
+    if (keyword) {
+      const ps = new kakao.maps.services.Places();
+      ps.keywordSearch(keyword, placesSearchCB, {
+        x: center.La,
+        y: center.Ma,
+        radius: 5000,
+        sort: 'distance',
+      });
+    }
   }, [keyword, searchCount]);
 
   useEffect(() => {
