@@ -1,5 +1,8 @@
 from django.db import models, transaction
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
+
+from posts.models import Exercise, User_Exercise
 
 
 class Profile(models.Model):
@@ -39,6 +42,7 @@ class CustomUserManager(models.Manager):
         dong,
         gender,
         introduction,
+        preferred_exercises,
     ):
         user = User.objects.create_user(username=username, password=password)
 
@@ -52,6 +56,16 @@ class CustomUserManager(models.Manager):
             gender=gender,
             introduction=introduction,
         )
+
+        for preferred_exercise in preferred_exercises:
+            exercise = get_object_or_404(
+                Exercise, name=preferred_exercise["exercise_name"]
+            )
+            User_Exercise.objects.create(
+                user=user,
+                exercise=exercise,
+                skill_level=preferred_exercise["skill_level"],
+            )
 
         return user
 

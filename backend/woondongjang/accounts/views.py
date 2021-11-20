@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST, require_GET
 
 from .models import Profile, ProxyUser
 from .decorators import signin_required
-from posts.models import User_Exercise, Exercise, Post, Participation
+from posts.models import User_Exercise, Post, Participation
 
 
 @require_POST
@@ -28,14 +28,14 @@ def signup(request):
         dong = req_dict["dong"]
         gender = req_dict["gender"]
         introduction = req_dict["introduction"]
-        preferred_exercise = req_dict["preferred_exercise"]
+        preferred_exercises = req_dict["preferred_exercises"]
     except (KeyError, JSONDecodeError):
         return HttpResponse(status=400)
 
     if not is_request_valid():
         return HttpResponse(status=400)
 
-    user = ProxyUser.objects.create_user_and_profile(
+    ProxyUser.objects.create_user_and_profile(
         username,
         password,
         nickname,
@@ -45,13 +45,8 @@ def signup(request):
         dong,
         gender,
         introduction,
+        preferred_exercises,
     )
-
-    for each in preferred_exercise:
-        exercise = Exercise.objects.get(name=each["exercise_name"])
-        User_Exercise.objects.create(
-            user=user, exercise=exercise, skill_level=each["skill_level"]
-        )
 
     return HttpResponse(status=201)
 
