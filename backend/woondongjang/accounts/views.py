@@ -13,7 +13,8 @@ from posts.models import User_Exercise, Post, Participation
 @require_POST
 def signup(request):
     def is_request_valid():
-        if gender not in Profile.Gender.names:
+        # ['남성', '여성']
+        if gender not in Profile.Gender.values:
             return False
         return True
 

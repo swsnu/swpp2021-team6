@@ -8,9 +8,8 @@ from posts.models import Exercise, User_Exercise
 class Profile(models.Model):
     # https://docs.djangoproject.com/en/3.2/ref/models/fields/#enumeration-types
     class Gender(models.TextChoices):
-        MALE = "M"
-        FEMALE = "F"
-        UNKNOWN = "U"
+        MALE = "남성"
+        FEMALE = "여성"
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nickname = models.CharField(max_length=20, unique=True)
@@ -22,9 +21,7 @@ class Profile(models.Model):
     )
     gu = models.CharField(max_length=20, default="관악구")
     dong = models.CharField(max_length=20, default="신림동")
-    gender = models.CharField(
-        max_length=2, default=Gender.UNKNOWN, choices=Gender.choices
-    )
+    gender = models.CharField(max_length=2, choices=Gender.choices)
     introduction = models.TextField(blank=True)
 
 
