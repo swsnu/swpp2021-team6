@@ -1,10 +1,8 @@
 from django.test import TestCase, Client
-import json
-from .models import Participation, Post, Exercise, Post_Keyword, Comment
-import sys
 from django.utils import timezone
+import json
 
-sys.path.append("..")
+from .models import Participation, Post, Exercise, Post_Keyword, Comment
 from accounts.models import ProxyUser
 
 
@@ -33,7 +31,8 @@ class BlogTestCase(TestCase):
     )
 
     def setUp(self):
-        test_user1 = ProxyUser.objects.create_user_and_profile(
+        test_exercise = Exercise.objects.create(name="축구")
+        test_user1 = ProxyUser.objects.create_user_with(
             username="username1",
             password="password1",
             nickname="닉네임1",
@@ -43,8 +42,9 @@ class BlogTestCase(TestCase):
             dong="동1",
             gender="MALE",
             introduction="안녕하세요 user1입니다.",
+            preferred_exercises=[{"exercise_name": "축구", "skill_level": "중"}],
         )
-        test_user2 = ProxyUser.objects.create_user_and_profile(
+        test_user2 = ProxyUser.objects.create_user_with(
             username="username2",
             password="password2",
             nickname="닉네임2",
@@ -54,8 +54,8 @@ class BlogTestCase(TestCase):
             dong="동2",
             gender="FEMALE",
             introduction="안녕하세요 user2입니다.",
+            preferred_exercises=[{"exercise_name": "축구", "skill_level": "상"}],
         )
-        test_exercise = Exercise.objects.create(name="축구")
         test_post1 = Post.objects.create(
             exercise=test_exercise,
             host=test_user1,
