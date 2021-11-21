@@ -1,12 +1,9 @@
 from django.test import TestCase, Client
-import json
-from .models import ProxyUser
 from django.utils import timezone
+import json
 
-import sys
-
-sys.path.append("..")
-from posts.models import Exercise, User_Exercise, Participation, Post
+from ..models import ProxyUser
+from posts.models import Exercise, Participation, Post
 
 
 class AccountsTestCase(TestCase):
@@ -19,9 +16,9 @@ class AccountsTestCase(TestCase):
             "longitude": 126.94494429645442,
             "gu": "구3",
             "dong": "동3",
-            "gender": "MALE",
+            "gender": "남성",
             "introduction": "안ㄴ여하세여ㅁㄴ이ㅏ럼ㄴ아ㅣ러ㅣㅏㄴ어라ㅣㄴㅁ어리ㅏㅓㄴ이ㅏ럼ㄴ이러ㅏㅇ",
-            "preferred_exercise": [
+            "preferred_exercises": [
                 {"exercise_name": "축구", "skill_level": "상"},
                 {"exercise_name": "축구", "skill_level": "중"},
             ],
@@ -39,7 +36,7 @@ class AccountsTestCase(TestCase):
             "dong": "동4",
             "gender": "M",
             "introduction": "gender type이 enum에 맞지 않는 corner case입니다.",
-            "preferred_exercise": [
+            "preferred_exercises": [
                 {"exercise_name": "축구", "skill_level": "상"},
                 {"exercise_name": "축구", "skill_level": "중"},
             ],
@@ -52,7 +49,8 @@ class AccountsTestCase(TestCase):
     )
 
     def setUp(self):
-        test_user1 = ProxyUser.objects.create_user_and_profile(
+        test_exercise = Exercise.objects.create(name="축구")
+        test_user1 = ProxyUser.objects.create_user_with(
             username="username1",
             password="password1",
             nickname="닉네임1",
@@ -60,10 +58,11 @@ class AccountsTestCase(TestCase):
             longitude=126.94494429645442,
             gu="구1",
             dong="동1",
-            gender="MALE",
+            gender="남성",
             introduction="안녕하세요 user1입니다.",
+            preferred_exercises=[{"exercise_name": "축구", "skill_level": "중"}],
         )
-        test_user2 = ProxyUser.objects.create_user_and_profile(
+        test_user2 = ProxyUser.objects.create_user_with(
             username="username2",
             password="password2",
             nickname="닉네임2",
@@ -71,15 +70,12 @@ class AccountsTestCase(TestCase):
             longitude=126.94494429645442,
             gu="구2",
             dong="동2",
-            gender="FEMALE",
+            gender="여성",
             introduction="안녕하세요 user2입니다.",
-        )
-        test_exercise1 = Exercise.objects.create(name="축구")
-        User_Exercise.objects.create(
-            user=test_user1, exercise=test_exercise1, skill_level="상"
+            preferred_exercises=[{"exercise_name": "축구", "skill_level": "상"}],
         )
         test_post2 = Post.objects.create(
-            exercise=test_exercise1,
+            exercise=test_exercise,
             host=test_user2,
             title="post2 title",
             description="post2 description",
