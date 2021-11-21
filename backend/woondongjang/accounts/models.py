@@ -31,7 +31,7 @@ class Profile(models.Model):
 # Custom manager for proxy user model
 class CustomUserManager(models.Manager):
     @transaction.atomic
-    def create_user_and_profile(
+    def create_user_with(
         self,
         username,
         password,

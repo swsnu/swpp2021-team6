@@ -35,7 +35,7 @@ def signup(request):
     if not is_request_valid():
         return HttpResponse(status=400)
 
-    ProxyUser.objects.create_user_and_profile(
+    ProxyUser.objects.create_user_with(
         username,
         password,
         nickname,
