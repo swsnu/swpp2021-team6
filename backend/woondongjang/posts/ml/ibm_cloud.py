@@ -8,7 +8,7 @@ AUTHENTICATOR = getattr(settings, "IBM_AUTHENTICATOR")
 SERVICE_URL = getattr(settings, "IBM_SERVICE_URL")
 
 
-def keyword_extraction_ML(text):
+def extract_keywords(text):
     authenticator = IAMAuthenticator(AUTHENTICATOR)
     natural_language_understanding = NaturalLanguageUnderstandingV1(
         version="2021-08-01", authenticator=authenticator

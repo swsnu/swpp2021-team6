@@ -6,7 +6,7 @@ from django.http import (
 from .models import Post, Exercise, Comment, Post_Keyword, Participation
 import json
 from django.db import transaction
-from .ml.ibmCloud import keyword_extraction_ML
+from .ml.ibm_cloud import extract_keywords
 from django.views.decorators.http import (
     require_POST,
     require_http_methods,
@@ -80,7 +80,7 @@ def posts(request):
             kakaotalk_link = req_data["kakaotalk_link"]
 
             # machine learning code 아직 모델에 안넣었음.
-            keyword_list = keyword_extraction_ML(description)
+            keyword_list = extract_keywords(description)
 
             new_exercise = Exercise.objects.get(name=exercise_name)
 
