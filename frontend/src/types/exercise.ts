@@ -7,4 +7,9 @@ export type ExerciseType =
   | '러닝'
   | '라이딩';
 
-export type ExpectedLevelType = '상' | '중' | '하' | '상관 없음';
+export type SkillLevelType = '상' | '중' | '하' | '상관 없음';
+
+export interface ExerciseAndSkill {
+  exerciseName: ExerciseType | string;
+  skillLevel: Omit<SkillLevelType, '상관 없음'>;
+}
