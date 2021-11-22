@@ -135,18 +135,25 @@ const SignUp = ({ history }: Props) => {
       <form>
         {guDong}
         <Input
+          className="username-input"
           placeholder="아이디"
           onChange={(e) => setForm({ ...form, username: e.target.value })}
         />
         <Input.Password
+          className="password-input"
           placeholder="비밀번호"
           onChange={(e) => setForm({ ...form, password: e.target.value })}
         />
         <Input
+          className="nickname-input"
           placeholder="닉네임"
           onChange={(e) => setForm({ ...form, nickname: e.target.value })}
         />
-        <Input.TextArea allowClear placeholder="소개글" />
+        <Input.TextArea
+          className="introduction-input"
+          allowClear
+          placeholder="소개글"
+        />
         <Radio.Group
           className="gender-radio"
           options={options}
@@ -156,7 +163,11 @@ const SignUp = ({ history }: Props) => {
         <span>선호 운동</span>
         {/* <Button type="link">추가하기</Button> */}
         {newPreferredExercise}
-        <Button type="primary" onClick={onClickSubmit}>
+        <Button
+          className="signup-submit-button"
+          type="primary"
+          onClick={onClickSubmit}
+        >
           완료
         </Button>
       </form>
