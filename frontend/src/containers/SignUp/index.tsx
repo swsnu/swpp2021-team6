@@ -66,8 +66,6 @@ const SignUp = ({ history }: Props) => {
     }
   }, [preferredExercise]);
 
-  console.log(form);
-
   const onClickSubmit = () => {
     if (!form.latitude || !form.longitude || !form.gu || !form.dong) {
       alert('위치 정보를 불러오는 중입니다');

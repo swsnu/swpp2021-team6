@@ -7,6 +7,7 @@ describe('SignUp', () => {
   let signup: any;
   beforeEach(() => {
     signup = <SignUp history={history} />;
+    window.alert = jest.fn().mockImplementation();
   });
 
   it('SignUp renders without crashing', () => {
