@@ -1,7 +1,6 @@
 from django.db import models, transaction
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
-from django.utils import timezone
 
 from .ml.ibm_cloud import extract_keywords
 
@@ -128,4 +127,4 @@ class Comment(models.Model):
     author = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     content = models.TextField()
-    created_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now=True)
