@@ -8,6 +8,7 @@ import json
 from django.db import transaction
 from .ml.ibmCloud import keyword_extraction_ML
 from django.views.decorators.http import (
+    require_GET,
     require_POST,
     require_http_methods,
 )
@@ -255,7 +256,6 @@ def comments(request, post_id=0):
                 return HttpResponse(status=404)
         else:
             return HttpResponse(status=401)
-
     # Create comment on specified article
     elif request.method == "POST":
         if request.user.is_authenticated:

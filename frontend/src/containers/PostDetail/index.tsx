@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { History } from 'history';
 import axios from 'axios';
 import humps from 'humps';
-import { PostEntity } from '../../types/post';
+import { PostEntity } from '../../backend/entity/post';
 import PostDetail from '../../components/PostDetail';
 import { AppState } from '../../store/store';
 

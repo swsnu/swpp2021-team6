@@ -1,4 +1,13 @@
-import { ExerciseType, ExpectedLevelType } from './exercise';
+export type ExerciseType =
+  | '축구'
+  | '농구'
+  | '배드민턴'
+  | '테니스'
+  | '탁구'
+  | '러닝'
+  | '라이딩';
+
+export type ExpectedLevelType = '상' | '중' | '하' | '상관 없음';
 
 export type PlaceType = {
   name: string;
@@ -37,4 +46,9 @@ export interface CreatePostEntity {
   maxCapacity: number;
   place: PlaceType;
   kakaotalkLink: string;
+}
+
+export interface UpdatePostEntity {
+  title?: string;
+  description?: string;
 }

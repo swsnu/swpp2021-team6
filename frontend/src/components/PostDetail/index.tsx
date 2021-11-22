@@ -4,7 +4,7 @@ import { UserOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { getKakaoMapWithMarker } from '../../utils/getKakaoMap';
 import Label from '../Label';
-import { PostEntity } from '../../types/post';
+import { PostEntity } from '../../backend/entity/post';
 import changeDateFormat from '../../utils/dateToString';
 
 const { Search } = Input;

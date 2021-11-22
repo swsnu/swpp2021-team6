@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import { push } from 'connected-react-router';
 import * as actionTypes from './actionTypes';
-import { UserEntity, UserSignInInputDTO } from '../../types/user';
+import { UserEntity, UserSignInInputDTO } from '../../backend/entity/user';
 
 import { AppState } from '../store';
 

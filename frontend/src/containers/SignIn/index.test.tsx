@@ -3,7 +3,7 @@ import { mount } from 'enzyme';
 import * as userActionCreators from '../../store/actions/user';
 import SignIn from './index';
 import { history } from '../../store/store';
-import { UserSignInInputDTO } from '../../types/user';
+import { UserSignInInputDTO } from '../../backend/entity/user';
 
 jest.mock('react-redux', () => ({
   useDispatch: () => jest.fn(),

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { History } from 'history';
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { PostEntity } from '../../types/post';
+import { PostEntity } from '../../backend/entity/post';
 import * as thumbnails from '../../utils/thumbnails';
 import './index.scss';
 import dateToString from '../../utils/dateToString';

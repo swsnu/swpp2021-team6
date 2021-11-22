@@ -6,7 +6,7 @@ import Filter from '../Filter';
 import * as actionCreators from '../../store/actions';
 import './index.scss';
 import { AppState } from '../../store/store';
-import { PostEntity } from '../../types/post';
+import { PostEntity } from '../../backend/entity/post';
 import AddButton from '../../components/AddButton';
 
 interface Props {
