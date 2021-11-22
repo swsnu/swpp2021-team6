@@ -1,68 +1,59 @@
+from json.decoder import JSONDecodeError
 from django.contrib.auth.models import User
-from django.http import (
-    HttpResponse,
-    JsonResponse,
-)
-from .models import Post, Exercise, Comment, Post_Keyword, Participation
-import json
+from django.http import HttpResponse, JsonResponse
 from django.db import transaction
+from django.shortcuts import get_object_or_404
+from django.views.decorators.http import require_POST, require_http_methods
+import json
+
+from .models import Post, Exercise, Comment, Post_Keyword, Participation
 from .ml.ibm_cloud import extract_keywords
-from django.views.decorators.http import (
-    require_POST,
-    require_http_methods,
-)
+from accounts.decorators import signin_required
 
 
 @require_http_methods(["GET", "POST"])
+@signin_required
 @transaction.atomic
 def posts(request):
-    # GET : 모든 post의 list 반환
+    # Retrieve all posts
     if request.method == "GET":
-        # 만약에 로그인이 되어 있지 않은 user면 401
-        if not request.user.is_authenticated:
-            return HttpResponse(status=401)
-        else:
-            post_list = [
-                {
-                    "post_id": post.id,
-                    "host_id": post.host.id,
-                    "exercise_name": post.exercise.name,
-                    "expected_level": post.expected_level,
-                    "title": post.title,
-                    "description": post.description,
-                    "meet_at": post.meet_at,
-                    "place": {
-                        "latitude": post.latitude,
-                        "longitude": post.longitude,
-                        "gu": post.gu,
-                        "dong": post.dong,
-                        "name": post.place_name,
-                        "address": post.place_address,
-                        "telephone": post.place_telephone,
-                    },
-                    "min_capacity": post.min_capacity,
-                    "max_capacity": post.max_capacity,
-                    "member_count": post.member_count,
-                    "kakaotalk_link": post.kakaotalk_link,
-                    "status": post.status,
-                    "keywords": [
-                        Post_Keyword.objects.get(post_id=post.id).keyword1,
-                        Post_Keyword.objects.get(post_id=post.id).keyword2,
-                        Post_Keyword.objects.get(post_id=post.id).keyword3,
-                    ],
-                }
-                for post in Post.objects.all()
-            ]
+        post_list = [
+            {
+                "post_id": post.id,
+                "host_id": post.host.id,
+                "exercise_name": post.exercise.name,
+                "expected_level": post.expected_level,
+                "title": post.title,
+                "description": post.description,
+                "meet_at": post.meet_at,
+                "place": {
+                    "latitude": post.latitude,
+                    "longitude": post.longitude,
+                    "gu": post.gu,
+                    "dong": post.dong,
+                    "name": post.place_name,
+                    "address": post.place_address,
+                    "telephone": post.place_telephone,
+                },
+                "min_capacity": post.min_capacity,
+                "max_capacity": post.max_capacity,
+                "member_count": post.member_count,
+                "kakaotalk_link": post.kakaotalk_link,
+                "status": post.status,
+                "keywords": [
+                    get_object_or_404(Post_Keyword, post=post).keyword1,
+                    get_object_or_404(Post_Keyword, post=post).keyword2,
+                    get_object_or_404(Post_Keyword, post=post).keyword3,
+                ],
+            }
+            for post in Post.objects.all()
+        ]
 
-            return JsonResponse(post_list, safe=False, status=200)
-
-    # POST : 새로운 post 생성
+        return JsonResponse(post_list, safe=False, status=200)
+    # Create a new post
     elif request.method == "POST":
-        if not request.user.is_authenticated:
-            return HttpResponse(status=401)
-        else:
+        try:
             req_data = json.loads(request.body.decode())
-            host = request.user
             exercise_name = req_data["exercise_name"]
             title = req_data["title"]
             description = req_data["description"]
@@ -78,329 +69,273 @@ def posts(request):
             min_capacity = req_data["min_capacity"]
             max_capacity = req_data["max_capacity"]
             kakaotalk_link = req_data["kakaotalk_link"]
+        except (KeyError, JSONDecodeError):
+            return HttpResponse(status=400)
 
-            # machine learning code 아직 모델에 안넣었음.
-            keyword_list = extract_keywords(description)
+        exercise = get_object_or_404(Exercise, name=exercise_name)
 
-            new_exercise = Exercise.objects.get(name=exercise_name)
+        # Post 생성
+        new_post = Post.objects.create(
+            host=request.user,
+            exercise=exercise,
+            title=title,
+            description=description,
+            expected_level=expected_level,
+            meet_at=meet_at,
+            latitude=latitude,
+            longitude=longitude,
+            gu=gu,
+            dong=dong,
+            place_name=place_name,
+            place_address=place_address,
+            place_telephone=place_telephone,
+            min_capacity=min_capacity,
+            max_capacity=max_capacity,
+            kakaotalk_link=kakaotalk_link,
+        )
 
-            new_post = Post(
-                host=host,
-                exercise=new_exercise,
-                title=title,
-                description=description,
-                expected_level=expected_level,
-                meet_at=meet_at,
-                latitude=latitude,
-                longitude=longitude,
-                gu=gu,
-                dong=dong,
-                place_name=place_name,
-                place_address=place_address,
-                place_telephone=place_telephone,
-                min_capacity=min_capacity,
-                max_capacity=max_capacity,
-                kakaotalk_link=kakaotalk_link,
-            )
-            new_post.save()
+        keyword_list = extract_keywords(description)
 
-            new_post_keyword = Post_Keyword(
-                post=new_post,
-                keyword1=keyword_list[0],
-                keyword2=keyword_list[1],
-                keyword3=keyword_list[2],
-            )
-            new_post_keyword.save()
+        # Post_Keyword 생성
+        Post_Keyword.objects.create(
+            post=new_post,
+            keyword1=keyword_list[0],
+            keyword2=keyword_list[1],
+            keyword3=keyword_list[2],
+        )
 
-            response_dict = {
-                "post_id": new_post.id,
-                "host_id": new_post.host.id,
-                "exercise_name": new_post.exercise.name,
-                "title": new_post.title,
-                "description": new_post.description,
-                "expected_level": new_post.expected_level,
-                "meet_at": new_post.meet_at,
-                "place": {
-                    "latitude": new_post.latitude,
-                    "longitude": new_post.longitude,
-                    "gu": new_post.gu,
-                    "dong": new_post.dong,
-                    "name": new_post.place_name,
-                    "address": new_post.place_address,
-                    "telephone": new_post.place_telephone,
-                },
-                "max_capacity": new_post.max_capacity,
-                "min_capacity": new_post.min_capacity,
-                "member_count": new_post.member_count,
-                "kakaotalk_link": new_post.kakaotalk_link,
-                "status": new_post.status,
-                "keywords": keyword_list,
-            }
-            return JsonResponse(response_dict, status=201)
+        response_dict = {
+            "post_id": new_post.id,
+            "host_id": new_post.host.id,
+            "exercise_name": new_post.exercise.name,
+            "title": new_post.title,
+            "description": new_post.description,
+            "expected_level": new_post.expected_level,
+            "meet_at": new_post.meet_at,
+            "place": {
+                "latitude": new_post.latitude,
+                "longitude": new_post.longitude,
+                "gu": new_post.gu,
+                "dong": new_post.dong,
+                "name": new_post.place_name,
+                "address": new_post.place_address,
+                "telephone": new_post.place_telephone,
+            },
+            "max_capacity": new_post.max_capacity,
+            "min_capacity": new_post.min_capacity,
+            "member_count": new_post.member_count,
+            "kakaotalk_link": new_post.kakaotalk_link,
+            "status": new_post.status,
+            "keywords": keyword_list,
+        }
+
+        return JsonResponse(response_dict, status=201)
 
 
 @require_http_methods(["GET", "PATCH", "DELETE"])
+@signin_required
 def post_detail(request, post_id=0):
-    # GET : 특정 id의 post의 정보를 반환
+    post = get_object_or_404(Post, id=post_id)
+
+    # Retrieve a specified post
     if request.method == "GET":
-        if request.user.is_authenticated:
-            # 만약 특정 id의 Post가 없으면 404.
-            if not Post.objects.filter(id=post_id).exists():
-                return HttpResponse(status=404)
-            # 있으면 Json Response
-            else:
-                post = Post.objects.get(id=post_id)
-                post_keyword = Post_Keyword.objects.get(post_id=post.id)
-                response_dict = {
-                    "host_id": post.host.id,
-                    "exercise_name": post.exercise.name,
-                    "title": post.title,
-                    "description": post.description,
-                    "expected_level": post.expected_level,
-                    "meet_at": post.meet_at,
-                    "max_capacity": post.max_capacity,
-                    "min_capacity": post.min_capacity,
-                    "member_count": post.member_count,
-                    "place": {
-                        "latitude": post.latitude,
-                        "longitude": post.longitude,
-                        "gu": post.gu,
-                        "dong": post.dong,
-                        "name": post.place_name,
-                        "address": post.place_address,
-                        "telephone": post.place_telephone,
-                    },
-                    "kakaotalk_link": post.kakaotalk_link,
-                    "status": post.status,
-                    "keywords": [
-                        post_keyword.keyword1,
-                        post_keyword.keyword2,
-                        post_keyword.keyword3,
-                    ],
-                }
-                return JsonResponse(response_dict, status=200)
-        else:
-            return HttpResponse(status=401)
+        post_keyword = get_object_or_404(Post_Keyword, post_id=post.id)
 
-        # Edit specified article
+        response_dict = {
+            "host_id": post.host.id,
+            "exercise_name": post.exercise.name,
+            "title": post.title,
+            "description": post.description,
+            "expected_level": post.expected_level,
+            "meet_at": post.meet_at,
+            "max_capacity": post.max_capacity,
+            "min_capacity": post.min_capacity,
+            "member_count": post.member_count,
+            "place": {
+                "latitude": post.latitude,
+                "longitude": post.longitude,
+                "gu": post.gu,
+                "dong": post.dong,
+                "name": post.place_name,
+                "address": post.place_address,
+                "telephone": post.place_telephone,
+            },
+            "kakaotalk_link": post.kakaotalk_link,
+            "status": post.status,
+            "keywords": [
+                post_keyword.keyword1,
+                post_keyword.keyword2,
+                post_keyword.keyword3,
+            ],
+        }
+
+        return JsonResponse(response_dict, status=200)
+    # Update a specified post
     elif request.method == "PATCH":
-        if request.user.is_authenticated:
-            # 만약 특정 id의 article이 있으면
-            if Post.objects.filter(id=post_id).exists():
-                post = Post.objects.get(id=post_id)
+        # 권한 확인
+        if request.user.id != post.host.id:
+            return HttpResponse(status=403)
 
-                # user가 edit할 권한이 있으면
-                if request.user.id == post.host.id:
-                    req_data = json.loads(request.body.decode())
-                    title = req_data["title"]
-                    description = req_data["description"]
+        try:
+            req_data = json.loads(request.body.decode())
+            title = req_data["title"]
+            description = req_data["description"]
+        except (KeyError, JSONDecodeError):
+            return HttpResponse(status=400)
 
-                    post.title = title
-                    post.description = description
-                    post.save()
-                    response_dict = {
-                        "id": post.id,
-                        "host_id": post.host.id,
-                        "title": post.title,
-                        "description": post.description,
-                    }
-                    return JsonResponse(response_dict, status=200)
+        post.title = title
+        post.description = description
+        post.save()
 
-                else:
-                    return HttpResponse(status=403)
-            # 없으면 404
-            else:
-                return HttpResponse(status=404)
-        # 로그인이 안되어 있으면 401
-        else:
-            return HttpResponse(status=401)
+        response_dict = {
+            "post_id": post.id,
+            "host_id": post.host.id,
+            "title": post.title,
+            "description": post.description,
+        }
 
-    # Delete specified article
+        return JsonResponse(response_dict, status=200)
+    # Delete a specified psot
     elif request.method == "DELETE":
-        if request.user.is_authenticated:
-            # 만약아 해당 article이 있고
-            if Post.objects.filter(id=post_id).exists():
-                post = Post.objects.get(id=post_id)
-                # user가 delete할 권한이 있으면
-                if request.user.id == post.host.id:
-                    post.delete()
-                    return HttpResponse(status=200)
-                # 권한이 없으면 403
-                else:
-                    return HttpResponse(status=403)
-            # 해당 article이 없으면 404
-            else:
-                return HttpResponse(status=404)
-        # 로그인이 되어 있지 않은 user면 401
-        else:
-            return HttpResponse(status=401)
+        # 권한 확인
+        if request.user.id != post.host.id:
+            return HttpResponse(status=403)
+
+        post.delete()
+
+        return HttpResponse(status=200)
 
 
 @require_http_methods(["GET", "POST"])
+@signin_required
 def comments(request, post_id=0):
-    # Get comments of specified article
+    post = get_object_or_404(Post, id=post_id)
+
+    # Retrieve all comments of a specified post
     if request.method == "GET":
-        if request.user.is_authenticated:
-            if Post.objects.filter(id=post_id).exists():
-                comment_list = [
-                    {
-                        "post_id": comment.post.id,
-                        "content": comment.content,
-                        "author_id": comment.author.id,
-                    }
-                    for comment in Comment.objects.filter(post_id=post_id)
-                ]
-                return JsonResponse(comment_list, safe=False, status=200)
-            else:
-                return HttpResponse(status=404)
-        else:
-            return HttpResponse(status=401)
-
-    # Create comment on specified article
+        comment_list = [
+            {
+                "author_id": comment.author.id,
+                "post_id": comment.post.id,
+                "content": comment.content,
+            }
+            for comment in Comment.objects.filter(post_id=post_id)
+        ]
+        return JsonResponse(comment_list, safe=False, status=200)
+    # Create a new comment on a specified post
     elif request.method == "POST":
-        if request.user.is_authenticated:
-            # 특정 article이 있을 때
-            if Post.objects.filter(id=post_id).exists():
-                req_data = json.loads(request.body.decode())
-                comment_post = Post.objects.get(id=post_id)
-                comment_content = req_data["content"]
-                comment_author = request.user
-                new_comment = Comment(
-                    post=comment_post, content=comment_content, author=comment_author
-                )
-                new_comment.save()
+        try:
+            req_data = json.loads(request.body.decode())
+            content = req_data["content"]
+        except (KeyError, JSONDecodeError):
+            return HttpResponse(status=400)
 
-                response_dict = {
-                    "id": new_comment.id,
-                    "post_id": new_comment.post.id,
-                    "content": new_comment.content,
-                    "author_id": new_comment.author.id,
-                }
-                return JsonResponse(response_dict, status=201)
-            # 특정 article이 없을 때
-            else:
-                return HttpResponse(status=404)
-        # 로그인하지 않은 user일 때
-        else:
-            return HttpResponse(status=401)
+        author = request.user
+        new_comment = Comment.objects.create(post=post, content=content, author=author)
+
+        response_dict = {
+            "comment_id": new_comment.id,
+            "author_id": new_comment.author.id,
+            "post_id": new_comment.post.id,
+            "content": new_comment.content,
+        }
+
+        return JsonResponse(response_dict, status=201)
 
 
 @require_http_methods(["GET", "PATCH", "DELETE"])
+@signin_required
 def comment_detail(request, comment_id=0):
-    # Get specified comment
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    # Retrieve a specified comment
     if request.method == "GET":
-        if request.user.is_authenticated:
-            if Comment.objects.filter(id=comment_id).exists():
-                comment = Comment.objects.get(id=comment_id)
-                response_dict = {
-                    "post_id": comment.post.id,
-                    "content": comment.content,
-                    "author_id": comment.author.id,
-                }
-                return JsonResponse(response_dict, status=200)
-            else:
-                return HttpResponse(status=404)
-        else:
-            return HttpResponse(status=401)
-    # Edit specified comment
+        response_dict = {
+            "author_id": comment.author.id,
+            "post_id": comment.post.id,
+            "content": comment.content,
+        }
+
+        return JsonResponse(response_dict, status=200)
+    # Update a specified comment
     elif request.method == "PATCH":
-        if request.user.is_authenticated:
-            if Comment.objects.filter(id=comment_id).exists():
-                comment = Comment.objects.get(id=comment_id)
-                if request.user.id == comment.author.id:
-                    req_data = json.loads(request.body.decode())
-                    comment.content = req_data["content"]
-                    comment.save()
-                    response_dict = {
-                        "id": comment.id,
-                        "post": comment.post.id,
-                        "content": comment.content,
-                        "author": comment.author.id,
-                    }
-                    return JsonResponse(response_dict, status=200)
-                else:
-                    return HttpResponse(status=403)
-            else:
-                return HttpResponse(status=404)
-        else:
-            return HttpResponse(status=401)
-    # Delete specified comment
+        # 권한 확인
+        if request.user.id != comment.author.id:
+            return HttpResponse(status=403)
+
+        try:
+            req_data = json.loads(request.body.decode())
+            content = req_data["content"]
+        except (KeyError, JSONDecodeError):
+            return HttpResponse(status=400)
+
+        comment.content = content
+        comment.save()
+
+        response_dict = {
+            "comment_id": comment.id,
+            "author_id": comment.author.id,
+            "post_id": comment.post.id,
+            "content": comment.content,
+        }
+
+        return JsonResponse(response_dict, status=200)
+    # Delete a specified comment
     elif request.method == "DELETE":
-        # 로그인이 되어 있고
-        if request.user.is_authenticated:
-            # 해당 comment id의 comment가 있고
-            if Comment.objects.filter(id=comment_id).exists():
-                comment = Comment.objects.get(id=comment_id)
-                # 로그인된 user가 delete 권한이 있을 때
-                if request.user.id == comment.author.id:
-                    comment.delete()
-                    return HttpResponse(status=200)
-                else:
-                    return HttpResponse(status=403)
-            else:
-                return HttpResponse(status=404)
-        else:
-            return HttpResponse(status=401)
+        # 권한 확인
+        if request.user.id != comment.author.id:
+            return HttpResponse(status=403)
+
+        comment.delete()
+
+        return HttpResponse(status=200)
 
 
 @require_POST
+@signin_required
 def apply(request, post_id):
-    if not request.user.is_authenticated:
-        return HttpResponse(status=401)
     # Post 조회
-    try:
-        post = Post.objects.get(id=post_id)
-    except Post.DoesNotExist:
-        return HttpResponse(status=404)
+    post = get_object_or_404(Post, id=post_id)
 
-    # host이면 apply가 안되게끔!!
+    # 권한 확인
     if request.user.id == post.host.id:
         return HttpResponse(status=403)
+
+    # Participation 생성
     Participation.objects.create(user=request.user, post=post)
+
     return HttpResponse(status=204)
 
 
 @require_POST
+@signin_required
 def accept(request, post_id, participant_id):
-    if not request.user.is_authenticated:
-        return HttpResponse(status=401)
-
     # Post 조회
-    try:
-        post = Post.objects.get(id=post_id)
-    except Post.DoesNotExist:
-        return HttpResponse(status=404)
+    post = get_object_or_404(Post, id=post_id)
 
     # User(participant) 조회
-    try:
-        participant = User.objects.get(id=participant_id)
-    except User.DoesNotExist:
-        return HttpResponse(status=404)
+    participant = get_object_or_404(User, id=participant_id)
 
+    # Participation 상태 변경
     Participation.objects.filter(user=participant, post=post).update(
         status=Participation.Status.ACCEPTED
     )
+
     return HttpResponse(status=204)
 
 
 @require_POST
+@signin_required
 def decline(request, post_id, participant_id):
-    if not request.user.is_authenticated:
-        return HttpResponse(status=401)
-
     # Post 조회
-    try:
-        post = Post.objects.get(id=post_id)
-    except Post.DoesNotExist:
-        return HttpResponse(status=404)
+    post = get_object_or_404(Post, id=post_id)
 
     # User(participant) 조회
-    try:
-        participant = User.objects.get(id=participant_id)
-    except User.DoesNotExist:
-        return HttpResponse(status=404)
+    participant = get_object_or_404(User, id=participant_id)
 
+    # Participation 상태 변경
     Participation.objects.filter(user=participant, post=post).update(
         status=Participation.Status.DECLINED
     )
+
     return HttpResponse(status=204)
