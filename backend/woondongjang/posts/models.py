@@ -1,14 +1,74 @@
-from django.db import models
+from django.db import models, transaction
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
+
+from .ml.ibm_cloud import extract_keywords
 
 
 class Exercise(models.Model):
     name = models.CharField(max_length=20)
 
 
-# Create your models here.
+class PostManager(models.Manager):
+    @transaction.atomic
+    def create_post(
+        self,
+        host,
+        exercise_name,
+        title,
+        description,
+        expected_level,
+        meet_at,
+        latitude,
+        longitude,
+        gu,
+        dong,
+        place_name,
+        place_address,
+        place_telephone,
+        min_capacity,
+        max_capacity,
+        kakaotalk_link,
+    ):
+        exercise = get_object_or_404(Exercise, name=exercise_name)
+
+        # Post 생성
+        new_post = self.create(
+            host=host,
+            exercise=exercise,
+            title=title,
+            description=description,
+            expected_level=expected_level,
+            meet_at=meet_at,
+            latitude=latitude,
+            longitude=longitude,
+            gu=gu,
+            dong=dong,
+            place_name=place_name,
+            place_address=place_address,
+            place_telephone=place_telephone,
+            min_capacity=min_capacity,
+            max_capacity=max_capacity,
+            kakaotalk_link=kakaotalk_link,
+        )
+
+        keywords = extract_keywords(description)
+
+        # Post_Keyword 생성
+        Post_Keyword.objects.create(
+            post=new_post,
+            keyword1=keywords[0],
+            keyword2=keywords[1],
+            keyword3=keywords[2],
+        )
+
+        return new_post
+
+
 class Post(models.Model):
+    objects = PostManager()
+
     class Status(models.TextChoices):
         RECRUITING = "모집 중"
         RECRUITED = "모집 완료"

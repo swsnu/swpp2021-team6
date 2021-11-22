@@ -1,19 +1,16 @@
 from json.decoder import JSONDecodeError
 from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse
-from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_POST, require_http_methods
 import json
 
-from .models import Post, Exercise, Comment, Post_Keyword, Participation
-from .ml.ibm_cloud import extract_keywords
+from .models import Post, Comment, Post_Keyword, Participation
 from accounts.decorators import signin_required
 
 
 @require_http_methods(["GET", "POST"])
 @signin_required
-@transaction.atomic
 def posts(request):
     # Retrieve all posts
     if request.method == "GET":
@@ -72,37 +69,31 @@ def posts(request):
         except (KeyError, JSONDecodeError):
             return HttpResponse(status=400)
 
-        exercise = get_object_or_404(Exercise, name=exercise_name)
-
-        # Post 생성
-        new_post = Post.objects.create(
-            host=request.user,
-            exercise=exercise,
-            title=title,
-            description=description,
-            expected_level=expected_level,
-            meet_at=meet_at,
-            latitude=latitude,
-            longitude=longitude,
-            gu=gu,
-            dong=dong,
-            place_name=place_name,
-            place_address=place_address,
-            place_telephone=place_telephone,
-            min_capacity=min_capacity,
-            max_capacity=max_capacity,
-            kakaotalk_link=kakaotalk_link,
+        new_post = Post.objects.create_post(
+            request.user,
+            exercise_name,
+            title,
+            description,
+            expected_level,
+            meet_at,
+            latitude,
+            longitude,
+            gu,
+            dong,
+            place_name,
+            place_address,
+            place_telephone,
+            min_capacity,
+            max_capacity,
+            kakaotalk_link,
         )
 
-        keyword_list = extract_keywords(description)
-
-        # Post_Keyword 생성
-        Post_Keyword.objects.create(
-            post=new_post,
-            keyword1=keyword_list[0],
-            keyword2=keyword_list[1],
-            keyword3=keyword_list[2],
-        )
+        post_keyword = get_object_or_404(Post_Keyword, post=new_post)
+        keyword_list = [
+            post_keyword.keyword1,
+            post_keyword.keyword2,
+            post_keyword.keyword3,
+        ]
 
         response_dict = {
             "post_id": new_post.id,
