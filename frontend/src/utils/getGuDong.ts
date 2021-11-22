@@ -16,7 +16,7 @@ const getGuDong = async (x: number, y: number) => {
       },
     });
     const { region_2depth_name, region_3depth_name } =
-      response.data.documents[0];
+      response.data.documents[1];
     result.gu = region_2depth_name;
     result.dong = region_3depth_name;
   } catch {

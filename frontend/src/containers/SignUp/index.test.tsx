@@ -1,11 +1,12 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import SignUp from './index';
+import { history } from '../../store/store';
 
 describe('SignUp', () => {
   let signup: any;
   beforeEach(() => {
-    signup = <SignUp />;
+    signup = <SignUp history={history} />;
   });
 
   it('SignUp renders without crashing', () => {
