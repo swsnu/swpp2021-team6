@@ -1,6 +1,6 @@
 import { ExerciseAndSkill } from './exercise';
 
-export type GenderType = 'MALE' | 'FEMALE' | 'UNKNOWN';
+export type GenderType = '남성' | '여성' | '미선택';
 
 export interface UserEntity {
   id: number;

@@ -1,5 +1,6 @@
 export const mockNavigatorGeolocation = () => {
   const getCurrentPositionMock = jest.fn();
+
   const geolocation = {
     getCurrentPosition: getCurrentPositionMock,
   };
