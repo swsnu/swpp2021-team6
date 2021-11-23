@@ -182,7 +182,11 @@ const Profile = ({ history }: ProfileProps) => {
           <TabPane tab="참가 신청한 모임" key="1">
             <div>
               {userInfo.participating_post.map((appointment: any) => (
-                <MyAppointment history={history} appointment={appointment} />
+                <MyAppointment
+                  key={appointment.post_id}
+                  history={history}
+                  appointment={appointment}
+                />
               ))}
             </div>
           </TabPane>
@@ -190,6 +194,7 @@ const Profile = ({ history }: ProfileProps) => {
             <div>
               {userInfo.hosting_post.map((appointment: any) => (
                 <HostingAppointment
+                  key={appointment.post_id}
                   history={history}
                   appointment={appointment}
                 />

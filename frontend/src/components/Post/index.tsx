@@ -7,7 +7,7 @@ import * as thumbnails from '../../utils/thumbnails';
 import './index.scss';
 import dateToString from '../../utils/dateToString';
 import Label from '../Label';
-import * as labelColors from '../../constants/labelColors';
+import * as labelColors from '../../style/labelColors';
 
 interface Props {
   history: History;

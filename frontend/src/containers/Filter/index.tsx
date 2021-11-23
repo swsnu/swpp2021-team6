@@ -11,8 +11,8 @@ const Filter = () => (
       <option>거리 순</option>
     </select>
     <h2>필터</h2>
-    <select className="filter-select">
-      <option disabled selected hidden>
+    <select className="filter-select" defaultValue="종목">
+      <option value="종목" disabled hidden>
         종목
       </option>
       <option>축구</option>
@@ -23,8 +23,8 @@ const Filter = () => (
       <option>러닝</option>
       <option>라이딩</option>
     </select>
-    <select>
-      <option disabled selected hidden>
+    <select defaultValue="기대 실력">
+      <option value="기대 실력" disabled hidden>
         기대 실력
       </option>
       <option>상</option>

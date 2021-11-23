@@ -1,4 +1,4 @@
-import { ExerciseType, ExpectedLevelType } from './exercise';
+import { ExerciseType, SkillLevelType } from './exercise';
 
 export type PlaceType = {
   name: string;
@@ -14,7 +14,7 @@ export interface PostEntity {
   postId: number;
   hostId: number;
   exerciseName: ExerciseType | string;
-  expectedLevel: ExpectedLevelType | string;
+  expectedLevel: SkillLevelType | string;
   title: string;
   description: string;
   meetAt: string;
@@ -29,7 +29,7 @@ export interface PostEntity {
 
 export interface CreatePostEntity {
   exerciseName: ExerciseType | string;
-  expectedLevel: ExpectedLevelType | string;
+  expectedLevel: SkillLevelType | string;
   title: string;
   description: string;
   meetAt: string;
