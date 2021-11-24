@@ -18,7 +18,7 @@ describe('Main', () => {
   beforeEach(() => {
     main = (
       <Provider store={mockStore}>
-        <Main history={history} />
+        <Main />
       </Provider>
     );
     useSelectorMock.mockReturnValue(mockPosts);

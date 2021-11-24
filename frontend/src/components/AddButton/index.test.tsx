@@ -14,7 +14,7 @@ describe('Add Button', () => {
     };
   it('should render Add Button', () => {
     const spyHistoryPush = jest.spyOn(history, 'push').mockImplementation();
-    const addButton = <AddButton history={history} />;
+    const addButton = <AddButton />;
     const component = mount(addButton);
     component.find('.plus-button').simulate('click');
     expect(spyHistoryPush).toBeCalledTimes(1);
