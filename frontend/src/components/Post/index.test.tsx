@@ -127,6 +127,13 @@ const mockPostWithWrongData = {
   keywords: ['뒤풀이', 'MBTI E', '이번 주말'],
 };
 
+const mockPush = jest.fn();
+
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useHistory: () => ({ push: mockPush }),
+}));
+
 describe('Post', () => {
   window.matchMedia =
     window.matchMedia ||
@@ -170,10 +177,9 @@ describe('Post', () => {
   });
 
   it('should redirect to post detail page when clicked', () => {
-    const spyHistoryPush = jest.spyOn(history, 'push').mockImplementation();
     const post = <Post post={soccerMockPost} />;
     const component = mount(post);
     component.find('.post').simulate('click');
-    expect(spyHistoryPush).toBeCalledTimes(1);
+    expect(mockPush).toHaveBeenCalled();
   });
 });

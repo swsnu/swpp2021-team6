@@ -32,9 +32,6 @@ const SignUp = ({ history }: Props) => {
     exerciseName: '',
     skillLevel: '',
   });
-
-  console.log(form);
-
   useEffect(() => {
     if (!('geolocation' in navigator)) {
       alert('위치 정보를 사용할 수 없습니다. 다른 브라우저를 이용해주세요.');

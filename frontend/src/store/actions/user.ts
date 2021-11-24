@@ -65,7 +65,6 @@ export const getUserInfo = (id: any) => {
   return async (dispatch: any) => {
     try {
       const response = await axios.get(`/users/${id}`);
-      console.log(response);
       const returnedUserInfo = response.data;
       dispatch(getUserInfo_(returnedUserInfo));
     } catch (e: any) {

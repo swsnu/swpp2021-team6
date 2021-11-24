@@ -2,6 +2,13 @@ import { mount } from 'enzyme';
 import { history } from '../../store/store';
 import AddButton from '.';
 
+const mockPush = jest.fn();
+
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useHistory: () => ({ push: mockPush }),
+}));
+
 describe('Add Button', () => {
   window.matchMedia =
     window.matchMedia ||
@@ -13,10 +20,9 @@ describe('Add Button', () => {
       };
     };
   it('should render Add Button', () => {
-    const spyHistoryPush = jest.spyOn(history, 'push').mockImplementation();
     const addButton = <AddButton />;
     const component = mount(addButton);
     component.find('.plus-button').simulate('click');
-    expect(spyHistoryPush).toBeCalledTimes(1);
+    expect(mockPush).toBeCalledTimes(1);
   });
 });

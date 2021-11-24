@@ -40,7 +40,6 @@ export const createComment = async ({
   entityId: string;
 }> => {
   const res: any = await axios.post(`posts/${postId}/comments`, createPayload);
-  // console.log("" + res.data.id);
   return { entityId: `${res.data.id}` };
 };
 
