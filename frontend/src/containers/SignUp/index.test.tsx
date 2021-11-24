@@ -9,6 +9,7 @@ describe('SignUp', () => {
   beforeEach(() => {
     signup = <SignUp history={history} />;
     window.alert = jest.fn().mockImplementation();
+    console.log = jest.fn().mockImplementation();
   });
 
   afterEach(() => {
