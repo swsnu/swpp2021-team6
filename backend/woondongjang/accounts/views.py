@@ -13,11 +13,44 @@ from posts.models import Exercise, User_Exercise, Post, Participation
 
 @require_POST
 def signup(request):
-    req_data = json.loads(request.body.decode())
-    username = req_data["username"]
-    password = req_data["password"]
-    user = User.objects.create_user(username=username, password=password)
-    return JsonResponse({"userId": user.id}, safe=False, status=201)
+    def is_request_valid():
+        # ['남성', '여성']
+        if gender not in Profile.Gender.values:
+            return False
+        return True
+
+    try:
+        req_dict = json.loads(request.body.decode())
+        username = req_dict["username"]
+        password = req_dict["password"]
+        nickname = req_dict["nickname"]
+        latitude = req_dict["latitude"]
+        longitude = req_dict["longitude"]
+        gu = req_dict["gu"]
+        dong = req_dict["dong"]
+        gender = req_dict["gender"]
+        introduction = req_dict["introduction"]
+        preferred_exercises = req_dict["preferred_exercises"]
+    except (KeyError, JSONDecodeError):
+        return HttpResponse(status=400)
+
+    if not is_request_valid():
+        return HttpResponse(status=400)
+
+    ProxyUser.objects.create_user_with(
+        username,
+        password,
+        nickname,
+        latitude,
+        longitude,
+        gu,
+        dong,
+        gender,
+        introduction,
+        preferred_exercises,
+    )
+
+    return HttpResponse(status=201)
 
 
 @require_POST
@@ -57,12 +90,12 @@ def signout(request):
     return HttpResponse(status=204)
 
 
-@require_http_methods(["GET", "POST", "PATCH"])
+@require_http_methods(["GET", "PATCH"])
 @signin_required
 def user_detail(request, user_id):
-    user = User.objects.get(id=user_id)
-
     if request.method == "GET":
+        user = User.objects.get(id=user_id)
+
         user_exercise = [
             {
                 "exercise_name": user_exercise.exercise.name,
@@ -108,43 +141,8 @@ def user_detail(request, user_id):
             "participating_post": participating_post,
             "hosting_post": hosting_post,
         }
+        print(response_dict)
         return JsonResponse(response_dict, status=200)
-    elif request.method == "POST":
-
-        def is_request_valid():
-            if gender not in Profile.Gender.values:
-                return False
-            return True
-
-        try:
-            req_dict = json.loads(request.body.decode())
-            nickname = req_dict["nickname"]
-            latitude = req_dict["latitude"]
-            longitude = req_dict["longitude"]
-            gu = req_dict["gu"]
-            dong = req_dict["dong"]
-            gender = req_dict["gender"]
-            introduction = req_dict["introduction"]
-            preferred_exercises = req_dict["preferred_exercises"]
-        except (KeyError, JSONDecodeError):
-            return HttpResponse(status=400)
-
-        if not is_request_valid():
-            return HttpResponse(status=400)
-
-        ProxyUser.objects.create_user_with(
-            user_id,
-            nickname,
-            latitude,
-            longitude,
-            gu,
-            dong,
-            gender,
-            introduction,
-            preferred_exercises,
-        )
-
-        return HttpResponse(status=201)
 
     elif request.method == "PATCH":
         user = User.objects.get(id=user_id)

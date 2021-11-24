@@ -6,6 +6,7 @@ import * as userActionCreators from '../../store/actions/user';
 import Profile from './index';
 import mockStore, { history } from '../../store/store';
 import userInfo from '../../mocks/userInfo.json';
+import './index.scss';
 
 const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
 const useDispatchMock = jest.spyOn(reactRedux, 'useDispatch');

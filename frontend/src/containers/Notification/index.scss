@@ -1,0 +1,27 @@
+.read {
+  background-color: grey;
+}
+
+.noti-item-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.noti-text {
+  width: 240px;
+  padding-right: 20px;
+  margin-left: 5px;
+}
+.noti-time {
+  color: green;
+  margin-left: 5px;
+}
+.noti-dot {
+  padding-right: 5px;
+}
+
+.read {
+  display: none;
+}
