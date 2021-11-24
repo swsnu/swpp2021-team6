@@ -1,10 +1,8 @@
 import axios from 'axios';
-import { createStore } from 'redux';
 import * as actionTypes from './actionTypes';
 import * as actionCreators from './post';
 import stubPost from '../../mocks/post.json';
 import stubPosts from '../../mocks/posts.json';
-import store from '../store';
 import { CreatePostEntity } from '../../types/post';
 import { PostState } from '../reducers/post';
 import { getMockStore } from '../../test-utils/mocks';
@@ -35,11 +33,11 @@ const stubInitialState: PostState = {
 };
 
 const mockStore = getMockStore(stubInitialState);
+console.log = jest.fn().mockImplementation();
 
 describe('ActionCreators', () => {
   afterEach(() => {
     jest.clearAllMocks();
-    console.log = jest.fn().mockImplementation();
   });
 
   it("'getPosts' should fetch posts", (done) => {

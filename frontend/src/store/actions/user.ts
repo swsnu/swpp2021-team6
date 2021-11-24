@@ -37,7 +37,6 @@ export function signout() {
   return async (dispatch: any) => {
     alert('안녕히 가세요!');
     localStorage.clear();
-    sessionStorage.clear();
     dispatch(signout_());
     await axios.get('/users/signout');
   };
@@ -52,7 +51,6 @@ export const getUserInfo_ = (userInfo: any) => ({
 export const getUserInfo = (id: any) => async (dispatch: any) => {
   try {
     const response = await axios.get(`/users/${id}`);
-    console.log(response);
     const returnedUserInfo = response.data;
     dispatch(getUserInfo_(returnedUserInfo));
   } catch (e: any) {
