@@ -1,6 +1,7 @@
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
 import { History } from 'history';
+import axios from 'axios';
 import SignIn from './containers/SignIn';
 import SignUp from './containers/SignUp';
 import SignOut from './containers/SignOut';
@@ -11,6 +12,9 @@ import PostEdit from './containers/PostEdit';
 import Profile from './containers/Profile';
 import ProfileEdit from './containers/ProfileEdit';
 import Navbar from './containers/Navbar';
+
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 interface Props {
   history: History;
