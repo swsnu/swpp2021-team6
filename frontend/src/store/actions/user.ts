@@ -10,7 +10,7 @@ import {
   UserEntity,
   UserProfileInfo,
   UserSignInInputDTO,
-} from '../../types/user';
+} from '../../backend/entity/user';
 
 import { AppState } from '../store';
 

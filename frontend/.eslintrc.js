@@ -44,6 +44,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'react/button-has-type': 'off',
     'no-unused-vars': 'off',
+    'react/prop-types': ['off'],
     'import/extensions': [
       'error',
       'ignorePackages',

@@ -1,30 +1,35 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { History } from 'history';
+import { useHistory } from 'react-router';
 import axios from 'axios';
 import humps from 'humps';
-import { PostEntity } from '../../types/post';
+import { PostEntity } from '../../backend/entity/post';
 import PostDetail from '../../components/PostDetail';
 import { AppState } from '../../store/store';
+import {
+  createComment,
+  deletePost,
+  queryComments,
+  readPost,
+  readUser,
+} from '../../backend/api/api';
 
-interface Props {
-  history: History;
-}
-
-const PostDetailContainer = ({ history }: Props) => {
-  const postId = useParams<{ id: string }>().id;
+const PostDetailContainer: React.FC = () => {
+  const history = useHistory();
+  const postId: number = Number(useParams<{ id: string }>().id);
   const [post, setPost] = useState<PostEntity>();
+
+  const onPostDelete = async () => {
+    await deletePost({ id: postId });
+    history.push('/main');
+  };
 
   // Fetch Post on mount
   useEffect(() => {
-    // TODO: api.ts로 옮기기
-    const getPost = async ({ id }: { id: string }): Promise<PostEntity> =>
-      (await axios.get(`/posts/${id}`)).data;
-
-    getPost({ id: postId }).then((value) =>
-      setPost(humps.camelizeKeys(value) as PostEntity),
-    );
+    readPost({ id: postId }).then((res) => {
+      setPost(res.entity);
+    });
   }, [postId]);
 
   const { user } = useSelector((state: AppState) => state.user);
@@ -36,7 +41,13 @@ const PostDetailContainer = ({ history }: Props) => {
 
   // Render Component
   if (post === undefined) return null;
-  return <PostDetail post={post} isHost={user?.userId === post.hostId} />;
+  return (
+    <PostDetail
+      post={post}
+      isHost={user?.userId === post.hostId}
+      onDelete={onPostDelete}
+    />
+  );
 };
 
 export default PostDetailContainer;

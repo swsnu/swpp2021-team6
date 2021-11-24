@@ -1,12 +1,12 @@
+import React from 'react';
 import { History } from 'history';
+import { useHistory } from 'react-router';
 import imgSrc from '../../assets/icon/addButton.png';
 import './index.scss';
 
-interface Props {
-  history: History;
-}
+const AddButton: React.FC = () => {
+  const history = useHistory();
 
-const AddButton = ({ history }: Props) => {
   const onClickAddButton = () => {
     history.push('/post/new');
   };

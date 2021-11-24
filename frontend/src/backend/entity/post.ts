@@ -38,3 +38,8 @@ export interface CreatePostEntity {
   place: PlaceType;
   kakaotalkLink: string;
 }
+
+export interface UpdatePostEntity {
+  title?: string;
+  description?: string;
+}

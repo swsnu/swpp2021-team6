@@ -4,7 +4,7 @@ import { UserOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { getKakaoMapWithMarker } from '../../utils/getKakaoMap';
 import Label from '../Label';
-import { PostEntity } from '../../types/post';
+import { PostEntity } from '../../backend/entity/post';
 import changeDateFormat from '../../utils/dateToString';
 
 const { Search } = Input;
@@ -12,9 +12,10 @@ const { Search } = Input;
 interface Props {
   post: PostEntity;
   isHost: boolean | undefined;
+  onDelete: () => Promise<void>;
 }
 
-const Detail: React.FC<Props> = ({ post, isHost = false }) => {
+const Detail: React.FC<Props> = ({ post, isHost = false, onDelete }) => {
   useEffect(() => {
     const container = document.getElementById('map');
     getKakaoMapWithMarker(container, post.place.latitude, post.place.longitude);
@@ -24,7 +25,7 @@ const Detail: React.FC<Props> = ({ post, isHost = false }) => {
   const button = isHost ? (
     <>
       <Button>수정하기</Button>
-      <Button>삭제하기</Button>
+      <Button onClick={onDelete}>삭제하기</Button>
     </>
   ) : (
     <Button>참가 신청하기</Button>
