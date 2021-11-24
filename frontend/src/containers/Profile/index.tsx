@@ -1,7 +1,5 @@
 /* eslint-disable react/jsx-wrap-multilines */
-import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { History } from 'history';
 import 'antd/dist/antd.css';
 import { Tabs, Card, Descriptions, Badge } from 'antd';

@@ -11,4 +11,5 @@ export const DELETE_COMMENT = 'DELETE_COMMENT';
 export const SIGNIN = 'SIGNIN';
 export const SIGNOUT = 'SIGNOUT';
 export const GET_USER_INFO = 'GET_USER_INFO';
+export const GET_USER_NOTIFICATION = 'GET_USER_NOTIFICATION';
 // export const GET_USRS = 'GET_USERS';

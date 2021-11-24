@@ -1,4 +1,4 @@
-import { ExerciseAndSkill } from './exercise';
+import { ExerciseAndSkill, SkillLevelType } from './exercise';
 
 export type GenderType = '남성' | '여성' | '미선택';
 
@@ -10,6 +10,26 @@ export interface UserEntity {
   gu: string;
   dong: string;
   gender: string;
+}
+
+export interface UserPostEntity {
+  postId: number;
+  title: string;
+  meetAt: string;
+  placeName: string;
+  status: string;
+}
+
+export interface UserInfoEntity {
+  userId: number;
+  nickname: string;
+  gu: string;
+  dong: string;
+  gender: GenderType;
+  introduction: string;
+  userExercise: ExerciseAndSkill[];
+  participatingPost: UserPostEntity[];
+  hostingPost: UserPostEntity[];
 }
 
 export interface UserSignInInputDTO {
