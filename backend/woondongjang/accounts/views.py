@@ -72,7 +72,8 @@ def signin(request):
 
     login(request, user)
 
-    response_dict = {"user_id": user.id}
+    response_dict = {"user_id": user.id, "nickname": user.profile.nickname, "latitude": user.profile.latitude,
+                     "longitude": user.profile.longitude}
     return JsonResponse(response_dict, safe=False, status=200)
 
 

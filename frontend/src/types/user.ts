@@ -17,6 +17,13 @@ export interface UserSignInInputDTO {
   password: string;
 }
 
+export interface UserProfileInfo {
+  userId: number;
+  nickname: string;
+  latitude: number;
+  longitude: number;
+}
+
 export interface SignUpInputDTO {
   username: string;
   password: string;

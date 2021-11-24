@@ -4,35 +4,37 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 import { push } from 'connected-react-router';
+import humps from 'humps';
 import * as actionTypes from './actionTypes';
-import { UserEntity, UserSignInInputDTO } from '../../types/user';
+import {
+  UserEntity,
+  UserProfileInfo,
+  UserSignInInputDTO,
+} from '../../types/user';
 
 import { AppState } from '../store';
 
 /* LOGIN */
-export const signin_ = (currentUser: UserEntity) => ({
-  user: currentUser,
+export const signin_ = (currentUser: UserProfileInfo) => ({
   type: actionTypes.SIGNIN,
+  user: currentUser,
 });
 
 export const signin = (user: UserSignInInputDTO) => {
   return async (dispatch: any) => {
     try {
       const response = await axios.post('/users/signin', user);
-      // const response = axios.post('/users/signin', user).then((res) => {
-      //   console.log(res);
-      // });
-      // console.log(response);
-      // const currentUser: any = response;
-      const currentUser: UserEntity = response.data;
-      window.localStorage.setItem('userInfo', JSON.stringify(currentUser));
+      const currentUser = humps.camelizeKeys(
+        response.data,
+      ) as unknown as UserProfileInfo;
+      window.localStorage.setItem('profileInfo', JSON.stringify(currentUser));
       dispatch(signin_(currentUser));
       dispatch(push('/main'));
     } catch (e: any) {
       if (e?.response && e.response.status === 404) {
-        alert('존재하지 않는 아이디입니다');
+        alert('존재하지 않는 아이디입니다.');
       } else if (e?.response && e.response.status === 401) {
-        alert('잘못된 비밀번호입니다');
+        alert('잘못된 비밀번호입니다.');
       }
     }
   };

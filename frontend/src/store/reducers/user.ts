@@ -1,15 +1,15 @@
 import * as actionTypes from '../actions/actionTypes';
-import { UserEntity } from '../../types/user';
+import { UserEntity, UserProfileInfo } from '../../types/user';
 import { UserAction } from '../actions/user';
 import { DefaultAction } from '../actions/index';
 
 export type UserState = {
-  user: UserEntity | null;
+  user: UserProfileInfo | null;
   userInfo: any | null;
 };
 
 const InitialState: UserState = {
-  user: JSON.parse(window.localStorage.getItem('userInfo')!),
+  user: JSON.parse(window.localStorage.getItem('userInfo')!) || null,
   userInfo: null,
 };
 
