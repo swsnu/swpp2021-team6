@@ -52,6 +52,10 @@ export const getUserInfo_ = (userInfo: any) => ({
 export const getUserInfo = (id: any) => async (dispatch: any) => {
   try {
     const response = await axios.get(`/users/${id}`);
+<<<<<<< HEAD
+=======
+    console.log(response);
+>>>>>>> ad11710 (test: Add post action test)
     const returnedUserInfo = response.data;
     dispatch(getUserInfo_(returnedUserInfo));
   } catch (e: any) {
