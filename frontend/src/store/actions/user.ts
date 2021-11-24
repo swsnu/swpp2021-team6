@@ -1,18 +1,8 @@
-/* eslint-disable arrow-body-style */
-import { useSelector } from 'react-redux';
-
 import axios from 'axios';
-
 import { push } from 'connected-react-router';
 import humps from 'humps';
 import * as actionTypes from './actionTypes';
-import {
-  UserEntity,
-  UserProfileInfo,
-  UserSignInInputDTO,
-} from '../../backend/entity/user';
-
-import { AppState } from '../store';
+import { UserProfileInfo, UserSignInInputDTO } from '../../backend/entity/user';
 
 /* LOGIN */
 export const signin_ = (currentUser: UserProfileInfo) => ({
@@ -20,24 +10,22 @@ export const signin_ = (currentUser: UserProfileInfo) => ({
   user: currentUser,
 });
 
-export const signin = (user: UserSignInInputDTO) => {
-  return async (dispatch: any) => {
-    try {
-      const response = await axios.post('/users/signin', user);
-      const currentUser = humps.camelizeKeys(
-        response.data,
-      ) as unknown as UserProfileInfo;
-      window.localStorage.setItem('profileInfo', JSON.stringify(currentUser));
-      dispatch(signin_(currentUser));
-      dispatch(push('/main'));
-    } catch (e: any) {
-      if (e?.response && e.response.status === 404) {
-        alert('존재하지 않는 아이디입니다.');
-      } else if (e?.response && e.response.status === 401) {
-        alert('잘못된 비밀번호입니다.');
-      }
+export const signin = (user: UserSignInInputDTO) => async (dispatch: any) => {
+  try {
+    const response = await axios.post('/users/signin', user);
+    const currentUser = humps.camelizeKeys(
+      response.data,
+    ) as unknown as UserProfileInfo;
+    window.localStorage.setItem('profileInfo', JSON.stringify(currentUser));
+    dispatch(signin_(currentUser));
+    dispatch(push('/main'));
+  } catch (e: any) {
+    if (e?.response && e.response.status === 404) {
+      alert('존재하지 않는 아이디입니다.');
+    } else if (e?.response && e.response.status === 401) {
+      alert('잘못된 비밀번호입니다.');
     }
-  };
+  }
 };
 
 /* LOGOUT */
@@ -49,7 +37,6 @@ export function signout() {
   return async (dispatch: any) => {
     alert('안녕히 가세요!');
     localStorage.clear();
-    sessionStorage.clear();
     dispatch(signout_());
     await axios.get('/users/signout');
   };
@@ -61,18 +48,16 @@ export const getUserInfo_ = (userInfo: any) => ({
   userInfo,
 });
 
-export const getUserInfo = (id: any) => {
-  return async (dispatch: any) => {
-    try {
-      const response = await axios.get(`/users/${id}`);
-      const returnedUserInfo = response.data;
-      dispatch(getUserInfo_(returnedUserInfo));
-    } catch (e: any) {
-      if (e?.response && e.response.status === 404) {
-        alert('존재하지 않는 유저입니다');
-      }
+export const getUserInfo = (id: any) => async (dispatch: any) => {
+  try {
+    const response = await axios.get(`/users/${id}`);
+    const returnedUserInfo = response.data;
+    dispatch(getUserInfo_(returnedUserInfo));
+  } catch (e: any) {
+    if (e?.response && e.response.status === 404) {
+      alert('존재하지 않는 유저입니다');
     }
-  };
+  }
 };
 
 export type UserAction =

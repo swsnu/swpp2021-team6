@@ -2,18 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useHistory } from 'react-router';
-import axios from 'axios';
-import humps from 'humps';
 import { PostEntity } from '../../backend/entity/post';
 import PostDetail from '../../components/PostDetail';
 import { AppState } from '../../store/store';
-import {
-  createComment,
-  deletePost,
-  queryComments,
-  readPost,
-  readUser,
-} from '../../backend/api/api';
+import { deletePost, readPost } from '../../backend/api/api';
 
 const PostDetailContainer: React.FC = () => {
   const history = useHistory();
