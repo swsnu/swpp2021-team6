@@ -1,7 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
-import { UserEntity, UserProfileInfo } from '../../backend/entity/user';
-import { UserAction } from '../actions/user';
-import { DefaultAction } from '../actions/index';
+import { UserProfileInfo } from '../../backend/entity/user';
 
 export type UserState = {
   user: UserProfileInfo | null;
