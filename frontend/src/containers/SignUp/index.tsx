@@ -2,10 +2,10 @@ import { Button, Input, Radio, Select } from 'antd';
 import { History } from 'history';
 import { useEffect, useState } from 'react';
 import logo from '../../assets/logo.png';
-import { SignUpInputDTO } from '../../types/user';
+import { SignUpInputDTO } from '../../backend/entity/user';
 import './index.scss';
 import getGuDong from '../../utils/getGuDong';
-import { ExerciseAndSkill } from '../../types/exercise';
+import { ExerciseAndSkill } from '../../backend/entity/exercise';
 
 const { Option } = Select;
 
@@ -32,9 +32,6 @@ const SignUp = ({ history }: Props) => {
     exerciseName: '',
     skillLevel: '',
   });
-
-  console.log(form);
-
   useEffect(() => {
     if (!('geolocation' in navigator)) {
       alert('위치 정보를 사용할 수 없습니다. 다른 브라우저를 이용해주세요.');

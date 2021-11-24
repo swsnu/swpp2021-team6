@@ -127,6 +127,13 @@ const mockPostWithWrongData = {
   keywords: ['뒤풀이', 'MBTI E', '이번 주말'],
 };
 
+const mockPush = jest.fn();
+
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useHistory: () => ({ push: mockPush }),
+}));
+
 describe('Post', () => {
   window.matchMedia =
     window.matchMedia ||
@@ -138,25 +145,25 @@ describe('Post', () => {
       };
     };
   it('should render soccer image with level high label', () => {
-    const post = <Post history={history} post={soccerMockPost} />;
+    const post = <Post post={soccerMockPost} />;
     const component = mount(post);
     expect(component.find('.level-label').at(0).text()).toBe('실력 : 상');
   });
 
   it('should render basketball image with level middle label', () => {
-    const post = <Post history={history} post={basketballMockPost} />;
+    const post = <Post post={basketballMockPost} />;
     const component = mount(post);
     expect(component.find('.level-label').at(0).text()).toBe('실력 : 중');
   });
 
   it('should render basketball image with level low label', () => {
-    const post = <Post history={history} post={levelLowMockPost} />;
+    const post = <Post post={levelLowMockPost} />;
     const component = mount(post);
     expect(component.find('.level-label').at(0).text()).toBe('실력 : 하');
   });
 
   it('should render soccer image with level none label', () => {
-    const post = <Post history={history} post={levelNoneMockPost} />;
+    const post = <Post post={levelNoneMockPost} />;
     const component = mount(post);
     expect(component.find('.level-label').at(0).text()).toBe(
       '실력 : 상관 없음',
@@ -165,15 +172,14 @@ describe('Post', () => {
 
   it('should alert with wrong data', () => {
     window.alert = jest.fn().mockImplementation();
-    const post = <Post history={history} post={mockPostWithWrongData} />;
+    const post = <Post post={mockPostWithWrongData} />;
     const component = mount(post);
   });
 
   it('should redirect to post detail page when clicked', () => {
-    const spyHistoryPush = jest.spyOn(history, 'push').mockImplementation();
-    const post = <Post history={history} post={soccerMockPost} />;
+    const post = <Post post={soccerMockPost} />;
     const component = mount(post);
     component.find('.post').simulate('click');
-    expect(spyHistoryPush).toBeCalledTimes(1);
+    expect(mockPush).toHaveBeenCalled();
   });
 });

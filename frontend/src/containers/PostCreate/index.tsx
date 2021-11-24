@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { DatePicker, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
-import { History } from 'history';
-import { CreatePostEntity } from '../../types/post';
+import { CreatePostEntity } from '../../backend/entity/post';
 import 'antd/dist/antd.css';
 import * as actionCreators from '../../store/actions';
 import getGuDong from '../../utils/getGuDong';
 import { AppState } from '../../store/store';
 import { getKakaoMap } from '../../utils/getKakaoMap';
+import { createPost, readUser } from '../../backend/api/api';
 
 const initialPostState: CreatePostEntity = {
   exerciseName: '축구',
@@ -30,14 +31,9 @@ const initialPostState: CreatePostEntity = {
   kakaotalkLink: '',
 };
 
-interface Props {
-  history: History;
-}
-
-const PostCreate = ({ history }: Props) => {
+const PostCreate: React.FC = () => {
+  const history = useHistory();
   const { user } = useSelector((state: AppState) => state.user);
-
-  console.log(user);
 
   const [post, setPost] = useState<CreatePostEntity>(initialPostState);
   const [date, setDate] = useState<Moment | null>(moment());
@@ -122,7 +118,7 @@ const PostCreate = ({ history }: Props) => {
     );
   };
 
-  const onclickSubmit = () => {
+  const onclickSubmit = async () => {
     if (!post.title) {
       alert('제목을 입력해주세요');
     } else if (!post.description) {
@@ -138,7 +134,8 @@ const PostCreate = ({ history }: Props) => {
     ) {
       alert('운동 장소를 설정해주세요');
     } else {
-      dispatch(actionCreators.createPost(post));
+      const newPost = (await createPost({ createPayload: post })).entity;
+      history.push(`/post/${newPost.postId}`);
     }
   };
 

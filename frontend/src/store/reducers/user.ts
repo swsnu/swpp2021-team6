@@ -1,5 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
-import { UserEntity, UserProfileInfo } from '../../types/user';
+import { UserEntity, UserProfileInfo } from '../../backend/entity/user';
 import { UserAction } from '../actions/user';
 import { DefaultAction } from '../actions/index';
 

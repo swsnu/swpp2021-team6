@@ -20,7 +20,7 @@ describe('PostCreate', () => {
   beforeEach(() => {
     postCreate = (
       <Provider store={mockStore}>
-        <PostCreate history={history} />
+        <PostCreate />
       </Provider>
     );
     useSelectorMock.mockReturnValue(mockUser);

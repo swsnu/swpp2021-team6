@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { History } from 'history';
 import Post from '../../components/Post';
@@ -6,19 +6,17 @@ import Filter from '../Filter';
 import * as actionCreators from '../../store/actions';
 import './index.scss';
 import { AppState } from '../../store/store';
-import { PostEntity } from '../../types/post';
+import { PostEntity } from '../../backend/entity/post';
 import AddButton from '../../components/AddButton';
+import { queryPosts } from '../../backend/api/api';
 
-interface Props {
-  history: History;
-}
-
-const Main = ({ history }: Props) => {
-  const posts = useSelector((state: AppState) => state.post?.posts);
-  const dispatch = useDispatch();
+const Main: React.FC = () => {
+  const [posts, setPosts] = useState<PostEntity[]>();
   useEffect(() => {
-    dispatch(actionCreators.getPosts());
+    queryPosts().then((res) => setPosts(res.items));
   }, []);
+
+  console.log('posts', posts);
 
   return (
     <div className="main">
@@ -26,11 +24,11 @@ const Main = ({ history }: Props) => {
         <Filter />
       </div>
       <div className="post-container">
-        {posts.map((post: PostEntity) => (
-          <Post key={post.postId} post={post} history={history} />
+        {posts?.map((post: PostEntity) => (
+          <Post key={post.postId} post={post} />
         ))}
       </div>
-      <AddButton history={history} />
+      <AddButton />
     </div>
   );
 };

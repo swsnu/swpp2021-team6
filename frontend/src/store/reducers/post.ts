@@ -1,4 +1,4 @@
-import { PostEntity } from '../../types/post';
+import { PostEntity } from '../../backend/entity/post';
 import { DefaultAction } from '../actions/index';
 import { PostAction } from '../actions/post';
 import * as actionTypes from '../actions/actionTypes';

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { History } from 'history';
+import { useHistory } from 'react-router';
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { PostEntity } from '../../types/post';
+import { PostEntity } from '../../backend/entity/post';
 import * as thumbnails from '../../utils/thumbnails';
 import './index.scss';
 import dateToString from '../../utils/dateToString';
@@ -10,13 +10,14 @@ import Label from '../Label';
 import * as labelColors from '../../style/labelColors';
 
 interface Props {
-  history: History;
   post: PostEntity;
 }
 
-const Post = ({ history, post }: Props) => {
+const Post: React.FC<Props> = ({ post }: Props) => {
+  const history = useHistory();
   const [imgSrc, setImgSrc] = useState<string>(thumbnails.soccer[0]);
   const [labelColor, setLabelColor] = useState<string>(labelColors.blue);
+
   useEffect(() => {
     const idx = Math.floor(Math.random() * 4);
     let imgArray = thumbnails.soccer;

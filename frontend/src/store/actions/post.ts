@@ -3,7 +3,7 @@ import { Dispatch } from 'redux';
 import { push } from 'connected-react-router';
 import humps from 'humps';
 import * as actionTypes from './actionTypes';
-import { PostEntity, CreatePostEntity } from '../../types/post';
+import { PostEntity, CreatePostEntity } from '../../backend/entity/post';
 
 export const getPosts_ = (posts: PostEntity[]) => ({
   type: actionTypes.GET_POSTS,
