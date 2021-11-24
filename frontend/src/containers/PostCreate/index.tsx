@@ -37,6 +37,8 @@ interface Props {
 const PostCreate = ({ history }: Props) => {
   const { user } = useSelector((state: AppState) => state.user);
 
+  console.log(user);
+
   const [post, setPost] = useState<CreatePostEntity>(initialPostState);
   const [date, setDate] = useState<Moment | null>(moment());
   const [time, setTime] = useState<Moment | null>(moment('7:00', 'h:mm a'));

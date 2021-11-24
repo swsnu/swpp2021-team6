@@ -36,7 +36,7 @@ const PostDetailContainer = ({ history }: Props) => {
 
   // Render Component
   if (post === undefined) return null;
-  return <PostDetail post={post} isHost={user?.id === post.hostId} />;
+  return <PostDetail post={post} isHost={user?.userId === post.hostId} />;
 };
 
 export default PostDetailContainer;
