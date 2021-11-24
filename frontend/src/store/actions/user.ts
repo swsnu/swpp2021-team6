@@ -60,7 +60,25 @@ export const getUserInfo = (id: any) => async (dispatch: any) => {
   }
 };
 
+export const getUserNotification_ = (userNotification: any) => ({
+  type: actionTypes.GET_USER_NOTIFICATION,
+  userNotification,
+});
+
+export const getUserNotification = (id: any) => async (dispatch: any) => {
+  try {
+    const response = await axios.get(`/users/${id}/notification`);
+    const userNotification = response.data;
+    dispatch(getUserNotification_(userNotification));
+  } catch (e: any) {
+    if (e?.response && e.response.status === 404) {
+      alert('존재하지 않는 유저입니다');
+    }
+  }
+};
+
 export type UserAction =
   | ReturnType<typeof signin_>
   | ReturnType<typeof signout_>
-  | ReturnType<typeof getUserInfo_>;
+  | ReturnType<typeof getUserInfo_>
+  | ReturnType<typeof getUserNotification_>;
