@@ -2,7 +2,13 @@ import axios from 'axios';
 import { push } from 'connected-react-router';
 import humps from 'humps';
 import * as actionTypes from './actionTypes';
-import { UserProfileInfo, UserSignInInputDTO } from '../../types/user';
+import {
+  UserEntity,
+  UserProfileInfo,
+  UserSignInInputDTO,
+} from '../../types/user';
+
+import { AppState } from '../store';
 
 /* LOGIN */
 export const signin_ = (currentUser: UserProfileInfo) => ({
