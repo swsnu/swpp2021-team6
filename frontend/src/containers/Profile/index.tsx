@@ -4,6 +4,7 @@ import { History } from 'history';
 import 'antd/dist/antd.css';
 import { Tabs, Card, Descriptions, Badge } from 'antd';
 import { AppState } from '../../store/store';
+import { UserInfoEntity } from '../../types/user';
 import { getUserInfo } from '../../store/actions/index';
 import userInfo from '../../mocks/userInfo.json';
 
@@ -21,69 +22,31 @@ const MyAppointment = ({
   >
     <p>{meet_at}</p>
     <p>{place_name}</p>
-    {status === '참가 중' ? (
-      <div
-        style={{
-          paddingBottom: 10,
-          marginBottom: 10,
-          display: 'flex',
-          justifyContent: 'right',
-        }}
-      >
-        <Badge status="processing" text="참가 중" />
-      </div>
-    ) : (
-      <div
-        style={{
-          paddingBottom: 10,
-          marginBottom: 10,
-          display: 'flex',
-          justifyContent: 'right',
-        }}
-      >
-        <Badge status="warning" text="승인 대기 중" />
-      </div>
-    )}
-  </Card>
-);
-
-const HostingAppointment = ({
-  history,
-  appointment: { post_id, title, place_name, meet_at, status, ...rest },
-}: any) => (
-  <Card
-    size="small"
-    title={title}
-    extra={
-      <button onClick={() => history.push(`/post/${post_id}`)}>자세히</button>
-    }
-    style={{ margin: 10, height: 160, width: 250 }}
-  >
-    <p>{meet_at}</p>
-    <p>{place_name}</p>
-    {status === '모집 중' ? (
-      <div
-        style={{
-          paddingBottom: 10,
-          marginBottom: 10,
-          display: 'flex',
-          justifyContent: 'right',
-        }}
-      >
-        <Badge status="warning" text="모집 중" />
-      </div>
-    ) : (
-      <div
-        style={{
-          paddingBottom: 10,
-          marginBottom: 10,
-          display: 'flex',
-          justifyContent: 'right',
-        }}
-      >
-        <Badge status="processing" text="모집 완료" />
-      </div>
-    )}
+    <div
+      style={{
+        paddingBottom: 10,
+        marginBottom: 10,
+        display: 'flex',
+        justifyContent: 'right',
+      }}
+    >
+      {() => {
+        switch (status) {
+          case '참가 중':
+            return <Badge status="processing" text="참가 중" />;
+          case '승인 대기 중':
+            return <Badge status="warning" text="승인 대기 중" />;
+          case '거절 됨':
+            return <Badge status="default" text="거절 됨" />;
+          case '모집 중':
+            return <Badge status="warning" text="모집 중" />;
+          case '모집 완료':
+            return <Badge status="processing" text="모집 완료" />;
+          default:
+            return '';
+        }
+      }}
+    </div>
   </Card>
 );
 
@@ -191,7 +154,7 @@ const Profile = ({ history }: ProfileProps) => {
           <TabPane tab="내가 만든 모임" key="2">
             <div>
               {userInfo.hosting_post.map((appointment: any) => (
-                <HostingAppointment
+                <MyAppointment
                   key={appointment.post_id}
                   history={history}
                   appointment={appointment}

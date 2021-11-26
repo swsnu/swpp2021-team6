@@ -26,6 +26,11 @@ const Notification = ({ history }: NotificationProps) => {
   //   dispatch(getUserNotification(userInfo?.userId));
   // }, []); //다음에 implement
 
+  const clickNotiHandler = (postId: number) => {
+    history.push(`/post/${postId}`);
+    // axios.put();
+  };
+
   const getMessage = (type: string, postId: number) => {
     const targetPost =
       userInfo?.participatingPost.filter((post) => post.postId === postId)[0] ||
@@ -35,9 +40,9 @@ const Notification = ({ history }: NotificationProps) => {
       // setPostTitle(targetPost.title);
       postTitle = targetPost.title;
     }
-    if (postTitle.length > 10) {
-      // setPostTitle(postTitle.substr(0, 9).concat('...'));
-      postTitle = postTitle.substr(0, 9).concat('...');
+    if (postTitle.length > 15) {
+      // setPostTitle(postTitle.substr(0, 14).concat('...'));
+      postTitle = postTitle.substr(0, 14).concat('...');
     }
     switch (type) {
       case 'request participation':

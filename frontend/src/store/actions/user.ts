@@ -77,8 +77,22 @@ export const getUserNotification = (id: any) => async (dispatch: any) => {
   }
 };
 
+export const readNotification_ = (userNotification: any) => ({
+  type: actionTypes.READ_NOTIFICATION,
+  userNotification,
+});
+
+export const readNotification = (userId: number, notiId: number) => {
+  return async (dispatch: any) => {
+    const response = await axios.put(`/users/${userId}/notification${notiId}`);
+    const userNotification = response.data;
+    dispatch(readNotification_(userNotification));
+  };
+};
+
 export type UserAction =
   | ReturnType<typeof signin_>
   | ReturnType<typeof signout_>
   | ReturnType<typeof getUserInfo_>
-  | ReturnType<typeof getUserNotification_>;
+  | ReturnType<typeof getUserNotification_>
+  | ReturnType<typeof readNotification_>;
