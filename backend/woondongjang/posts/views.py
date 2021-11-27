@@ -6,6 +6,7 @@ from django.views.decorators.http import require_POST, require_http_methods
 import json
 
 from .models import Post, Comment, Post_Keyword, Participation
+from .filters import PostFilter
 from accounts.decorators import signin_required
 
 
@@ -43,7 +44,7 @@ def posts(request):
                     get_object_or_404(Post_Keyword, post=post).keyword3,
                 ],
             }
-            for post in Post.objects.all()
+            for post in PostFilter(request.GET, Post.objects.all()).qs
         ]
 
         return JsonResponse(post_list, safe=False, status=200)
