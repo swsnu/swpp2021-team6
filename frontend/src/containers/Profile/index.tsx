@@ -6,7 +6,6 @@ import { useParams } from 'react-router';
 import 'antd/dist/antd.css';
 import { Tabs, Card, Descriptions, Badge } from 'antd';
 import { AppState } from '../../store/store';
-import { UserInfoEntity } from '../../types/user';
 import { getUserInfo } from '../../store/actions/index';
 // import userState.userInfo from '../../mocks/userState.userInfo.json';
 
