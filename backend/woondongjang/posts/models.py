@@ -53,6 +53,24 @@ class Exercise(models.Model):
             return self.Name.RIDING.label
 
 
+class Level(models.TextChoices):
+    HIGH = "상", _("high")
+    MIDDLE = "중", _("middle")
+    LOW = "하", _("low")
+    ANY = "상관 없음", _("any")
+
+    @classmethod
+    def label_to_value(cls, label):
+        if label.lower() == cls.HIGH.label:
+            return cls.HIGH.value
+        elif label.lower() == cls.MIDDLE.label:
+            return cls.MIDDLE.value
+        elif label.lower() == cls.LOW.label:
+            return cls.LOW.value
+        elif label.lower() == cls.ANY.label:
+            return cls.ANY.value
+
+
 class PostManager(models.Manager):
     @transaction.atomic
     def create_post(
@@ -120,7 +138,7 @@ class Post(models.Model):
     host = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.TextField(default="")
     description = models.TextField(default="")
-    expected_level = models.CharField(max_length=20)
+    expected_level = models.CharField(max_length=20, choices=Level.choices)
     meet_at = models.DateTimeField()
     latitude = models.DecimalField(max_digits=19, decimal_places=16)
     longitude = models.DecimalField(max_digits=19, decimal_places=16)
@@ -164,7 +182,7 @@ class Participation(models.Model):
 class User_Exercise(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
-    skill_level = models.CharField(max_length=20)
+    skill_level = models.CharField(max_length=20, choices=Level.choices)
 
 
 class Comment(models.Model):

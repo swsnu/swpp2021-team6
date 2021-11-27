@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from ..models import Exercise, Post
+from ..models import Exercise, Level, Post
 
 
 class PostTestCase(TestCase):
@@ -36,24 +36,15 @@ class PostTestCase(TestCase):
 
 
 class ExerciseTestCase(TestCase):
-    def setUp(self):
-        Exercise.objects.create(name="축구")
-        Exercise.objects.create(name="농구")
-        Exercise.objects.create(name="배드민턴")
-        Exercise.objects.create(name="테니스")
-        Exercise.objects.create(name="탁구")
-        Exercise.objects.create(name="러닝")
-        Exercise.objects.create(name="라이딩")
-
     def test_exercise_name_label(self):
-        # When
-        exercise1 = Exercise.objects.get(name="축구")
-        exercise2 = Exercise.objects.get(name="농구")
-        exercise3 = Exercise.objects.get(name="배드민턴")
-        exercise4 = Exercise.objects.get(name="테니스")
-        exercise5 = Exercise.objects.get(name="탁구")
-        exercise6 = Exercise.objects.get(name="러닝")
-        exercise7 = Exercise.objects.get(name="라이딩")
+        # Given
+        exercise1 = Exercise.objects.create(name="축구")
+        exercise2 = Exercise.objects.create(name="농구")
+        exercise3 = Exercise.objects.create(name="배드민턴")
+        exercise4 = Exercise.objects.create(name="테니스")
+        exercise5 = Exercise.objects.create(name="탁구")
+        exercise6 = Exercise.objects.create(name="러닝")
+        exercise7 = Exercise.objects.create(name="라이딩")
 
         # Then
         self.assertEqual(exercise1.name_label, "soccer")
@@ -66,9 +57,17 @@ class ExerciseTestCase(TestCase):
 
     def test_exercise_name_label_to_value(self):
         self.assertEqual(Exercise.Name.label_to_value("soccer"), "축구")
-        self.assertEqual(Exercise.Name.label_to_value("basketball"), "농구")
-        self.assertEqual(Exercise.Name.label_to_value("badminton"), "배드민턴")
+        self.assertEqual(Exercise.Name.label_to_value("BASKETBALL"), "농구")
+        self.assertEqual(Exercise.Name.label_to_value("BaDmInTon"), "배드민턴")
         self.assertEqual(Exercise.Name.label_to_value("tennis"), "테니스")
         self.assertEqual(Exercise.Name.label_to_value("tabletennis"), "탁구")
         self.assertEqual(Exercise.Name.label_to_value("running"), "러닝")
         self.assertEqual(Exercise.Name.label_to_value("riding"), "라이딩")
+
+
+class LevelTestCase(TestCase):
+    def test_level_label_to_value(self):
+        self.assertEqual(Level.label_to_value("high"), "상")
+        self.assertEqual(Level.label_to_value("MIDDLE"), "중")
+        self.assertEqual(Level.label_to_value("lOw"), "하")
+        self.assertEqual(Level.label_to_value("any"), "상관 없음")
