@@ -4,7 +4,7 @@ from django.test import TestCase
 from ..models import Exercise, Post
 
 
-class PostsModelsTestCase(TestCase):
+class PostTestCase(TestCase):
     def test_create_post(self):
         # Given
         host = User.objects.create_user(username="username")
@@ -33,3 +33,42 @@ class PostsModelsTestCase(TestCase):
         # Then
         self.assertEqual(post.id, 1)
         self.assertEqual(post.exercise.name, "축구")
+
+
+class ExerciseTestCase(TestCase):
+    def setUp(self):
+        Exercise.objects.create(name="축구")
+        Exercise.objects.create(name="농구")
+        Exercise.objects.create(name="배드민턴")
+        Exercise.objects.create(name="테니스")
+        Exercise.objects.create(name="탁구")
+        Exercise.objects.create(name="러닝")
+        Exercise.objects.create(name="라이딩")
+
+    def test_exercise_name_label(self):
+        # When
+        exercise1 = Exercise.objects.get(name="축구")
+        exercise2 = Exercise.objects.get(name="농구")
+        exercise3 = Exercise.objects.get(name="배드민턴")
+        exercise4 = Exercise.objects.get(name="테니스")
+        exercise5 = Exercise.objects.get(name="탁구")
+        exercise6 = Exercise.objects.get(name="러닝")
+        exercise7 = Exercise.objects.get(name="라이딩")
+
+        # Then
+        self.assertEqual(exercise1.name_label, "soccer")
+        self.assertEqual(exercise2.name_label, "basketball")
+        self.assertEqual(exercise3.name_label, "badminton")
+        self.assertEqual(exercise4.name_label, "tennis")
+        self.assertEqual(exercise5.name_label, "tabletennis")
+        self.assertEqual(exercise6.name_label, "running")
+        self.assertEqual(exercise7.name_label, "riding")
+
+    def test_exercise_name_label_to_value(self):
+        self.assertEqual(Exercise.Name.label_to_value("soccer"), "축구")
+        self.assertEqual(Exercise.Name.label_to_value("basketball"), "농구")
+        self.assertEqual(Exercise.Name.label_to_value("badminton"), "배드민턴")
+        self.assertEqual(Exercise.Name.label_to_value("tennis"), "테니스")
+        self.assertEqual(Exercise.Name.label_to_value("tabletennis"), "탁구")
+        self.assertEqual(Exercise.Name.label_to_value("running"), "러닝")
+        self.assertEqual(Exercise.Name.label_to_value("riding"), "라이딩")
