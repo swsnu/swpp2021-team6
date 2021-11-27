@@ -17,7 +17,7 @@ const Navbar = ({ history }: NavbarProps) => (
       <span
         className="mypage"
         aria-hidden="true"
-        onClick={() => history.push('/profile')}
+        onClick={() => history.push('/profile/my')}
       >
         마이페이지
       </span>
