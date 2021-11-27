@@ -17,6 +17,23 @@ const Main: React.FC = () => {
 
   console.log('filterArray', filterArray);
 
+  const getQueryString = (arr: FilterInputDTO[]) => {
+    let search = '';
+    arr.forEach((val, idx) => {
+      if (idx === 0) search += '?';
+      if (idx !== 0) search += '&';
+      search += `exercise=${val.exerciseName}&level=${val.skillLevel}`;
+    });
+
+    return search;
+  };
+
+  useEffect(() => {
+    console.log(getQueryString(filterArray));
+  }, [filterArray]);
+
+  // TODO: Filter 컨테이너 내에서 적용 버튼 누르면 history.push
+
   return (
     <div className="main">
       <div className="filter-container">
