@@ -1,6 +1,5 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
 import Main from '.';
 import * as actionCreators from '../../backend/api/api';
 import { PostEntity } from '../../backend/entity/post';
@@ -41,9 +40,23 @@ describe('Main', () => {
     main = <Main />;
     spyQueryPosts = jest
       .spyOn(actionCreators, 'queryPosts')
-      // .mockResolvedValue({ items: mockPosts })
-      .mockRejectedValue(new Error('async error'));
-    console.log = jest.fn().mockImplementation();
+      .mockResolvedValue({ items: mockPosts });
+    // .mockRejectedValue(new Error('async error'));
+    // console.log = jest.fn().mockImplementation();
+
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: jest.fn().mockImplementation((query) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+      })),
+    });
   });
 
   it('should render without error', () => {
