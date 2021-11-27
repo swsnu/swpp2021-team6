@@ -1,12 +1,56 @@
 from django.db import models, transaction
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
+from django.utils.translation import gettext_lazy as _
 
 from .ml.ibm_cloud import extract_keywords
 
 
 class Exercise(models.Model):
-    name = models.CharField(max_length=20)
+    class Name(models.TextChoices):
+        SOCCER = "축구", _("soccer")
+        BASKETBALL = "농구", _("basketball")
+        BADMINTON = "배드민턴", _("badminton")
+        TENNIS = "테니스", _("tennis")
+        TABLE_TENNIS = "탁구", _("tabletennis")
+        RUNNING = "러닝", _("running")
+        RIDING = "라이딩", _("riding")
+
+        @classmethod
+        def label_to_value(cls, label):
+            if label.lower() == cls.SOCCER.label:
+                return cls.SOCCER.value
+            elif label.lower() == cls.BASKETBALL.label:
+                return cls.BASKETBALL.value
+            elif label.lower() == cls.BADMINTON.label:
+                return cls.BADMINTON.value
+            elif label.lower() == cls.TENNIS.label:
+                return cls.TENNIS.value
+            elif label.lower() == cls.TABLE_TENNIS.label:
+                return cls.TABLE_TENNIS.value
+            elif label.lower() == cls.RUNNING.label:
+                return cls.RUNNING.value
+            elif label.lower() == cls.RIDING.label:
+                return cls.RIDING.value
+
+    name = models.CharField(max_length=20, choices=Name.choices)
+
+    @property
+    def name_label(self):
+        if self.name == self.Name.SOCCER.value:
+            return self.Name.SOCCER.label
+        elif self.name == self.Name.BASKETBALL.value:
+            return self.Name.BASKETBALL.label
+        elif self.name == self.Name.BADMINTON.value:
+            return self.Name.BADMINTON.label
+        elif self.name == self.Name.TENNIS.value:
+            return self.Name.TENNIS.label
+        elif self.name == self.Name.TABLE_TENNIS.value:
+            return self.Name.TABLE_TENNIS.label
+        elif self.name == self.Name.RUNNING.value:
+            return self.Name.RUNNING.label
+        elif self.name == self.Name.RIDING.value:
+            return self.Name.RIDING.label
 
 
 class PostManager(models.Manager):
