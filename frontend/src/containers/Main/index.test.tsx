@@ -41,8 +41,7 @@ describe('Main', () => {
     spyQueryPosts = jest
       .spyOn(actionCreators, 'queryPosts')
       .mockResolvedValue({ items: mockPosts });
-    // .mockRejectedValue(new Error('async error'));
-    // console.log = jest.fn().mockImplementation();
+    console.log = jest.fn().mockImplementation();
 
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
@@ -78,5 +77,6 @@ describe('Main', () => {
         ],
         setFilterArrayMock,
       ]);
+    expect(spyQueryPosts).toBeCalledTimes(1);
   });
 });
