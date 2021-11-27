@@ -51,7 +51,7 @@ export const getUserInfo_ = (userInfo: any) => ({
 export const getUserInfo = (id: any) => async (dispatch: any) => {
   try {
     const response = await axios.get(`/users/${id}`);
-    const returnedUserInfo = response.data;
+    const returnedUserInfo = humps.camelizeKeys(response.data);
     dispatch(getUserInfo_(returnedUserInfo));
   } catch (e: any) {
     if (e?.response && e.response.status === 404) {
@@ -82,13 +82,12 @@ export const readNotification_ = (userNotification: any) => ({
   userNotification,
 });
 
-export const readNotification = (userId: number, notiId: number) => {
-  return async (dispatch: any) => {
+export const readNotification =
+  (userId: number, notiId: number) => async (dispatch: any) => {
     const response = await axios.put(`/users/${userId}/notification${notiId}`);
     const userNotification = response.data;
     dispatch(readNotification_(userNotification));
   };
-};
 
 export type UserAction =
   | ReturnType<typeof signin_>
