@@ -9,7 +9,7 @@ import mockUserInfo from '../../mocks/userInfo.json';
 import notiIcon from '../../assets/icon/notification.png';
 import { getUserNotification } from '../../store/actions/user';
 import './index.scss';
-import { UserInfoEntity } from '../../types/user';
+import { UserInfoEntity } from '../../backend/entity/user';
 
 interface NotificationProps {
   history: History;
