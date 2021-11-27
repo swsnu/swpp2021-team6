@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from ..models import Exercise, Post
+from ..models import Exercise, Level, Post
 
 
 class PostTestCase(TestCase):
@@ -72,3 +72,11 @@ class ExerciseTestCase(TestCase):
         self.assertEqual(Exercise.Name.label_to_value("tabletennis"), "탁구")
         self.assertEqual(Exercise.Name.label_to_value("running"), "러닝")
         self.assertEqual(Exercise.Name.label_to_value("riding"), "라이딩")
+
+
+class LevelTestCase(TestCase):
+    def test_level_label_to_value(self):
+        self.assertEqual(Level.label_to_value("high"), "상")
+        self.assertEqual(Level.label_to_value("MIDDLE"), "중")
+        self.assertEqual(Level.label_to_value("lOw"), "하")
+        self.assertEqual(Level.label_to_value("any"), "상관 없음")
