@@ -3,7 +3,7 @@ import * as actionTypes from './actionTypes';
 import * as actionCreators from './post';
 import stubPost from '../../mocks/post.json';
 import stubPosts from '../../mocks/posts.json';
-import { CreatePostEntity } from '../../types/post';
+import { CreatePostEntity } from '../../backend/entity/post';
 import { PostState } from '../reducers/post';
 import { getMockStore } from '../../test-utils/mocks';
 
