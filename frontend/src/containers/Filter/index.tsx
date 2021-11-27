@@ -79,7 +79,10 @@ interface Props {
   setFilterArray: Dispatch<SetStateAction<FilterInputDTO[]>>;
 }
 
-const Filter: React.FC<Props> = ({ filterArray, setFilterArray }: Props) => {
+const Filter: React.FC<Props> = ({
+  filterArray = [],
+  setFilterArray,
+}: Props) => {
   const [selectedFilter, setSelectedFilter] = useState<FilterInputDTO>({
     exerciseName: '종목',
     skillLevel: '기대 실력',
