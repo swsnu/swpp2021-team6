@@ -4,7 +4,7 @@ import * as actionTypes from './actionTypes';
 import * as actionCreators from './user';
 import { getMockStore } from '../../test-utils/mocks';
 import { UserState } from '../reducers/user';
-import { UserSignInInputDTO } from '../../types/user';
+import { UserSignInInputDTO } from '../../backend/entity/user';
 
 const stubUser: UserSignInInputDTO = {
   username: 'test user',
