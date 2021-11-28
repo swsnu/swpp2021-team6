@@ -1,4 +1,5 @@
 import axios from 'axios';
+import humps from 'humps';
 import { CommentEntity, CreateCommentEntity } from '../entity/comment';
 import { CreatePostEntity, PostEntity, UpdatePostEntity } from '../entity/post';
 import { UserEntity } from '../entity/user';
@@ -23,6 +24,13 @@ export const updatePost = produceUpdateAPI<UpdatePostEntity>('/posts');
 export const queryUsers = produceQueryAPI<UserEntity>('/users');
 export const readUser = produceReadAPI<UserEntity>('/users');
 export const updateUser = produceUpdateAPI<UserEntity>('/users');
+
+export const queryFilterPosts = async (
+  filterString: string,
+): Promise<queryReturnType<PostEntity>> => {
+  const res = await axios.get(`/posts/?${filterString}`);
+  return { items: humps.camelizeKeys(res.data) as PostEntity[] };
+};
 
 export const queryComments = async ({
   postId,
