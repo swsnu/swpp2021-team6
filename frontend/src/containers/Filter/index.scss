@@ -1,36 +1,218 @@
-@import '../../style/gray.scss';
+@import '../../style/green.scss';
 
 .filter {
-  width: 200px;
-  border: solid 1px $gray1;
-  border-radius: 5px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 80px;
   padding: 10px;
+  background: linear-gradient(0deg, #ffffff, #ffffff), #f1f1f1;
+  box-shadow: 0px -3px 14px rgba(0, 0, 0, 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 1;
+}
 
-  select {
-    outline: 0;
-    background-color: $gray0;
-    border: solid 1px $gray1;
-    padding: 2px 4px;
+.filter-header {
+  margin-left: 20px;
+  margin-right: 45px;
+
+  img {
+    width: 27px;
+    margin-right: 15px;
+    margin-bottom: 5px;
   }
-
-  h2 {
-    font-weight: 700;
-  }
-
-  .sort-select {
-    margin-bottom: 15px;
+  span {
+    margin-top: 10px;
+    font-size: 18px;
   }
 }
 
-.filter-content {
-  button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 20px;
-    height: 20px;
-    margin: 0;
-    border: 0;
-    border-radius: 50%;
+.filter-body {
+  img {
+    margin-right: 10px;
   }
+
+  select {
+    margin-right: 25px;
+    outline: 0;
+    padding: 10px 40px 10px 15px;
+    border: 1px solid #b6b6b6;
+    border-radius: 40px;
+    -o-appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: url('../../assets/icon/select-chevron.svg') calc(100% - 10px)
+      center no-repeat;
+    font-size: 16px;
+  }
+}
+
+.filter-array {
+  position: fixed;
+  margin-right: 50px;
+  right: 0;
+  bottom: 95px;
+  width: 280px;
+  font-size: 18px;
+
+  .filter-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(0deg, #ffffff, #ffffff), #121212;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 8px;
+
+    img {
+      margin-right: 10px;
+      margin-bottom: 3px;
+    }
+
+    button {
+      background: 0;
+      outline: 0;
+      border: 0;
+      margin: 0;
+      display: flex;
+      align-items: center;
+
+      img {
+        margin: 0;
+      }
+    }
+  }
+}
+
+.filter-distance {
+  display: flex;
+  width: 300px;
+  margin-right: 80px;
+
+  #range-label {
+    display: flex;
+    justify-content: space-between;
+
+    span {
+      font-size: 12px;
+      color: #c4c4c4;
+    }
+  }
+
+  /* Reset range input css */
+  input[type='range'] {
+    width: 100%;
+    -webkit-appearance: none;
+    background: transparent;
+  }
+
+  input[type='range']::-ms-track {
+    width: 100%;
+    cursor: pointer;
+
+    /* Hides the slider so custom styles can be added */
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+  }
+
+  /* Custom thumb style */
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: 1px solid #ffffff;
+    height: 20px;
+    width: 20px;
+    margin-top: -6px;
+    border-radius: 50px;
+    background: $mainGreen;
+    cursor: pointer;
+  }
+
+  input[type='range']::-ms-thumb {
+    border: 1px solid #ffffff;
+    height: 20px;
+    width: 20px;
+    border-radius: 50px;
+    background: $mainGreen;
+    cursor: pointer;
+  }
+
+  /* Custom track style */
+  input[type='range']::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 9px;
+    background: #e9e9e9;
+    border-radius: 20px;
+  }
+
+  input[type='range']::-moz-range-track {
+    width: 100%;
+    height: 9px;
+    background: #e9e9e9;
+    border-radius: 20px;
+  }
+
+  #range-container {
+    width: 250px;
+  }
+
+  .distance-label {
+    display: flex;
+    flex-direction: column;
+    width: 80px;
+    margin-left: 25px;
+    margin-right: 15px;
+
+    #label-text {
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    #label-number {
+      // font-family: Rubik
+      display: inline-block;
+      font-weight: 700;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    #label-metric {
+      // font-family: Rubik
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+  }
+}
+
+.green {
+  color: $mainGreen;
+}
+
+#filter-apply-btn {
+  width: 180px;
+  height: 60px;
+  padding: 0;
+  border: 0;
+  border-radius: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: $mainGreen;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 400;
+
+  img {
+    margin-left: -10px;
+    margin-right: 10px;
+  }
+}
+
+/* 1400px 미만일 때  */
+@media screen {
 }
