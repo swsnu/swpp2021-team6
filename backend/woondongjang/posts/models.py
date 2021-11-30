@@ -2,6 +2,7 @@ from django.db import models, transaction
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
+from datetime import datetime
 
 from .ml.ibm_cloud import extract_keywords
 
@@ -101,7 +102,7 @@ class PostManager(models.Manager):
             title=title,
             description=description,
             expected_level=expected_level,
-            meet_at=meet_at,
+            meet_at=datetime.strptime(meet_at, "%Y-%m-%d %H:%M"),
             latitude=latitude,
             longitude=longitude,
             gu=gu,
@@ -156,6 +157,10 @@ class Post(models.Model):
     )
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def meet_at_res(self):
+        return self.meet_at.strftime("%Y-%m-%d %H:%M")
 
 
 class Post_Keyword(models.Model):

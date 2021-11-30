@@ -1,6 +1,6 @@
 from django.test import TestCase, Client
-from django.utils import timezone
 import json
+from datetime import datetime
 
 from ..models import Participation, Post, Exercise, Post_Keyword, Comment
 from accounts.models import ProxyUser
@@ -13,7 +13,7 @@ class PostsViewsTestCase(TestCase):
             "expected_level": "상",
             "title": "고수들끼리 뜨겁게 땀 한 번 흘려보아요~",
             "description": "농구한지 10년 정도 되었구요, 길거리 농구 많이 했습니다. 제가 새로운 사람들이랑 같이 땀흘리는거 좋아해서 같이 즐기실 고수님들 모집해봅니다. 제가 워낙 활발한 스타일이라 어색할 거 생각하지 마시고 편하게 참가 신청 해주세요!!!",
-            "meet_at": str(timezone.now()),
+            "meet_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
             "min_capacity": 3,
             "max_capacity": 6,
             "place": {
@@ -35,7 +35,7 @@ class PostsViewsTestCase(TestCase):
             "expected_level": "상",
             "title123": "고수들끼리 뜨겁게 땀 한 번 흘려보아요~",
             "description": "농구한지 10년 정도 되었구요, 길거리 농구 많이 했습니다. 제가 새로운 사람들이랑 같이 땀흘리는거 좋아해서 같이 즐기실 고수님들 모집해봅니다. 제가 워낙 활발한 스타일이라 어색할 거 생각하지 마시고 편하게 참가 신청 해주세요!!!",
-            "meet_at": str(timezone.now()),
+            "meet_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
             "min_capacity": 3,
             "max_capacity": 6,
             "place": {
@@ -84,7 +84,7 @@ class PostsViewsTestCase(TestCase):
             title="post1 title",
             description="post1 description",
             expected_level="상",
-            meet_at=timezone.now(),
+            meet_at=datetime.now(),
             latitude=37.47880163846696,
             longitude=126.94494429645442,
             gu="구1",
@@ -102,7 +102,7 @@ class PostsViewsTestCase(TestCase):
             title="post2 title",
             description="post2 description",
             expected_level="상",
-            meet_at=timezone.now(),
+            meet_at=datetime.now(),
             latitude=37.47880163846696,
             longitude=126.94494429645442,
             gu="구2",

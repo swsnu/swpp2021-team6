@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
+from datetime import datetime
 
 from ..models import Exercise, Level, Post
 
@@ -33,6 +34,7 @@ class PostTestCase(TestCase):
         # Then
         self.assertEqual(post.id, 1)
         self.assertEqual(post.exercise.name, "축구")
+        self.assertEqual(post.meet_at, datetime(2021, 11, 11, 11, 11))
 
 
 class ExerciseTestCase(TestCase):
