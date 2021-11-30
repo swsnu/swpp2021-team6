@@ -23,7 +23,7 @@ def posts(request):
                 "expected_level": post.expected_level,
                 "title": post.title,
                 "description": post.description,
-                "meet_at": post.meet_at,
+                "meet_at": post.meet_at_res,
                 "place": {
                     "latitude": post.latitude,
                     "longitude": post.longitude,
@@ -103,7 +103,7 @@ def posts(request):
             "title": new_post.title,
             "description": new_post.description,
             "expected_level": new_post.expected_level,
-            "meet_at": new_post.meet_at,
+            "meet_at": new_post.meet_at_res,
             "place": {
                 "latitude": new_post.latitude,
                 "longitude": new_post.longitude,
@@ -139,7 +139,7 @@ def post_detail(request, post_id=0):
             "title": post.title,
             "description": post.description,
             "expected_level": post.expected_level,
-            "meet_at": post.meet_at,
+            "meet_at": post.meet_at_res,
             "max_capacity": post.max_capacity,
             "min_capacity": post.min_capacity,
             "member_count": post.member_count,
