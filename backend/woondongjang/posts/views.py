@@ -7,6 +7,7 @@ import json
 
 from .models import Post, Comment, Post_Keyword, Participation
 from .filters import PostFilter
+from .sorts import PostSort
 from accounts.decorators import signin_required
 
 
@@ -15,6 +16,9 @@ from accounts.decorators import signin_required
 def posts(request):
     # Retrieve all posts
     if request.method == "GET":
+        filtered_posts = PostFilter(request.GET, Post.objects.all()).qs
+        sorted_filtered_posts = PostSort(request.GET, filtered_posts).qs
+
         post_list = [
             {
                 "post_id": post.id,
@@ -44,7 +48,7 @@ def posts(request):
                     get_object_or_404(Post_Keyword, post=post).keyword3,
                 ],
             }
-            for post in PostFilter(request.GET, Post.objects.all()).qs
+            for post in sorted_filtered_posts
         ]
 
         return JsonResponse(post_list, safe=False, status=200)
