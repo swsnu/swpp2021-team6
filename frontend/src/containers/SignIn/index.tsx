@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { History } from 'history';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { Redirect } from 'react-router';
 import { signin } from '../../store/actions/index';
+import { AppState } from '../../store/store';
 
 interface SignInProps {
   history: History;
@@ -11,8 +13,11 @@ interface SignInProps {
 const SignIn = ({ history }: SignInProps) => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+
   // dispatch 구현하고 만들어야 함
   const dispatch = useDispatch();
+
+  const user = window.localStorage.getItem('profileInfo') || null;
 
   const onClickLogin = () => {
     if (!username) {
@@ -30,8 +35,12 @@ const SignIn = ({ history }: SignInProps) => {
     }
   };
 
+  // 로그인 user가 있을 경우 redirect to main
+  const redirect = user ? <Redirect to="/main" /> : null;
+
   return (
     <div id="signin" className="intro-container">
+      {redirect}
       <h1>Sign In</h1>
       <input
         id="username"

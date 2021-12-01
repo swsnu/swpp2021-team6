@@ -1,5 +1,6 @@
 import { History } from 'history';
 import { useEffect, useState } from 'react';
+import { Redirect } from 'react-router';
 import logo from '../../assets/logo.png';
 import { SignUpInputDTO } from '../../backend/entity/user';
 import './index.scss';
@@ -28,7 +29,7 @@ const SignUp = ({ history }: Props) => {
     exerciseName: '',
     skillLevel: '',
   });
-
+  const user = window.localStorage.getItem('profileInfo') || null;
   useEffect(() => {
     if (!('geolocation' in navigator)) {
       alert('위치 정보를 사용할 수 없습니다. 다른 브라우저를 이용해주세요.');
@@ -127,8 +128,11 @@ const SignUp = ({ history }: Props) => {
     </div>
   );
 
+  const redirect = user ? <Redirect to="/main" /> : null;
+
   return (
     <div className="signup">
+      {redirect}
       <img className="logo" src={logo} alt="woondongjang logo" />
       <form>
         {guDong}
