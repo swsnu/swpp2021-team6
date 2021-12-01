@@ -23,7 +23,10 @@ interface Props {
 }
 
 const App = ({ history }: Props) => {
-  const user = window.localStorage.getItem('profileInfo') || null;
+  const user =
+    useSelector((state: AppState) => state.user.user) ||
+    window.localStorage.getItem('profileInfo') ||
+    null;
 
   return (
     <ConnectedRouter history={history}>
