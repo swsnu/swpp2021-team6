@@ -37,20 +37,21 @@ export const queryComments = async ({
 }: {
   postId: number;
 }): Promise<queryReturnType<CommentEntity>> => {
-  const res = await axios.get(`posts/${postId}/comments`);
+  const res = await axios.get(`/posts/${postId}/comments`);
+  console.log(res);
   return { items: res.data };
 };
 
 export const createComment = async ({
   createPayload,
   postId,
-}: CreateProps<CreateCommentEntity> & { postId: string }): Promise<{
+}: CreateProps<CreateCommentEntity> & { postId: number }): Promise<{
   entityId: string;
 }> => {
-  const res: any = await axios.post(`posts/${postId}/comments`, createPayload);
+  const res: any = await axios.post(`/posts/${postId}/comments`, createPayload);
   return { entityId: `${res.data.id}` };
 };
 
-export const readComment = produceReadAPI<CommentEntity>('/comments');
-export const updateComment = produceUpdateAPI<CommentEntity>('/comments');
-export const deleteComemnt = produceDeleteAPI('/comments');
+export const readComment = produceReadAPI<CommentEntity>('/posts/comments');
+export const updateComment = produceUpdateAPI<CommentEntity>('/posts/comments');
+export const deleteComment = produceDeleteAPI('/posts/comments');

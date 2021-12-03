@@ -1,4 +1,5 @@
 export interface CommentEntity {
+  comment_id: number;
   author_id: number;
   post_id: number;
   content: string;
@@ -6,5 +7,7 @@ export interface CommentEntity {
 }
 
 export interface CreateCommentEntity {
+  post_id: number;
+  author_id: number;
   content: string;
 }

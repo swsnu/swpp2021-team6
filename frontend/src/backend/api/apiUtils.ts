@@ -57,7 +57,7 @@ export function produceUpdateAPI<entityUpdateProp>(apiPath: string) {
     id,
     updatePayload,
   }: UpdateProps<entityUpdateProp>): Promise<void> {
-    await axios.put(`${apiPath}/${id}`, updatePayload);
+    await axios.patch(`${apiPath}/${id}`, updatePayload);
   };
 }
 
