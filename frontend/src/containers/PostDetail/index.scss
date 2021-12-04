@@ -1,0 +1,42 @@
+#post-detail-page {
+    display: flex;
+    flex-direction: column;
+    width: 60vw;
+    margin: 0 auto;
+
+    #post-detail-comment{
+        margin-bottom: 50px;
+        p{
+            font-size: 23px;
+            font-weight: bold;
+        }
+        #comment-create{
+            position: relative;
+            vertical-align: middle;
+            input::placeholder{
+                font-size: 16px;
+                color: #B6B6B6;
+                font-weight: normal;
+            }
+            #new-comment-content-input{
+                padding-left: 15px;
+                width: 100%;
+                border-radius: 15px;
+                border: 1.5px solid #E9E9E9;
+                line-height: 50px;
+            }
+            #confirm-create-comment-button{
+                position: absolute;
+                top: 15%;
+                right: 0;
+                width: 55px;
+                margin-right: 5px;
+                border-radius: 12px;
+                color: white;
+                background: #247100;
+                line-height: 30px;
+            }
+        }
+    }
+  }
+  

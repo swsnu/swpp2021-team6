@@ -69,7 +69,6 @@ const Detail: React.FC<Props> = ({ post, isHost = false, onDelete }) => {
       </div>
       {button}
       <Divider />
-      <Search placeholder="댓글을 입력하세요" enterButton="작성" size="large" />
     </div>
   );
 };
