@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { deleteComment, updateComment } from '../../backend/api/api';
 import { AppState } from '../../store/store';
+import './index.scss';
 
 interface Props {
   commentId: number;
@@ -49,20 +50,18 @@ const CommentsListItem: React.FunctionComponent<Props> = ({
 
   return (
     <div id="comments-list-item">
-      <div>--------------------------</div>
-      <div>{authorName}</div>
-      <div>{content}</div>
+      <div id="author-name">{authorName}</div>
+      <div id="content">{content}</div>
       {isAuthor && (
-        <div>
+        <div id="for-author-button">
           <button id="edit-comment-button" onClick={onEdit}>
-            Edit Comment
+            수정
           </button>
           <button id="delete-comment-button" onClick={onDelete}>
-            Delete Comment
+            삭제
           </button>
         </div>
       )}
-      <div>--------------------------</div>
     </div>
   );
 };

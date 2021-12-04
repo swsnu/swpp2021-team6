@@ -5,6 +5,7 @@ import { useHistory } from 'react-router';
 import { PostEntity } from '../../backend/entity/post';
 import PostDetail from '../../components/PostDetail';
 import { AppState } from '../../store/store';
+import './index.scss';
 import {
   createComment,
   deletePost,
@@ -47,13 +48,6 @@ const PostDetailContainer: React.FC = () => {
     await deletePost({ id: postId });
     history.push('/main');
   };
-
-  // Fetch Post on mount
-  // useEffect(() => {
-  //   readPost({ id: postId }).then((res) => {
-  //     setPost(res.entity);
-  //   });
-  // }, [postId]);
 
   const fetchPostItem = async () => {
     const post: PostEntity = (await readPost({ id: postId })).entity;
@@ -101,39 +95,36 @@ const PostDetailContainer: React.FC = () => {
           isHost={user?.userId === postItem.hostId}
           onDelete={onPostDelete}
         />
-        {commentItems.map((c, i) => (
-          <CommentsListItem
-            commentId={c.comment_id}
-            content={c.content}
-            authorId={c.author_id}
-            authorName={c.authorName}
-            postId={c.post_id}
-            createdAt={c.created_at}
-            setCommentsUpdated={setCommentsUpdated}
-            key={i}
-          />
-        ))}
-        Comment
-        <textarea
-          id="new-comment-content-input"
-          rows={2}
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-        />
-        <button
-          id="confirm-create-comment-button"
-          onClick={() => onCommentConfirm(newComment)}
-          disabled={!newComment}
-        >
-          Confirm Comment
-        </button>
-        <br /> <br />
-        <button
-          id="back-detail-article-button"
-          onClick={() => history.push('/articles')}
-        >
-          Back
-        </button>
+        <div id="post-detail-comment">
+          <p>코멘트 남기기</p>
+          <div id="comment-create">
+            <input
+              id="new-comment-content-input"
+              placeholder="댓글을 입력하세요"
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+            />
+            <button
+              id="confirm-create-comment-button"
+              onClick={() => onCommentConfirm(newComment)}
+              disabled={!newComment}
+            >
+              입력
+            </button>
+          </div>
+          {commentItems.map((c, i) => (
+            <CommentsListItem
+              commentId={c.comment_id}
+              content={c.content}
+              authorId={c.author_id}
+              authorName={c.authorName}
+              postId={c.post_id}
+              createdAt={c.created_at}
+              setCommentsUpdated={setCommentsUpdated}
+              key={i}
+            />
+          ))}
+        </div>
       </div>
     </>
   );
