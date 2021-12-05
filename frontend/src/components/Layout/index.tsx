@@ -1,4 +1,5 @@
 import './index.scss';
+import { useEffect, useState } from 'react';
 import defaultImage from '../../assets/image/auth/signin-left.jpg';
 import whiteLogo from '../../assets/image/whitelogo.svg';
 import lineCircle from '../../assets/image/auth/line-circle.svg';
@@ -13,13 +14,16 @@ interface Props {
   children: React.ReactNode;
 }
 
-const randomIndex = Math.floor(Math.random() * quotes.length);
-
 const Layout = ({ name, imageUrl = defaultImage, children }: Props) => {
   const backgroundStyle = {
     background: `linear-gradient(0deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${imageUrl})`,
     backgroundSize: 'cover',
   };
+  const [randomIndex, setRandomIndex] = useState<number>(0);
+
+  useEffect(() => {
+    setRandomIndex(Math.floor(Math.random() * quotes.length));
+  }, []);
 
   return (
     <div className="layout">
