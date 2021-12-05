@@ -1,0 +1,23 @@
+#divider {
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #bababa;
+  text-align: center;
+
+  .divider-left,
+  .divider-right {
+    flex-grow: 2;
+    border-bottom: 1px solid #f5f5f5;
+  }
+
+  .description {
+    flex-grow: 1;
+  }
+}
+
+#divider-without-text {
+  margin: 20px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
