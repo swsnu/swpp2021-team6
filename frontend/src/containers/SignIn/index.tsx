@@ -27,9 +27,9 @@ const SignIn = ({ history }: SignInProps) => {
 
   const onClickLogin = () => {
     if (!username) {
-      alert('아이디를 입력해주세요');
+      alert('아이디를 입력해주세요.');
     } else if (!password) {
-      alert('비밀번호를 입력해주세요');
+      alert('비밀번호를 입력해주세요.');
     } else {
       dispatch(signin({ username, password }));
     }
@@ -42,8 +42,8 @@ const SignIn = ({ history }: SignInProps) => {
   };
 
   const onClickKakaoSignIn = () => {};
+  const onClickGoogleSignIn = () => {};
 
-  // 로그인 user가 있을 경우 redirect to main
   const redirect = user ? <Redirect to="/main" /> : null;
 
   return (
@@ -65,7 +65,7 @@ const SignIn = ({ history }: SignInProps) => {
           onChange={(e) => setPassword(e.target.value)}
           onKeyPress={onKeyPress}
         />
-        <Button className="local-signin-button" onClick={onClickLogin}>
+        <Button id="local-signin-button" onClick={onClickLogin}>
           로그인
         </Button>
         <Divider text="or" />
