@@ -1,0 +1,41 @@
+@import '../../style/gray.scss';
+$gray: #d9d9d9;
+
+.signup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  .logo {
+    width: 400px;
+    margin: 0;
+  }
+
+  form {
+    width: 60%;
+  }
+
+  .gu-dong,
+  .gu-dong-loading {
+    display: block;
+    width: 100%;
+    height: 30px;
+    padding: 4px 11px;
+    border: 1px $gray solid;
+    border-radius: 2px;
+  }
+
+  .gu-dong-loading {
+    color: $gray2;
+  }
+
+  .gender-radio {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .exercise {
+    width: 100px;
+  }
+}

@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import SignIn from './containers/SignIn';
 import SignUp from './containers/SignUp';
 import SignOut from './containers/SignOut';
+import Onboarding from './containers/Onboarding';
 import Main from './containers/Main';
 import PostCreate from './containers/PostCreate';
 import PostDetail from './containers/PostDetail';
@@ -36,6 +37,7 @@ const App = ({ history }: Props) => {
         <Route path="/signin" exact component={SignIn} />
         <Route path="/signup" exact component={SignUp} />
         <Route path="/signout" exact component={SignOut} />
+        <Route path="/onboarding" exact component={Onboarding} />
         <Route path="/main" exact component={Main} />
         <Route path="/post/new" exact component={PostCreate} />
         <Route path="/post/:id" exact component={PostDetail} />
