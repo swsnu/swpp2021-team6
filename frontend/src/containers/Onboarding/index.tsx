@@ -30,6 +30,7 @@ const SignUp = ({ history }: Props) => {
     exerciseName: '',
     skillLevel: '',
   });
+
   const { user } = useSelector((state: AppState) => state.user);
 
   useEffect(() => {
