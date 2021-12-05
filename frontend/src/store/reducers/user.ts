@@ -10,13 +10,13 @@ import { DefaultAction } from '../actions/index';
 export type UserState = {
   user: UserProfileInfo | null;
   userInfo: UserInfoEntity | null;
-  notification: null;
+  userNotification: any | null;
 };
 
 const InitialState: UserState = {
   user: JSON.parse(window.localStorage.getItem('userInfo')!) || null,
   userInfo: null,
-  notification: null,
+  userNotification: null,
 };
 
 function userReducer(state: UserState = InitialState, action: any): UserState {
@@ -33,7 +33,13 @@ function userReducer(state: UserState = InitialState, action: any): UserState {
       return { ...state, userInfo: action.userInfo };
 
     case actionTypes.GET_USER_NOTIFICATION:
-      return { ...state, notification: action.notification };
+      return { ...state, userNotification: action.userNotification };
+
+    case actionTypes.READ_NOTIFICATION:
+      return { ...state, userNotification: action.userNotification };
+
+    case actionTypes.CREATE_NOTIFICATION:
+      return state;
 
     default:
       return state;

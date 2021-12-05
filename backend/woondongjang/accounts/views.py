@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST, require_GET
 
-from .models import Profile, ProxyUser
+from .models import Notification, Profile, ProxyUser
 from .decorators import signin_required
 from posts.models import User_Exercise, Post, Participation
 
@@ -72,8 +72,12 @@ def signin(request):
 
     login(request, user)
 
-    response_dict = {"user_id": user.id, "nickname": user.profile.nickname, "latitude": user.profile.latitude,
-                     "longitude": user.profile.longitude}
+    response_dict = {
+        "user_id": user.id,
+        "nickname": user.profile.nickname,
+        "latitude": user.profile.latitude,
+        "longitude": user.profile.longitude,
+    }
     return JsonResponse(response_dict, safe=False, status=200)
 
 
@@ -132,3 +136,57 @@ def user_detail(request, user_id):
         "hosting_post": hosting_post,
     }
     return JsonResponse(response_dict, status=200)
+
+
+@require_POST
+@signin_required
+def create_notification(request, user_id, post_id, noti_type):
+    if request.method == "POST":
+        user = User.objects.get(id=user_id)
+        post = Post.objects.get(id=post_id)
+        new_notification = Notification.objects.create(
+            user=user,
+            post=post,
+            noti_type=noti_type,
+        )
+        new_notification.save()
+
+        return HttpResponse(status=201)
+
+    return
+
+
+@require_GET
+@signin_required
+def get_notification(request, user_id):
+    if request.method == "GET":
+        user = User.objects.get(id=user_id)
+        noti_list = [
+            {
+                "noti_id": noti.id,
+                "noti_type": noti.noti_type,
+                "post_id": noti.post.id,
+                "post_title": noti.post.title,
+            }
+            for noti in Notification.objects.get(user=user)
+        ]
+
+        return JsonResponse(noti_list, status=201)
+
+
+@signin_required
+def read_notification(request, noti_id):
+    if request.method == "PATCH":
+        target_noti = Notification.objects.get(id=noti_id)
+        target_noti.is_read = True
+        target_noti.save()
+        noti_list = [
+            {
+                "noti_id": noti.id,
+                "noti_type": noti.noti_type,
+                "post_id": noti.post.id,
+                "post_title": noti.post.title,
+            }
+            for noti in Notification.objects.get(user=request.user)
+        ]
+        return JsonResponse(noti_list, status=200)

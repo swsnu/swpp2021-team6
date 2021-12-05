@@ -76,7 +76,13 @@ class ProxyUser(User):
 
 
 class Notification(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
-    noti_type = models.CharField(max_length=30)
+    class NotiType(models.TextChoices):
+        REQUEST_PARTICIPATION = "request participation"
+        REQUEST_APPROVED = "request approved"
+        REQUEST_DENIED = "request denied"
+        COMMENT = "comment"
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    noti_type = models.CharField(max_length=25, choices=NotiType.choices)
     is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
