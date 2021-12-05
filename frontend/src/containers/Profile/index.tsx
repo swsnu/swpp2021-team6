@@ -1,13 +1,30 @@
 /* eslint-disable react/jsx-wrap-multilines */
-import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import { History } from 'history';
+import { useParams } from 'react-router';
 import 'antd/dist/antd.css';
 import { Tabs, Card, Descriptions, Badge } from 'antd';
 import { AppState } from '../../store/store';
 import { getUserInfo } from '../../store/actions/index';
-import userInfo from '../../mocks/userInfo.json';
+// import userState.userInfo from '../../mocks/userState.userInfo.json';
+
+const returnPostStatus = (status: string) => {
+  switch (status) {
+    case '참가 중':
+      return <Badge status="processing" text="참가 중" />;
+    case '승인 대기 중':
+      return <Badge status="warning" text="승인 대기 중" />;
+    case '거절 됨':
+      return <Badge status="default" text="거절 됨" />;
+    case '모집 중':
+      return <Badge status="warning" text="모집 중" />;
+    case '모집 완료':
+      return <Badge status="processing" text="모집 완료" />;
+    default:
+      return <span>dd</span>;
+  }
+};
 
 const MyAppointment = ({
   history,
@@ -23,69 +40,16 @@ const MyAppointment = ({
   >
     <p>{meet_at}</p>
     <p>{place_name}</p>
-    {status === '참가 중' ? (
-      <div
-        style={{
-          paddingBottom: 10,
-          marginBottom: 10,
-          display: 'flex',
-          justifyContent: 'right',
-        }}
-      >
-        <Badge status="processing" text="참가 중" />
-      </div>
-    ) : (
-      <div
-        style={{
-          paddingBottom: 10,
-          marginBottom: 10,
-          display: 'flex',
-          justifyContent: 'right',
-        }}
-      >
-        <Badge status="warning" text="승인 대기 중" />
-      </div>
-    )}
-  </Card>
-);
-
-const HostingAppointment = ({
-  history,
-  appointment: { post_id, title, place_name, meet_at, status, ...rest },
-}: any) => (
-  <Card
-    size="small"
-    title={title}
-    extra={
-      <button onClick={() => history.push(`/post/${post_id}`)}>자세히</button>
-    }
-    style={{ margin: 10, height: 160, width: 250 }}
-  >
-    <p>{meet_at}</p>
-    <p>{place_name}</p>
-    {status === '모집 중' ? (
-      <div
-        style={{
-          paddingBottom: 10,
-          marginBottom: 10,
-          display: 'flex',
-          justifyContent: 'right',
-        }}
-      >
-        <Badge status="warning" text="모집 중" />
-      </div>
-    ) : (
-      <div
-        style={{
-          paddingBottom: 10,
-          marginBottom: 10,
-          display: 'flex',
-          justifyContent: 'right',
-        }}
-      >
-        <Badge status="processing" text="모집 완료" />
-      </div>
-    )}
+    <div
+      style={{
+        paddingBottom: 10,
+        marginBottom: 10,
+        display: 'flex',
+        justifyContent: 'right',
+      }}
+    >
+      {returnPostStatus(status)}
+    </div>
   </Card>
 );
 
@@ -94,20 +58,29 @@ interface ProfileProps {
 }
 
 const Profile = ({ history }: ProfileProps) => {
-  // const userInfo = useSelector((state: AppState) => state.user.userInfo);
   const dispatch = useDispatch();
   const userState = useSelector((state: AppState) => state.user);
-  // const userInfo = currentUser;
-  // const userId = match.params.id === null ? currentUser.id : match.params.id;
+  const { id }: any = useParams();
+  const loginProfile = window.localStorage.getItem('profileInfo');
+  let parsedloginProfile: any;
+  if (loginProfile !== null) {
+    parsedloginProfile = JSON.parse(loginProfile);
+  }
+  let isLoggedInUser = id === 'my';
+  let profileUserId = isLoggedInUser ? parsedloginProfile.userId : id;
 
-  // useEffect(() => {
-  //   console.log(window.localStorage.getItem('userInfo'));
-  //   dispatch(getUserInfo(currentUser.id));
-  // }, []);
+  useEffect(() => {
+    console.log(id);
+    console.log('user userId', parsedloginProfile.userId);
+    isLoggedInUser = id === 'my';
+    console.log(isLoggedInUser);
+    profileUserId = isLoggedInUser ? parsedloginProfile.userId : id;
+    console.log('profileUserId', profileUserId);
+    dispatch(getUserInfo(profileUserId));
+    console.log('userInfo', userState.userInfo);
+  }, [profileUserId]);
 
-  // const isLoggedInUser = currentUser.id === userInfo.user_id;
-
-  const isLoggedInUser = true;
+  // const isLoggedInUser = true;
 
   const { TabPane } = Tabs;
 
@@ -121,29 +94,31 @@ const Profile = ({ history }: ProfileProps) => {
         bordered
       >
         <Descriptions.Item label="닉네임" span={3}>
-          {userInfo.nickname}
+          {userState.userInfo?.nickname}
         </Descriptions.Item>
         <Descriptions.Item label="성별" span={1}>
-          {userInfo.gender}
+          {userState.userInfo?.gender}
         </Descriptions.Item>
         <Descriptions.Item label="인증한 동네" span={2}>
-          {userInfo.gu} {userInfo.dong}
+          {userState.userInfo?.gu} {userState.userInfo?.dong}
         </Descriptions.Item>
         <Descriptions.Item label="소개" span={3}>
-          {userInfo.introduction}
+          {userState.userInfo?.introduction}
         </Descriptions.Item>
       </Descriptions>
       <br />
       <Descriptions title="좋아하는 운동" bordered>
-        {userInfo.user_exercise.map((preferredExercise: any, idx: number) => (
-          <Descriptions.Item
-            key={idx}
-            label={preferredExercise.exercise_name}
-            span={3}
-          >
-            {preferredExercise.skill_level}
-          </Descriptions.Item>
-        ))}
+        {userState.userInfo?.userExercise.map(
+          (preferredExercise: any, idx: number) => (
+            <Descriptions.Item
+              key={idx}
+              label={preferredExercise.exerciseName}
+              span={3}
+            >
+              {preferredExercise.skillLevel}
+            </Descriptions.Item>
+          ),
+        )}
       </Descriptions>
       {isLoggedInUser === true && (
         <div
@@ -181,9 +156,9 @@ const Profile = ({ history }: ProfileProps) => {
         <Tabs defaultActiveKey="1">
           <TabPane tab="참가 신청한 모임" key="1">
             <div>
-              {userInfo.participating_post.map((appointment: any) => (
+              {userState.userInfo?.participatingPost.map((appointment: any) => (
                 <MyAppointment
-                  key={appointment.post_id}
+                  key={appointment.postId}
                   history={history}
                   appointment={appointment}
                 />
@@ -192,9 +167,9 @@ const Profile = ({ history }: ProfileProps) => {
           </TabPane>
           <TabPane tab="내가 만든 모임" key="2">
             <div>
-              {userInfo.hosting_post.map((appointment: any) => (
-                <HostingAppointment
-                  key={appointment.post_id}
+              {userState.userInfo?.hostingPost.map((appointment: any) => (
+                <MyAppointment
+                  key={appointment.postId}
                   history={history}
                   appointment={appointment}
                 />

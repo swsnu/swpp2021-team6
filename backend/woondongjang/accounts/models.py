@@ -2,7 +2,7 @@ from django.db import models, transaction
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 
-from posts.models import Exercise, User_Exercise
+from posts.models import Exercise, User_Exercise, Post
 
 
 class Profile(models.Model):
@@ -73,3 +73,10 @@ class ProxyUser(User):
 
     class Meta:
         proxy = True
+
+
+class Notification(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
+    noti_type = models.CharField(max_length=30)
+    is_read = models.BooleanField(default=False)

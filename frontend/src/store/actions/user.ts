@@ -51,7 +51,7 @@ export const getUserInfo_ = (userInfo: any) => ({
 export const getUserInfo = (id: any) => async (dispatch: any) => {
   try {
     const response = await axios.get(`/users/${id}`);
-    const returnedUserInfo = response.data;
+    const returnedUserInfo = humps.camelizeKeys(response.data);
     dispatch(getUserInfo_(returnedUserInfo));
   } catch (e: any) {
     if (e?.response && e.response.status === 404) {
@@ -60,7 +60,38 @@ export const getUserInfo = (id: any) => async (dispatch: any) => {
   }
 };
 
+export const getUserNotification_ = (userNotification: any) => ({
+  type: actionTypes.GET_USER_NOTIFICATION,
+  userNotification,
+});
+
+export const getUserNotification = (id: any) => async (dispatch: any) => {
+  try {
+    const response = await axios.get(`/users/${id}/notification`);
+    const userNotification = response.data;
+    dispatch(getUserNotification_(userNotification));
+  } catch (e: any) {
+    if (e?.response && e.response.status === 404) {
+      alert('존재하지 않는 유저입니다');
+    }
+  }
+};
+
+export const readNotification_ = (userNotification: any) => ({
+  type: actionTypes.READ_NOTIFICATION,
+  userNotification,
+});
+
+export const readNotification =
+  (userId: number, notiId: number) => async (dispatch: any) => {
+    const response = await axios.put(`/users/${userId}/notification${notiId}`);
+    const userNotification = response.data;
+    dispatch(readNotification_(userNotification));
+  };
+
 export type UserAction =
   | ReturnType<typeof signin_>
   | ReturnType<typeof signout_>
-  | ReturnType<typeof getUserInfo_>;
+  | ReturnType<typeof getUserInfo_>
+  | ReturnType<typeof getUserNotification_>
+  | ReturnType<typeof readNotification_>;
