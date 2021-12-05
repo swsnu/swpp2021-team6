@@ -53,14 +53,14 @@ const SignIn = ({ history }: SignInProps) => {
         <label htmlFor="username">이름</label>
         <input
           id="username"
-          placeholder="username"
+          placeholder="이름"
           onChange={(e) => setUsername(e.target.value)}
           onKeyPress={onKeyPress}
         />
         <label htmlFor="password">비밀번호</label>
         <input
           id="password"
-          placeholder="password"
+          placeholder="비밀번호"
           type="password"
           onChange={(e) => setPassword(e.target.value)}
           onKeyPress={onKeyPress}

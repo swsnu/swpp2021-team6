@@ -14,6 +14,7 @@
 }
 
 .left {
+  position: fixed;
   width: 45vw;
   height: 100vh;
   padding: 50px;
@@ -63,6 +64,8 @@
 }
 
 .right {
+  position: relative;
+  left: 45vw;
   width: 55vw;
   padding-top: 8vh;
   padding-left: 10%;
