@@ -1,41 +1,14 @@
-@import '../../style/gray.scss';
-$gray: #d9d9d9;
+.local-signup-button {
+  background-color: #247100;
+  color: #ffffff;
+  box-shadow: none;
+  margin: 20px 0;
+}
 
-.signup {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+.social-signup-button {
+  margin-bottom: 20px;
+}
 
-  .logo {
-    width: 400px;
-    margin: 0;
-  }
-
-  form {
-    width: 60%;
-  }
-
-  .gu-dong,
-  .gu-dong-loading {
-    display: block;
-    width: 100%;
-    height: 30px;
-    padding: 4px 11px;
-    border: 1px $gray solid;
-    border-radius: 2px;
-  }
-
-  .gu-dong-loading {
-    color: $gray2;
-  }
-
-  .gender-radio {
-    width: 100%;
-    margin-bottom: 20px;
-  }
-
-  .exercise {
-    width: 100px;
-  }
+.signup-instruction {
+  margin-bottom: 50px;
 }
