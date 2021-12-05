@@ -1,7 +1,7 @@
 import React from 'react';
 import { History } from 'history';
 import { useHistory } from 'react-router';
-import imgSrc from '../../assets/icon/addButton.png';
+import imgSrc from '../../assets/image/icon/addButton.png';
 import './index.scss';
 
 const AddButton: React.FC = () => {
