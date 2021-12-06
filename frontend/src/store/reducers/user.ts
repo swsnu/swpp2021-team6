@@ -1,14 +1,22 @@
 import * as actionTypes from '../actions/actionTypes';
-import { UserProfileInfo } from '../../backend/entity/user';
+import {
+  UserEntity,
+  UserProfileInfo,
+  UserInfoEntity,
+} from '../../backend/entity/user';
+import { UserAction } from '../actions/user';
+import { DefaultAction } from '../actions/index';
 
 export type UserState = {
   user: UserProfileInfo | null;
-  userInfo: any | null;
+  userInfo: UserInfoEntity | null;
+  userNotification: any | null;
 };
 
 const InitialState: UserState = {
   user: JSON.parse(window.localStorage.getItem('userInfo')!) || null,
   userInfo: null,
+  userNotification: null,
 };
 
 function userReducer(state: UserState = InitialState, action: any): UserState {
@@ -19,10 +27,19 @@ function userReducer(state: UserState = InitialState, action: any): UserState {
 
     /* LOGOUT */
     case actionTypes.SIGNOUT:
-      return { ...state, user: null };
+      return { ...state, user: null, userInfo: null, userNotification: null };
 
     case actionTypes.GET_USER_INFO:
       return { ...state, userInfo: action.userInfo };
+
+    case actionTypes.GET_USER_NOTIFICATION:
+      return { ...state, userNotification: action.userNotification };
+
+    case actionTypes.READ_NOTIFICATION:
+      return { ...state, userNotification: action.userNotification };
+
+    case actionTypes.CREATE_NOTIFICATION:
+      return state;
 
     default:
       return state;
