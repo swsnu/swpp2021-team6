@@ -84,10 +84,10 @@ const SignUp = ({ history }: Props) => {
         >
           구글 계정으로 회원가입
         </Button>
-        <span className="signup-instruction">
+        <span className="signin-instruction">
           운동장의 회원이신가요?{' '}
           <span
-            className="signup-button"
+            className="signin-button"
             onClick={() => history.push('/signin')}
           >
             로그인 하기
