@@ -1,6 +1,7 @@
 import { History } from 'history';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Redirect } from 'react-router';
 import getGuDong from '../../utils/getGuDong';
 import { AppState } from '../../store/store';
 import { ProfileDTO } from '../../backend/entity/user';
@@ -37,8 +38,6 @@ const Onboarding = ({ history }: { history: History }) => {
   const { user } = useSelector((state: AppState) => state.user);
 
   useEffect(() => {
-    if (user) history.push('/main');
-
     if (!('geolocation' in navigator)) {
       alert('위치 정보를 사용할 수 없습니다. 다른 브라우저를 이용해주세요.');
     } else {
@@ -113,8 +112,11 @@ const Onboarding = ({ history }: { history: History }) => {
     }
   };
 
+  const redirect = user && <Redirect to="/main" />;
+
   return (
     <div className="onboarding">
+      {redirect}
       <img
         id="small-dots"
         className="bg-deco"
