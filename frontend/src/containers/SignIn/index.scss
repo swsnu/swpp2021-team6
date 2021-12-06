@@ -1,19 +1,20 @@
-#local-signup-button {
+#local-signin-button {
   background-color: #247100;
-  color: #ffffff;
+  color: #fff;
+  margin-top: 20px;
   box-shadow: none;
-  margin: 20px 0;
 }
 
-.social-signup-button {
+.social-signin-button {
   margin-bottom: 20px;
 }
 
-.signin-instruction {
-  margin: 15px auto 50px auto;
+.signup-instruction {
+  margin: 0 auto;
+  margin-top: 15px;
   color: #878787;
 
-  .signin-button {
+  .signup-button {
     cursor: pointer;
     border-bottom: 1px solid #878787;
   }

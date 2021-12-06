@@ -1,8 +1,9 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import Main from '.';
+import { history } from '../../store/store';
 import * as actionCreators from '../../backend/api/api';
 import { PostEntity } from '../../backend/entity/post';
+import Main from '.';
 
 const mockPosts: PostEntity[] = [
   {
@@ -32,12 +33,14 @@ const mockPosts: PostEntity[] = [
   },
 ];
 
+const spyHistoryPush = jest.spyOn(history, 'push').mockImplementation();
+
 describe('Main', () => {
   let main: any;
   let spyQueryPosts: any;
 
   beforeEach(() => {
-    main = <Main />;
+    main = <Main history={history} />;
     spyQueryPosts = jest
       .spyOn(actionCreators, 'queryPosts')
       .mockResolvedValue({ items: mockPosts });

@@ -3,15 +3,16 @@ import {
   skillLevelNameType,
   exerciseNameType,
   FilterInputDTO,
+  ExerciseType,
 } from '../../backend/entity/exercise';
 import './index.scss';
-import greenHeart from '../../assets/icon/filled-heart.svg';
-import sort from '../../assets/icon/sort.svg';
-import exercise from '../../assets/icon/exercise.svg';
-import greenCircle from '../../assets/icon/green-circle.svg';
-import filterDelete from '../../assets/icon/filter-delete-button.svg';
-import level from '../../assets/icon/level.svg';
-import search from '../../assets/icon/search.svg';
+import greenHeart from '../../assets/image/icon/filled-heart.svg';
+import sort from '../../assets/image/icon/sort.svg';
+import exercise from '../../assets/image/icon/exercise.svg';
+import greenCircle from '../../assets/image/icon/green-circle.svg';
+import filterDelete from '../../assets/image/icon/filter-delete-button.svg';
+import level from '../../assets/image/icon/level.svg';
+import search from '../../assets/image/icon/search.svg';
 
 const exerciseNameAndValue = [
   {

@@ -1,269 +1,128 @@
-import React from 'react';
+/* eslint-disable no-proto */
 import { mount } from 'enzyme';
-import SignUp from './index';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { history } from '../../store/store';
-import { mockNavigatorGeolocation } from '../../test-utils/mockNavigatorGeolocation';
+import { getMockStore } from '../../test-utils/mocks';
+import SignUp from '.';
+import Main from '../Main';
+
+const mockStore = getMockStore({});
+
+jest.spyOn(window.localStorage.__proto__, 'getItem');
+window.localStorage.__proto__.getItem = jest
+  .fn()
+  .mockReturnValue({ username: 'test', password: 'test' });
+
+window.alert = jest.fn().mockImplementation();
+
+const spyHistoryPush = jest
+  .spyOn(history, 'push')
+  .mockImplementation(jest.fn());
 
 describe('SignUp', () => {
-  let signup: any;
-  beforeEach(() => {
-    signup = <SignUp history={history} />;
-    window.alert = jest.fn().mockImplementation();
-    console.log = jest.fn().mockImplementation();
-  });
+  let signUp: any;
+  const mockUser = {
+    username: 'test',
+    password: 'test',
+  };
 
+  beforeEach(() => {
+    signUp = (
+      <Provider store={mockStore}>
+        <SignUp history={history} />
+      </Provider>
+    );
+  });
   afterEach(() => {
     jest.clearAllMocks();
   });
-
-  it('should render without crashing', () => {
-    const component = mount(signup);
-    expect(component.find('SignUp').length).toBe(1);
+  afterAll(() => {
+    jest.restoreAllMocks();
   });
 
-  it('should change username input', () => {
-    const component = mount(signup);
+  it('should render without error', () => {
+    const component = mount(signUp);
+    expect(component.find('.signup-container').length).toBe(1);
+  });
+
+  it('should change form state with input change', () => {
+    const component = mount(signUp);
+    const signUpButton = component.find('#local-signup-button').at(0);
+
+    signUpButton.simulate('click');
+    expect(window.alert).toBeCalledTimes(1);
+
     component
-      .find('.username-input')
+      .find('#username')
       .simulate('change', { target: { value: 'test username' } });
-    expect(component.find('.username-input').prop('value')).toBe(
-      'test username',
-    );
-  });
-
-  it('should change password input', () => {
-    const component = mount(signup);
-    component
-      .find('.password-input')
-      .simulate('change', { target: { value: 'test password' } });
-    expect(component.find('.password-input').prop('value')).toBe(
-      'test password',
-    );
-  });
-
-  it('should change nickname input', () => {
-    const component = mount(signup);
-    component
-      .find('.nickname-input')
-      .simulate('change', { target: { value: 'test nickname' } });
-    expect(component.find('.nickname-input').prop('value')).toBe(
-      'test nickname',
-    );
-  });
-
-  it('should set preferred exercise', () => {
-    const component = mount(signup);
-    component
-      .find('.exercise')
-      .simulate('change', { target: { value: '축구' } });
-    component
-      .find('.skill-level')
-      .simulate('change', { target: { value: '상' } });
-  });
-
-  it('should change introduction input', () => {
-    const component = mount(signup);
-    component
-      .find('.introduction-input')
-      .simulate('change', { target: { value: 'test introduction' } });
-    expect(component.find('.introduction-input').prop('value')).toBe(
-      'test introduction',
-    );
-  });
-
-  it('should change gender radio', () => {
-    const component = mount(signup);
-    component.find('#gender-male').simulate('change');
-    expect(component.find('#gender-male').prop('checked')).toBe(true);
-    component.find('#gender-female').simulate('change');
-    expect(component.find('#gender-female').prop('checked')).toBe(true);
-  });
-
-  it('should alert when submitting before getting location', () => {
-    const component = mount(signup);
-    component.find('.signup-submit-button').simulate('click');
+    signUpButton.simulate('click');
     expect(window.alert).toBeCalledTimes(2);
+
+    component
+      .find('#password')
+      .simulate('change', { target: { value: 'test password' } });
+    signUpButton.simulate('click');
+    expect(window.alert).toBeCalledTimes(3);
+
+    component
+      .find('#password-verify')
+      .simulate('change', { target: { value: 'test password verify' } });
+    signUpButton.simulate('click');
+    expect(window.alert).toBeCalledTimes(4);
   });
 
-  it('should alert on clicking submit button without username', () => {
-    const { getCurrentPositionMock } = mockNavigatorGeolocation();
-    getCurrentPositionMock.mockImplementation();
-    const useStateMock = jest.spyOn(React, 'useState');
-    const setFormMock = jest.fn();
-    const setPreferredExerciseMock = jest.fn();
-    jest.mock('../../utils/getGuDong', () => jest.fn());
-    useStateMock
-      .mockReturnValueOnce([
-        {
-          username: '',
-          nickname: '',
-          password: '',
-          latitude: 37.12345,
-          longitude: 127.12345,
-          gu: '관악구',
-          dong: '신림동',
-          gender: '미선택',
-          introduction: '',
-          preferredExercise: [],
-        },
-        setFormMock,
-      ])
-      .mockReturnValueOnce([
-        { exerciseName: '', skillLevel: '' },
-        setPreferredExerciseMock,
-      ]);
-    const component = mount(signup);
-    component.find('.signup-submit-button').simulate('click');
-    expect(window.alert).toBeCalledTimes(1);
+  it('should dispatch signUp action with inputs filled', () => {
+    const component = mount(signUp);
+    component
+      .find('#username')
+      .simulate('change', { target: { value: 'test username' } });
+    component
+      .find('#password')
+      .simulate('change', { target: { value: 'test password' } });
+    component
+      .find('#password-verify')
+      .simulate('change', { target: { value: 'test password' } });
+    component.find('#local-signup-button').at(0).simulate('click');
   });
 
-  it('should alert on clicking submit button without password', () => {
-    const useStateMock = jest.spyOn(React, 'useState');
-    const setFormMock = jest.fn();
-    const setPreferredExerciseMock = jest.fn();
-    jest.mock('../../utils/getGuDong', () => jest.fn());
-    useStateMock
-      .mockReturnValueOnce([
-        {
-          username: 'test username',
-          nickname: '',
-          password: '',
-          latitude: 37.12345,
-          longitude: 127.12345,
-          gu: '관악구',
-          dong: '신림동',
-          gender: '미선택',
-          introduction: '',
-          preferredExercise: [],
-        },
-        setFormMock,
-      ])
-      .mockReturnValueOnce([
-        { exerciseName: '', skillLevel: '' },
-        setPreferredExerciseMock,
-      ]);
-    const component = mount(signup);
-    component.find('.signup-submit-button').simulate('click');
-    expect(window.alert).toBeCalledTimes(1);
+  it('should move to SignIn page when clicking SignIn button', () => {
+    const component = mount(signUp);
+    component.find('.signin-button').simulate('click');
+    expect(spyHistoryPush).toBeCalledTimes(1);
+  });
+});
+
+describe('SignUp with signIn user', () => {
+  const mockUserProfile = {
+    userId: 1,
+    nickname: 'juyoung',
+    latitude: 37.12345,
+    longitude: 127.12345,
+  };
+
+  let signUp: any;
+  beforeEach(() => {
+    signUp = (
+      <Router>
+        <Main history={history} />
+        <SignUp history={history} />
+      </Router>
+    );
+    jest.spyOn(window.localStorage.__proto__, 'getItem');
+    window.localStorage.__proto__.getItem = jest
+      .fn()
+      .mockReturnValue(mockUserProfile);
+  });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  afterAll(() => {
+    jest.restoreAllMocks();
   });
 
-  it('should alert on clicking submit button without gender', () => {
-    const useStateMock = jest.spyOn(React, 'useState');
-    const setFormMock = jest.fn();
-    const setPreferredExerciseMock = jest.fn();
-    jest.mock('../../utils/getGuDong', () => jest.fn());
-    useStateMock
-      .mockReturnValueOnce([
-        {
-          username: 'test username',
-          nickname: '',
-          password: 'test password',
-          latitude: 37.12345,
-          longitude: 127.12345,
-          gu: '관악구',
-          dong: '신림동',
-          gender: '미선택',
-          introduction: '',
-          preferredExercise: [],
-        },
-        setFormMock,
-      ])
-      .mockReturnValueOnce([
-        { exerciseName: '', skillLevel: '' },
-        setPreferredExerciseMock,
-      ]);
-    const component = mount(signup);
-    component.find('.signup-submit-button').simulate('click');
-    expect(window.alert).toBeCalledTimes(1);
-  });
-
-  it('should alert on clicking submit button without nickname', () => {
-    const useStateMock = jest.spyOn(React, 'useState');
-    const setFormMock = jest.fn();
-    const setPreferredExerciseMock = jest.fn();
-    jest.mock('../../utils/getGuDong', () => jest.fn());
-    useStateMock
-      .mockReturnValueOnce([
-        {
-          username: 'test username',
-          nickname: '',
-          password: 'test password',
-          latitude: 37.12345,
-          longitude: 127.12345,
-          gu: '관악구',
-          dong: '신림동',
-          gender: '여성',
-          introduction: '',
-          preferredExercise: [],
-        },
-        setFormMock,
-      ])
-      .mockReturnValueOnce([
-        { exerciseName: '', skillLevel: '' },
-        setPreferredExerciseMock,
-      ]);
-    const component = mount(signup);
-    component.find('.signup-submit-button').simulate('click');
-    expect(window.alert).toBeCalledTimes(1);
-  });
-
-  it('should alert on clicking submit button without preferred exercise', () => {
-    const useStateMock = jest.spyOn(React, 'useState');
-    const setFormMock = jest.fn();
-    const setPreferredExerciseMock = jest.fn();
-    jest.mock('../../utils/getGuDong', () => jest.fn());
-    useStateMock
-      .mockReturnValueOnce([
-        {
-          username: 'test username',
-          nickname: 'test nickname',
-          password: 'test password',
-          latitude: 37.12345,
-          longitude: 127.12345,
-          gu: '관악구',
-          dong: '신림동',
-          gender: '여성',
-          introduction: '',
-          preferredExercise: [],
-        },
-        setFormMock,
-      ])
-      .mockReturnValueOnce([
-        { exerciseName: '', skillLevel: '' },
-        setPreferredExerciseMock,
-      ]);
-    const component = mount(signup);
-    component.find('.signup-submit-button').simulate('click');
-    expect(window.alert).toBeCalledTimes(1);
-  });
-
-  it('should handle submit', () => {
-    const useStateMock = jest.spyOn(React, 'useState');
-    const setFormMock = jest.fn();
-    const setPreferredExerciseMock = jest.fn();
-    jest.mock('../../utils/getGuDong', () => jest.fn());
-    useStateMock
-      .mockReturnValueOnce([
-        {
-          username: 'test username',
-          nickname: 'test nickname',
-          password: 'test password',
-          latitude: 37.12345,
-          longitude: 127.12345,
-          gu: '관악구',
-          dong: '신림동',
-          gender: '여성',
-          introduction: '',
-          preferredExercise: [{ exerciseName: '축구', skillLevel: '상' }],
-        },
-        setFormMock,
-      ])
-      .mockReturnValueOnce([
-        { exerciseName: '', skillLevel: '' },
-        setPreferredExerciseMock,
-      ]);
-    const component = mount(signup);
-    component.find('.signup-submit-button').simulate('click');
-    expect(window.alert).toBeCalledTimes(0);
+  it('should redirect to Main page', () => {
+    const component = mount(signUp);
+    expect(component.find('.main').length).toBe(1);
   });
 });

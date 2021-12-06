@@ -24,6 +24,12 @@ export interface UserProfileInfo {
   longitude: number;
 }
 
+export interface SignUpDTO {
+  username: string;
+  password: string;
+}
+
+/* TODO: 아래 DTO를 onboarding용으로 수정 */
 export interface SignUpInputDTO {
   username: string;
   password: string;

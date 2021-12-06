@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { History } from 'history';
 import Post from '../../components/Post';
 import Filter from '../Filter';
 import './index.scss';
@@ -7,11 +8,18 @@ import AddButton from '../../components/AddButton';
 import { queryFilterPosts, queryPosts } from '../../backend/api/api';
 import { FilterInputDTO } from '../../backend/entity/exercise';
 
-const Main: React.FC = () => {
+interface Props {
+  history: History;
+}
+
+const Main = ({ history }: Props) => {
   const [posts, setPosts] = useState<PostEntity[]>();
   const [filterArray, setFilterArray] = useState<FilterInputDTO[]>([]);
+  const user = window.localStorage.getItem('profileInfo') || null;
 
   useEffect(() => {
+    if (!user) history.push('/signin');
+
     queryPosts()
       .then((res) => setPosts(res.items))
       .catch((reason) => console.log(reason));
@@ -35,9 +43,7 @@ const Main: React.FC = () => {
       .catch((reason) => console.log(reason));
   };
 
-  console.log(posts);
-
-  // TODO: filterArray & queryString 리셋 with 리셋 버튼
+  // const redirect = !user ? <Redirect to="/signin" /> : null;
 
   return (
     <div className="main">

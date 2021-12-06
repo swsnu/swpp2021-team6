@@ -1,6 +1,6 @@
 import { History } from 'history';
-import logo from '../../assets/logo.png';
-import noti from '../../assets/icon/notification.png';
+import logo from '../../assets/image/logo.png';
+import noti from '../../assets/image/icon/notification.png';
 import './index.scss';
 
 interface NavbarProps {
