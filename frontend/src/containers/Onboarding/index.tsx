@@ -1,9 +1,11 @@
 import { History } from 'history';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import logo from '../../assets/image/logo.png';
 import { SignUpInputDTO } from '../../backend/entity/user';
 import './index.scss';
 import getGuDong from '../../utils/getGuDong';
+import { AppState } from '../../store/store';
 
 const initialFormState: SignUpInputDTO = {
   username: '',
@@ -28,7 +30,8 @@ const SignUp = ({ history }: Props) => {
     exerciseName: '',
     skillLevel: '',
   });
-  const user = window.localStorage.getItem('profileInfo') || null;
+  const { user } = useSelector((state: AppState) => state.user);
+
   useEffect(() => {
     if (user) history.push('/main');
 

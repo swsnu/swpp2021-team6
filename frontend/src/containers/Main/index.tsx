@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { History } from 'history';
+import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 import Post from '../../components/Post';
 import Filter from '../Filter';
 import './index.scss';
@@ -7,15 +8,13 @@ import { PostEntity } from '../../backend/entity/post';
 import AddButton from '../../components/AddButton';
 import { queryFilterPosts, queryPosts } from '../../backend/api/api';
 import { FilterInputDTO } from '../../backend/entity/exercise';
+import { AppState } from '../../store/store';
 
-interface Props {
-  history: History;
-}
-
-const Main = ({ history }: Props) => {
+const Main = () => {
+  const history = useHistory();
   const [posts, setPosts] = useState<PostEntity[]>();
   const [filterArray, setFilterArray] = useState<FilterInputDTO[]>([]);
-  const user = window.localStorage.getItem('profileInfo') || null;
+  const { user } = useSelector((state: AppState) => state.user);
 
   useEffect(() => {
     if (!user) history.push('/signin');
@@ -31,7 +30,6 @@ const Main = ({ history }: Props) => {
       if (idx !== 0) search += '&';
       search += `exercise=${val.exerciseName}&level=${val.skillLevel}`;
     });
-
     return search;
   };
 

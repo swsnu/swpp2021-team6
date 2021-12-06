@@ -1,13 +1,17 @@
 import { History } from 'history';
+import { useSelector } from 'react-redux';
 import logo from '../../assets/image/logo.png';
 import noti from '../../assets/image/icon/notification.png';
 import './index.scss';
+import { AppState } from '../../store/store';
 
 interface NavbarProps {
   history: History;
 }
 
 const Navbar = ({ history }: NavbarProps) => {
+  const { user } = useSelector((state: AppState) => state.user);
+
   const onClickNoti = () => {
     alert('noti open!');
   };
@@ -26,7 +30,7 @@ const Navbar = ({ history }: NavbarProps) => {
         <span
           className="mypage"
           aria-hidden="true"
-          onClick={() => history.push('/profile')}
+          onClick={() => history.push(`/profile/${user?.userId}`)}
         >
           마이페이지
         </span>

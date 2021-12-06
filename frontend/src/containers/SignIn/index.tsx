@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useState } from 'react';
 import { History } from 'history';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router';
 import { signin } from '../../store/actions/index';
 import Layout from '../../components/Layout';
@@ -12,6 +12,7 @@ import Button from '../../components/Button';
 import Divider from '../../components/Divider';
 import googleIcon from '../../assets/image/auth/google.svg';
 import kakaotalkIcon from '../../assets/image/auth/kakaotalk.svg';
+import { AppState } from '../../store/store';
 
 interface SignInProps {
   history: History;
@@ -23,7 +24,7 @@ const SignIn = ({ history }: SignInProps) => {
 
   const dispatch = useDispatch();
 
-  const user = window.localStorage.getItem('profileInfo') || null;
+  const { user } = useSelector((state: AppState) => state.user);
 
   const onClickLogin = () => {
     if (!username) {

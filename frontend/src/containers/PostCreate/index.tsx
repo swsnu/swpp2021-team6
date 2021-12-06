@@ -49,7 +49,7 @@ const PostCreate: React.FC = () => {
 
   useEffect(() => {
     if (user === null) history.push('/signin');
-    else {
+    else if (user !== undefined) {
       const container = document.getElementById('map');
       getKakaoMap(container, user.latitude, user.longitude, setCenter);
     }

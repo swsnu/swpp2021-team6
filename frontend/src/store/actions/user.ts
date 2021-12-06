@@ -5,6 +5,19 @@ import * as actionTypes from './actionTypes';
 import { UserProfileInfo, UserSignInInputDTO } from '../../backend/entity/user';
 
 /* LOGIN */
+export const autoSignin_ = (lastLoggedInUser: UserProfileInfo) => ({
+  type: actionTypes.AUTO_SIGNIN,
+  user: lastLoggedInUser,
+});
+
+export const autoSignin = () => async (dispatch: any) => {
+  const lastLoggedInUserString = localStorage.getItem('profileInfo');
+  const lastLoggedInUser: UserProfileInfo = lastLoggedInUserString
+    ? JSON.parse(lastLoggedInUserString)
+    : null;
+  dispatch(autoSignin_(lastLoggedInUser));
+};
+
 export const signin_ = (currentUser: UserProfileInfo) => ({
   type: actionTypes.SIGNIN,
   user: currentUser,

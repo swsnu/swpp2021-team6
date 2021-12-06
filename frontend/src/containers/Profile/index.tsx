@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-wrap-multilines */
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { History } from 'history';
 import 'antd/dist/antd.css';
 import { Tabs, Card, Descriptions, Badge } from 'antd';
@@ -94,20 +94,10 @@ interface ProfileProps {
 }
 
 const Profile = ({ history }: ProfileProps) => {
-  // const userInfo = useSelector((state: AppState) => state.user.userInfo);
-  const dispatch = useDispatch();
-  const userState = useSelector((state: AppState) => state.user);
-  // const userInfo = currentUser;
-  // const userId = match.params.id === null ? currentUser.id : match.params.id;
+  const userId = parseInt(useParams<{ id: string }>().id, 10);
+  const { user } = useSelector((state: AppState) => state.user);
 
-  // useEffect(() => {
-  //   console.log(window.localStorage.getItem('userInfo'));
-  //   dispatch(getUserInfo(currentUser.id));
-  // }, []);
-
-  // const isLoggedInUser = currentUser.id === userInfo.user_id;
-
-  const isLoggedInUser = true;
+  const isLoggedInUser = userId === user?.userId;
 
   const { TabPane } = Tabs;
 

@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useEffect, useState } from 'react';
 import { History } from 'history';
+import { useSelector } from 'react-redux';
 import Layout from '../../components/Layout';
 import defaultImage from '../../assets/image/auth/signup-left.jpg';
 import Divider from '../../components/Divider';
@@ -10,6 +11,7 @@ import './index.scss';
 import googleIcon from '../../assets/image/auth/google.svg';
 import kakaotalkIcon from '../../assets/image/auth/kakaotalk.svg';
 import { SignUpDTO } from '../../backend/entity/user';
+import { AppState } from '../../store/store';
 
 interface Props {
   history: History;
@@ -22,8 +24,7 @@ const SignUp = ({ history }: Props) => {
   });
   const [checkPassword, setCheckPassword] = useState<string>();
 
-  const user = window.localStorage.getItem('profileInfo') || null;
-
+  const { user } = useSelector((state: AppState) => state.user);
   useEffect(() => {
     if (user) history.push('/main');
   });

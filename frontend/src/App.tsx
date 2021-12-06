@@ -1,8 +1,9 @@
+import { useEffect } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
 import { History } from 'history';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import SignIn from './containers/SignIn';
 import SignUp from './containers/SignUp';
 import SignOut from './containers/SignOut';
@@ -15,6 +16,7 @@ import Profile from './containers/Profile';
 import ProfileEdit from './containers/ProfileEdit';
 import Navbar from './containers/Navbar';
 import { AppState } from './store/store';
+import { autoSignin } from './store/actions/user';
 
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -24,10 +26,13 @@ interface Props {
 }
 
 const App = ({ history }: Props) => {
-  const user =
-    useSelector((state: AppState) => state.user.user) ||
-    window.localStorage.getItem('profileInfo') ||
-    null;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(autoSignin());
+  }, []);
+
+  const { user } = useSelector((state: AppState) => state.user);
 
   return (
     <ConnectedRouter history={history}>
@@ -42,7 +47,6 @@ const App = ({ history }: Props) => {
         <Route path="/post/new" exact component={PostCreate} />
         <Route path="/post/:id" exact component={PostDetail} />
         <Route path="/post/:id/edit" exact component={PostEdit} />
-        <Route path="/profile" exact component={Profile} />
         <Route path="/profile/edit" exact component={ProfileEdit} />
         <Route path="/profile/:id" exact component={Profile} />
         <Redirect exact from="/" to="/signin" />
