@@ -1,30 +1,44 @@
-import React from 'react';
+/* eslint-disable no-proto */
 import { mount } from 'enzyme';
+import { BrowserRouter as Router } from 'react-router-dom';
 import * as userActionCreators from '../../store/actions/user';
-import SignIn from './index';
+import SignIn from '.';
+import Main from '../Main';
+
 import { history } from '../../store/store';
-import { UserSignInInputDTO } from '../../backend/entity/user';
+
+const mockUserProfile = {
+  userId: 1,
+  nickname: 'juyoung',
+  latitude: 37.12345,
+  longitude: 127.12345,
+};
+
+const mockUser = {
+  username: 'juyoung',
+  password: 'test',
+};
 
 jest.mock('react-redux', () => ({
   useDispatch: () => jest.fn(),
   connect: () => jest.fn(),
 }));
 
-describe('signin', () => {
-  let signin: any;
-  let spyLoginAction: any;
-  let spyHistoryPush: any;
-  const mockUser: UserSignInInputDTO = {
-    username: 'test',
-    password: 'test',
-  };
+const spyAlert = jest.spyOn(window, 'alert').mockImplementation();
+const spyHistoryPush = jest
+  .spyOn(history, 'push')
+  .mockImplementation(jest.fn());
+const spySignInAction: any = jest
+  .spyOn(userActionCreators, 'signin')
+  .mockImplementation(() => jest.fn());
+
+describe('SignIn without user', () => {
+  let signIn: any;
 
   beforeEach(() => {
-    signin = <SignIn history={history} />;
-    spyLoginAction = jest
-      .spyOn(userActionCreators, 'signin')
-      .mockImplementation(() => jest.fn());
-    spyHistoryPush = jest.spyOn(history, 'push').mockImplementation(jest.fn());
+    signIn = <SignIn history={history} />;
+    jest.spyOn(window.localStorage.__proto__, 'getItem');
+    window.localStorage.__proto__.getItem = jest.fn().mockReturnValue(null);
   });
   afterEach(() => {
     jest.clearAllMocks();
@@ -33,88 +47,108 @@ describe('signin', () => {
     jest.restoreAllMocks();
   });
 
-  it('Login renders without crashing', () => {
-    const component = mount(signin);
-    expect(component.find('SignIn').length).toBe(1);
-    expect(component.find('input').length).toBe(2);
-    expect(component.find('button').length).toBe(3);
+  it('should render without errors', () => {
+    const component = mount(signIn);
+    expect(component.find('.signin-container').length).toBe(1);
   });
 
-  it('Signin should dispatch signin correctly', () => {
-    const component = mount(signin);
-    const inputList = component.find('input');
-    inputList
+  it('should dispatch signin correctly', () => {
+    const component = mount(signIn);
+    component
       .find('#username')
-      .simulate('change', { target: { value: mockUser.username } }); // username
-    inputList
+      .simulate('change', { target: { value: mockUser.username } });
+    component
       .find('#password')
-      .simulate('change', { target: { value: mockUser.password } }); // password
+      .simulate('change', { target: { value: mockUser.password } });
 
-    const signinButton = component.find('button#local-signin-button');
-    signinButton.simulate('click');
-    expect(spyLoginAction).toBeCalledTimes(1);
-    expect(spyLoginAction).toBeCalledWith(mockUser);
+    component.find('#local-signin-button').at(0).simulate('click');
+
+    expect(spySignInAction).toBeCalledTimes(1);
+    expect(spySignInAction).toBeCalledWith(mockUser);
   });
 
-  it('Login should not dispatch login with insufficient inputs', () => {
-    const component = mount(signin);
-    const inputList = component.find('input');
-    const loginButton = component.find('button#local-signin-button');
-    const spyAlert = jest.spyOn(window, 'alert').mockImplementation();
+  it('should not dispatch signIn action with insufficient inputs', () => {
+    const component = mount(signIn);
+    const signInButton = component.find('button#local-signin-button');
 
-    inputList
+    // without username
+    component
       .find('#username')
-      .simulate('change', { target: { value: mockUser.username } }); // username
-
-    loginButton.simulate('click');
-    expect(spyLoginAction).toBeCalledTimes(0);
+      .simulate('change', { target: { value: mockUser.username } });
+    signInButton.simulate('click');
+    expect(spySignInAction).toBeCalledTimes(0);
     expect(spyAlert).toBeCalledTimes(1);
 
-    inputList.find('#username').simulate('change', { target: { value: '' } }); // username to null
-    inputList
+    // without password
+    component.find('#username').simulate('change', { target: { value: '' } });
+    component
       .find('#password')
-      .simulate('change', { target: { value: mockUser.password } }); // password
-    loginButton.simulate('click');
-    expect(spyLoginAction).toBeCalledTimes(0);
+      .simulate('change', { target: { value: mockUser.password } });
+    signInButton.simulate('click');
+    expect(spySignInAction).toBeCalledTimes(0);
     expect(spyAlert).toBeCalledTimes(2);
   });
 
-  it('signup button should push to signup page', () => {
-    const component = mount(signin);
-    const signupButton = component.find('button#signup-button');
-
+  it('should move to SignUp page when clicking SignUp button', () => {
+    const component = mount(signIn);
+    const signupButton = component.find('span.signup-button');
     signupButton.simulate('click');
     expect(spyHistoryPush).toBeCalledTimes(1);
     expect(spyHistoryPush).toBeCalledWith('/signup');
   });
 
-  it('should call login function on pressing enter at username', () => {
-    const component = mount(signin);
-    const inputList = component.find('input');
+  it('should dispatch signIn action on pressing enter', () => {
+    const component = mount(signIn);
 
-    inputList
+    component
       .find('#username')
-      .simulate('change', { target: { value: mockUser.username } }); // username
-    inputList
+      .simulate('change', { target: { value: mockUser.username } });
+    component
       .find('#password')
-      .simulate('change', { target: { value: mockUser.password } }); // password
+      .simulate('change', { target: { value: mockUser.password } });
 
-    inputList.find('#username').simulate('keypress', { key: 'Enter' });
-    expect(spyLoginAction).toBeCalledTimes(1);
+    component.find('#username').simulate('keypress', { key: 'Enter' });
+
+    expect(spySignInAction).toBeCalledTimes(1);
   });
 
-  it('should not call login function on pressing non-enter at input', () => {
-    const component = mount(signin);
-    const inputList = component.find('input');
+  it('should not dispatch signIn action on pressing non-enter at input', () => {
+    const component = mount(signIn);
 
-    inputList
+    component
       .find('#username')
-      .simulate('change', { target: { value: mockUser.username } }); // username
-    inputList
+      .simulate('change', { target: { value: mockUser.username } });
+    component
       .find('#password')
-      .simulate('change', { target: { value: mockUser.password } }); // password
+      .simulate('change', { target: { value: mockUser.password } });
 
-    inputList.find('#username').simulate('keypress', { key: 'backspace' });
-    expect(spyLoginAction).toBeCalledTimes(0);
+    component.find('#username').simulate('keypress', { key: 'backspace' });
+    expect(spySignInAction).toBeCalledTimes(0);
+  });
+});
+
+describe('SignIn with signIn user', () => {
+  let signIn: any;
+  beforeEach(() => {
+    signIn = (
+      <Router>
+        <Main history={history} />
+        <SignIn history={history} />
+      </Router>
+    );
+    jest.spyOn(window.localStorage.__proto__, 'getItem');
+    window.localStorage.__proto__.getItem = jest
+      .fn()
+      .mockReturnValue(mockUserProfile);
+  });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  afterAll(() => {
+    jest.restoreAllMocks();
+  });
+  it('should redirect to Main page', () => {
+    const component = mount(signIn);
+    expect(component.find('.main').length).toBe(1);
   });
 });
