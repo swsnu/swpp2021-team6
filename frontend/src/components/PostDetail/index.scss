@@ -6,11 +6,15 @@
         display: flex;
         justify-content: space-between;
         font-size: 18px;
-        font-weight: 500;
+        font-weight: 600;
         margin-bottom: 20px;
         button{
             border-radius: 5px;
             font-size: small;
+        }
+        img{
+            margin-right: 15px;
+            width: 40px;
         }
     }
     #body-1{

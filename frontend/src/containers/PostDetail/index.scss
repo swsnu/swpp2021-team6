@@ -1,16 +1,31 @@
+#background{
+    width: 100vw;
+}
 #post-detail-page {
     display: flex;
     flex-direction: column;
     width: 60vw;
     margin: 0 auto;
-    min-width: 1000px;
+    min-width: 900px;
 
     #post-detail-comment{
-        margin-bottom: 50px;
-        p{
-            font-size: 23px;
-            font-weight: bold;
+        #comment-header{
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+            img{
+                width: 35px;
+            }        
+            p{
+                font-size: 23px;
+                font-weight: bold;
+                vertical-align: middle;
+                margin: 0;
+                margin-right: 10px;
+            }
         }
+        margin-bottom: 50px;
+
         #comment-create{
             position: relative;
             vertical-align: middle;

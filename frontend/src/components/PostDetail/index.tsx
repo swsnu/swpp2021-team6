@@ -8,6 +8,7 @@ import Label from '../Label';
 import { PostEntity } from '../../backend/entity/post';
 import changeDateFormat from '../../utils/dateToString';
 import './index.scss';
+import gps from '../../assets/image/post-detail/gps.svg';
 
 type PostItem = PostEntity & { hostName: string };
 
@@ -43,7 +44,10 @@ const Detail: React.FC<Props> = ({ post, isHost = false, onDelete }) => {
     <>
       <div id="post-detail-component">
         <div id="header">
-          {`${post.place.gu} ${post.place.dong}`}
+          <div>
+            <img src={gps} alt="gps" />
+            {`${post.place.gu} ${post.place.dong}`}
+          </div>
           <div id="edit-delete">{button}</div>
         </div>
         <div id="body-1">
