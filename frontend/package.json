@@ -30,7 +30,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --coverage --watchAll=false --passWithNoTests",
+    "test": "react-scripts test --coverage --watchAll=false --passWithNoTests --silent",
     "eject": "react-scripts eject",
     "lint:fix": "eslint --fix --ext .ts,.tsx ."
   },
