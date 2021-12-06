@@ -32,6 +32,7 @@ const Detail: React.FC<Props> = ({ post, isHost = false, onDelete }) => {
   ) : (
     <></>
   );
+
   const button2 = isHost ? (
     <span>참여자 명단 확인</span>
   ) : (
