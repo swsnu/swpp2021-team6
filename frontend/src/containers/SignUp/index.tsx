@@ -56,6 +56,7 @@ const SignUp = ({ history }: Props) => {
         <input
           id="password"
           placeholder="비밀번호"
+          type="password"
           onChange={(e) =>
             setSignUpForm({ ...signUpForm, password: e.target.value })
           }
@@ -64,6 +65,7 @@ const SignUp = ({ history }: Props) => {
         <input
           id="password-verify"
           placeholder="비밀번호"
+          type="password"
           onChange={(e) => setCheckPassword(e.target.value)}
         />
         <Button id="local-signup-button" onClick={onClickSignUp}>
