@@ -215,7 +215,7 @@ def comments(request, post_id=0):
                 "author_id": comment.author.id,
                 "post_id": comment.post.id,
                 "content": comment.content,
-                "created_at" : comment.created_at.strftime("%y/%m/%d %H:%M"),
+                "created_at": comment.created_at.strftime("%y/%m/%d %H:%M"),
             }
             for comment in Comment.objects.filter(post_id=post_id)
         ]
