@@ -1,5 +1,6 @@
 import { History } from 'history';
-import logo from '../../assets/logo.png';
+import logo from '../../assets/icon/green-logo.svg';
+import profileIcon from '../../assets/icon/default-profile.svg';
 import './index.scss';
 import Notification from '../Notification';
 
@@ -19,7 +20,7 @@ const Navbar = ({ history }: NavbarProps) => (
         aria-hidden="true"
         onClick={() => history.push('/profile/my')}
       >
-        마이페이지
+        <img src={profileIcon} alt="profile-icon" />
       </span>
     </div>
   </div>

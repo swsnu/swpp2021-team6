@@ -2,7 +2,7 @@ import axios from 'axios';
 import humps from 'humps';
 import { CommentEntity, CreateCommentEntity } from '../entity/comment';
 import { CreatePostEntity, PostEntity, UpdatePostEntity } from '../entity/post';
-import { UserEntity } from '../entity/user';
+import { UpdateProfileEntity, UserEntity } from '../entity/user';
 import {
   CreateProps,
   produceCreateAPI,
@@ -24,6 +24,7 @@ export const updatePost = produceUpdateAPI<UpdatePostEntity>('/posts');
 export const queryUsers = produceQueryAPI<UserEntity>('/users');
 export const readUser = produceReadAPI<UserEntity>('/users');
 export const updateUser = produceUpdateAPI<UserEntity>('/users');
+export const updateProfile = produceUpdateAPI<UpdateProfileEntity>('/users');
 
 export const queryFilterPosts = async (
   filterString: string,

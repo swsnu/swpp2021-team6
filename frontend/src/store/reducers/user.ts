@@ -27,7 +27,7 @@ function userReducer(state: UserState = InitialState, action: any): UserState {
 
     /* LOGOUT */
     case actionTypes.SIGNOUT:
-      return { ...state, user: null };
+      return { ...state, user: null, userInfo: null, userNotification: null };
 
     case actionTypes.GET_USER_INFO:
       return { ...state, userInfo: action.userInfo };

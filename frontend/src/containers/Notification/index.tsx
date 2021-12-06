@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { History } from 'history';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -6,8 +8,14 @@ import humps from 'humps';
 import { AppState } from '../../store/store';
 import notifications from '../../mocks/notification.json';
 import mockUserInfo from '../../mocks/userInfo.json';
-import notiIcon from '../../assets/icon/notification.png';
-import { getUserNotification } from '../../store/actions/user';
+import notiIconWithDot from '../../assets/icon/noti-with-dot.svg';
+import notiIcon from '../../assets/icon/noti-without-dot.svg';
+import notiDot from '../../assets/icon/noti-dot.svg';
+import {
+  getUserInfo,
+  getUserNotification,
+  readNotification,
+} from '../../store/actions/user';
 import './index.scss';
 import { UserInfoEntity } from '../../backend/entity/user';
 
@@ -18,61 +26,96 @@ interface NotificationProps {
 const Notification = ({ history }: NotificationProps) => {
   // const [postTitle, setPostTitle] = useState<string>('');
   const dispatch = useDispatch();
-  // const userInfo = useSelector((state: AppState) => state.user.userInfo);
-  const userInfo = humps.camelizeKeys(mockUserInfo) as UserInfoEntity;
-  const mockNotifications = humps.camelizeKeys(notifications);
+  const userState = useSelector((state: AppState) => state.user);
+  // const userInfo = humps.camelizeKeys(mockUserInfo) as UserInfoEntity;
+  // const mockNotifications = humps.camelizeKeys(notifications);
+  const loginProfile = window.localStorage.getItem('profileInfo');
+  let parsedLoginProfile: any;
+  if (loginProfile !== null) {
+    parsedLoginProfile = JSON.parse(loginProfile);
+  }
 
-  // useEffect(() => {
-  //   dispatch(getUserNotification(userInfo?.userId));
-  // }, []); //다음에 implement
+  useEffect(() => {
+    if (parsedLoginProfile) {
+      dispatch(getUserNotification(parsedLoginProfile.userId));
+      if (loginProfile !== null) {
+        parsedLoginProfile = JSON.parse(loginProfile);
+      }
+    }
+    console.log(userState.userNotification === null);
+  }, [loginProfile]);
 
-  const clickNotiHandler = (postId: number) => {
-    history.push(`/post/${postId}`);
-    // axios.put();
+  const getMessage = (postTitle: string, notiType: string) => {
+    let displayedTitle = postTitle;
+    if (postTitle.length > 10) {
+      displayedTitle = postTitle.slice(0, 10);
+      displayedTitle += '...';
+    }
+
+    let message;
+    switch (notiType) {
+      case 'request participation':
+        message = `"${displayedTitle}" 게시글에 참가 신청이 있습니다.`;
+        break;
+      case 'request approved':
+        message = `"${displayedTitle}" 게시글에 참가 신청이 승인되었습니다.`;
+        break;
+      case 'request denied':
+        message = `"${displayedTitle}" 게시글에 참가 신청이 거절되었습니다.`;
+        break;
+      case 'comment':
+        message = `"${displayedTitle}" 게시글에 댓글이 달렸습니다.`;
+        break;
+      default:
+        message = '';
+    }
+    return message;
   };
 
-  const getMessage = (type: string, postId: number) => {
-    const targetPost =
-      userInfo?.participatingPost.filter((post) => post.postId === postId)[0] ||
-      userInfo?.hostingPost.filter((post) => post.postId === postId)[0];
-    let postTitle: string = '';
-    if (targetPost) {
-      // setPostTitle(targetPost.title);
-      postTitle = targetPost.title;
-    }
-    if (postTitle.length > 15) {
-      // setPostTitle(postTitle.substr(0, 14).concat('...'));
-      postTitle = postTitle.substr(0, 14).concat('...');
-    }
-    switch (type) {
-      case 'request participation':
-        return `"${postTitle}" 게시글에 참가 신청이 있습니다`;
-      case 'request approved':
-        return `"${postTitle}" 게시글에 참가 신청이 승인되었습니다`;
-      case 'request denied':
-        return `"${postTitle}" 게시글에 참가 신청이 거절되었습니다`;
-      case 'comment':
-        return `"${postTitle}" 게시글에 댓글이 달렸습니다`;
-      default:
-        return '';
-    }
+  const onClickNotification = (notiId: number, postId: number) => {
+    dispatch(readNotification(notiId));
+    history.push(`/post/${postId}`);
   };
 
   const myNotis = () => (
     <Menu>
-      {mockNotifications.map((notification: any) => (
-        <Menu.Item
-          key={notification.id}
-          className={notification.isRead === true ? 'read' : 'unread'}
-        >
-          <span
-            aria-hidden="true"
-            onClick={() => history.push(`/post/${notification.postId}`)}
-          >
-            {getMessage(notification.type, notification.postId)}
-          </span>
+      {userState.userNotification === null ? (
+        <Menu.Item>
+          <span>표시할 알림이 없습니다</span>
         </Menu.Item>
-      ))}
+      ) : (
+        userState.userNotification.map((notification: any) => (
+          // <Menu.Item
+          //   key={notification.notiId}
+          //   className={notification.isRead === true ? 'read' : 'unread'}
+          // >
+          <div
+            className="noti-item-container"
+            onClick={() =>
+              onClickNotification(notification.notiId, notification.postId)
+            }
+          >
+            <div className="noti-left">
+              <div className="noti-text">
+                <span className="noti-text" aria-hidden="true">
+                  {getMessage(notification.postTitle, notification.notiType)}
+                </span>
+              </div>
+              <div>
+                <span className="noti-time">{notification.createdAt}</span>
+              </div>
+            </div>
+            <div className="noti-right">
+              <img
+                className={notification.isRead ? 'read' : 'noti-dot'}
+                src={notiDot}
+                alt="noti-dot"
+              />
+            </div>
+          </div>
+          /* </Menu.Item> */
+        ))
+      )}
     </Menu>
   );
 
@@ -83,8 +126,21 @@ const Notification = ({ history }: NotificationProps) => {
         aria-hidden="true"
         onClick={(e) => e.preventDefault()}
       >
-        알림
-        <img src={notiIcon} alt="notification" />
+        {userState.userNotification !== null ? (
+          <img
+            className="noti-icon"
+            src={
+              userState.userNotification.filter(
+                (noti: any) => noti.isRead === false,
+              ).length > 0
+                ? notiIconWithDot
+                : notiIcon
+            }
+            alt="notification-icon"
+          />
+        ) : (
+          <img className="noti-icon" src={notiIcon} alt="notification-icon" />
+        )}
       </span>
     </Dropdown>
   );

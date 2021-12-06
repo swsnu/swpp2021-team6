@@ -68,7 +68,7 @@ export const getUserNotification_ = (userNotification: any) => ({
 export const getUserNotification = (id: any) => async (dispatch: any) => {
   try {
     const response = await axios.get(`/users/${id}/notification`);
-    const userNotification = response.data;
+    const userNotification = humps.camelizeKeys(response.data);
     dispatch(getUserNotification_(userNotification));
   } catch (e: any) {
     if (e?.response && e.response.status === 404) {
@@ -83,8 +83,8 @@ export const readNotification_ = (userNotification: any) => ({
 });
 
 export const readNotification = (notiId: number) => async (dispatch: any) => {
-  const response = await axios.put(`/users/notification/${notiId}`);
-  const userNotification = response.data;
+  const response = await axios.patch(`/users/notification/${notiId}`);
+  const userNotification = humps.camelizeKeys(response.data);
   dispatch(readNotification_(userNotification));
 };
 

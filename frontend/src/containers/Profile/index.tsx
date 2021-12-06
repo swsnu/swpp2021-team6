@@ -28,18 +28,18 @@ const returnPostStatus = (status: string) => {
 
 const MyAppointment = ({
   history,
-  appointment: { post_id, title, place_name, meet_at, status, ...rest },
+  appointment: { postId, title, placeName, meetAt, status, ...rest },
 }: any) => (
   <Card
     size="small"
     title={title}
     extra={
-      <button onClick={() => history.push(`/post/${post_id}`)}>자세히</button>
+      <button onClick={() => history.push(`/post/${postId}`)}>자세히</button>
     }
     style={{ margin: 10, height: 160, width: 250 }}
   >
-    <p>{meet_at}</p>
-    <p>{place_name}</p>
+    <p>{meetAt}</p>
+    <p>{placeName}</p>
     <div
       style={{
         paddingBottom: 10,
@@ -70,14 +70,9 @@ const Profile = ({ history }: ProfileProps) => {
   let profileUserId = isLoggedInUser ? parsedloginProfile.userId : id;
 
   useEffect(() => {
-    console.log(id);
-    console.log('user userId', parsedloginProfile.userId);
     isLoggedInUser = id === 'my';
-    console.log(isLoggedInUser);
     profileUserId = isLoggedInUser ? parsedloginProfile.userId : id;
-    console.log('profileUserId', profileUserId);
     dispatch(getUserInfo(profileUserId));
-    console.log('userInfo', userState.userInfo);
   }, [profileUserId]);
 
   // const isLoggedInUser = true;

@@ -56,3 +56,11 @@ export interface SignUpInputDTO {
   introduction: string;
   preferredExercise: ExerciseAndSkill[];
 }
+
+export interface UpdateProfileEntity {
+  nickname: string | undefined;
+  gu: string | undefined;
+  dong: string | undefined;
+  introduction: string | undefined;
+  userExercise: ExerciseAndSkill[] | undefined;
+}
