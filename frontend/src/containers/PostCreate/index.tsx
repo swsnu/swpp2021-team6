@@ -35,8 +35,6 @@ const PostCreate: React.FC = () => {
   const history = useHistory();
   const { user } = useSelector((state: AppState) => state.user);
 
-  console.log(user);
-
   const [post, setPost] = useState<CreatePostEntity>(initialPostState);
   const [date, setDate] = useState<Moment | null>(moment());
   const [time, setTime] = useState<Moment | null>(moment('7:00', 'h:mm a'));
@@ -48,8 +46,6 @@ const PostCreate: React.FC = () => {
     La: 126.952281,
     Ma: 37.480584,
   });
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (user === null) history.push('/signin');
@@ -136,6 +132,11 @@ const PostCreate: React.FC = () => {
     ) {
       alert('운동 장소를 설정해주세요');
     } else {
+      // Get Gu Dong
+      const GuDong = getGuDong(post.place.longitude, post.place.latitude);
+      post.place.gu = (await GuDong).gu;
+      post.place.dong = (await GuDong).dong;
+
       const newPost = (await createPost({ createPayload: post })).entity;
       history.push(`/post/${newPost.postId}`);
     }
