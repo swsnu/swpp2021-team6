@@ -16,16 +16,9 @@ window.localStorage.__proto__.getItem = jest
 
 window.alert = jest.fn().mockImplementation();
 
-const mockPush = jest.fn();
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useHistory: () => ({ push: mockPush }),
-}));
-
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useHistory: () => ({ push: mockPush }),
-}));
+const spyHistoryPush = jest
+  .spyOn(history, 'push')
+  .mockImplementation(jest.fn());
 
 describe('SignUp', () => {
   let signUp: any;
@@ -96,7 +89,7 @@ describe('SignUp', () => {
   it('should move to SignIn page when clicking SignIn button', () => {
     const component = mount(signUp);
     component.find('.signin-button').simulate('click');
-    expect(mockPush).toBeCalledTimes(1);
+    expect(spyHistoryPush).toBeCalledTimes(1);
   });
 });
 
