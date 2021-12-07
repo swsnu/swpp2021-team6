@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useEffect, useState } from 'react';
-import { History } from 'history';
 import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 import Layout from '../../components/Layout';
 import defaultImage from '../../assets/image/auth/signup-left.jpg';
 import Divider from '../../components/Divider';
@@ -13,11 +13,7 @@ import kakaotalkIcon from '../../assets/image/auth/kakaotalk.svg';
 import { SignUpDTO } from '../../backend/entity/user';
 import { AppState } from '../../store/store';
 
-interface Props {
-  history: History;
-}
-
-const SignUp = ({ history }: Props) => {
+const SignUp = () => {
   const [signUpForm, setSignUpForm] = useState<SignUpDTO>({
     username: '',
     password: '',
@@ -25,6 +21,8 @@ const SignUp = ({ history }: Props) => {
   const [checkPassword, setCheckPassword] = useState<string>();
 
   const { user } = useSelector((state: AppState) => state.user);
+  const history = useHistory();
+
   useEffect(() => {
     if (user) history.push('/main');
   });

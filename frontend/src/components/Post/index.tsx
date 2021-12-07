@@ -69,7 +69,6 @@ const Post: React.FC<Props> = ({ post }: Props) => {
   const dateTime = dateToString(post.meetAt);
 
   const onClickPost = (postId: number) => {
-    console.log(`debug${postId}`);
     history.push(`/post/${postId}`);
   };
 

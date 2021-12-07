@@ -1,9 +1,8 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { useState } from 'react';
-import { History } from 'history';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router';
+import { Redirect, useHistory } from 'react-router';
 import { signin } from '../../store/actions/index';
 import Layout from '../../components/Layout';
 import defaultImage from '../../assets/image/auth/signin-left.jpg';
@@ -14,17 +13,13 @@ import googleIcon from '../../assets/image/auth/google.svg';
 import kakaotalkIcon from '../../assets/image/auth/kakaotalk.svg';
 import { AppState } from '../../store/store';
 
-interface SignInProps {
-  history: History;
-}
-
-const SignIn = ({ history }: SignInProps) => {
+const SignIn = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
   const dispatch = useDispatch();
-
   const { user } = useSelector((state: AppState) => state.user);
+  const history = useHistory();
 
   const onClickLogin = () => {
     if (!username) {
@@ -45,11 +40,12 @@ const SignIn = ({ history }: SignInProps) => {
   const onClickKakaoSignIn = () => {};
   const onClickGoogleSignIn = () => {};
 
-  const redirect = user ? <Redirect to="/main" /> : null;
+  useEffect(() => {
+    if (user) history.push('/main');
+  });
 
   return (
     <div id="signin" className="signin-container">
-      {redirect}
       <Layout name="로그인" imageUrl={defaultImage}>
         <label htmlFor="username">이름</label>
         <input

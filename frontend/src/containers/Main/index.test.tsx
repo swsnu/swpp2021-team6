@@ -1,9 +1,23 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import { history } from '../../store/store';
+import { mount, shallow } from 'enzyme';
+import { Provider } from 'react-redux';
+import * as reactRedux from 'react-redux';
+import userInfo from '../../mocks/userInfo.json';
+import mockStore, { history } from '../../store/store';
 import * as actionCreators from '../../backend/api/api';
 import { PostEntity } from '../../backend/entity/post';
 import Main from '.';
+
+const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
+const mockPush = jest.fn();
+const setPostsMock = jest.fn();
+const setFilterArrayMock = jest.fn();
+const useStateMock = jest.spyOn(React, 'useState');
+
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useHistory: () => ({ push: mockPush }),
+}));
 
 const mockPosts: PostEntity[] = [
   {
@@ -32,15 +46,24 @@ const mockPosts: PostEntity[] = [
     keywords: ['뒷풀이', '이번 주말', 'MBTI E'],
   },
 ];
-
-const spyHistoryPush = jest.spyOn(history, 'push').mockImplementation();
-
 describe('Main', () => {
   let main: any;
   let spyQueryPosts: any;
 
   beforeEach(() => {
-    main = <Main history={history} />;
+    main = <Main />;
+    useSelectorMock.mockImplementation((callback) =>
+      callback({ user: { user: userInfo } }),
+    );
+    useStateMock
+      .mockReturnValueOnce([mockPosts, setPostsMock])
+      .mockReturnValueOnce([
+        [
+          { exerciseName: 'soccer', skillLevel: 'high' },
+          { exerciseName: 'basketball', skillLevel: 'middle' },
+        ],
+        setFilterArrayMock,
+      ]);
     spyQueryPosts = jest
       .spyOn(actionCreators, 'queryPosts')
       .mockResolvedValue({ items: mockPosts });
@@ -62,24 +85,7 @@ describe('Main', () => {
   });
 
   it('should render without error', () => {
-    const component = mount(main);
+    const component = shallow(main);
     expect(component.find('.main').length).toBe(1);
-  });
-
-  it('should call getQueryString', () => {
-    const component = mount(main);
-    const useStateMock = jest.spyOn(React, 'useState');
-    const setPostsMock = jest.fn();
-    const setFilterArrayMock = jest.fn();
-    useStateMock
-      .mockReturnValueOnce([mockPosts, setPostsMock])
-      .mockReturnValueOnce([
-        [
-          { exerciseName: 'soccer', skillLevel: 'high' },
-          { exerciseName: 'basketball', skillLevel: 'middle' },
-        ],
-        setFilterArrayMock,
-      ]);
-    expect(spyQueryPosts).toBeCalledTimes(1);
   });
 });

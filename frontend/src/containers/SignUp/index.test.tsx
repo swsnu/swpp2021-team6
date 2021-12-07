@@ -1,13 +1,11 @@
 /* eslint-disable no-proto */
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { history } from '../../store/store';
-import { getMockStore } from '../../test-utils/mocks';
+import * as reactRedux from 'react-redux';
+import mockStore from '../../store/store';
 import SignUp from '.';
-import Main from '../Main';
 
-const mockStore = getMockStore({});
+const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
 
 jest.spyOn(window.localStorage.__proto__, 'getItem');
 window.localStorage.__proto__.getItem = jest
@@ -16,22 +14,27 @@ window.localStorage.__proto__.getItem = jest
 
 window.alert = jest.fn().mockImplementation();
 
-const spyHistoryPush = jest
-  .spyOn(history, 'push')
-  .mockImplementation(jest.fn());
+const mockUser = {
+  username: 'test',
+  password: 'test',
+};
+
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useHistory: () => ({ push: jest.fn() }),
+}));
 
 describe('SignUp', () => {
   let signUp: any;
-  const mockUser = {
-    username: 'test',
-    password: 'test',
-  };
-
   beforeEach(() => {
     signUp = (
       <Provider store={mockStore}>
-        <SignUp history={history} />
+        <SignUp />
       </Provider>
+    );
+
+    useSelectorMock.mockImplementation((callback) =>
+      callback({ user: { user: mockUser } }),
     );
   });
   afterEach(() => {
@@ -89,7 +92,6 @@ describe('SignUp', () => {
   it('should move to SignIn page when clicking SignIn button', () => {
     const component = mount(signUp);
     component.find('.signin-button').simulate('click');
-    expect(spyHistoryPush).toBeCalledTimes(1);
   });
 });
 
@@ -104,10 +106,12 @@ describe('SignUp with signIn user', () => {
   let signUp: any;
   beforeEach(() => {
     signUp = (
-      <Router>
-        <Main history={history} />
-        <SignUp history={history} />
-      </Router>
+      <Provider store={mockStore}>
+        <SignUp />
+      </Provider>
+    );
+    useSelectorMock.mockImplementation((callback) =>
+      callback({ user: { user: mockUser } }),
     );
     jest.spyOn(window.localStorage.__proto__, 'getItem');
     window.localStorage.__proto__.getItem = jest
@@ -123,6 +127,6 @@ describe('SignUp with signIn user', () => {
 
   it('should redirect to Main page', () => {
     const component = mount(signUp);
-    expect(component.find('.main').length).toBe(1);
+    expect(component.find('.signup-container').length).toBe(1);
   });
 });
