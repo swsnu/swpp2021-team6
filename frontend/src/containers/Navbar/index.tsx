@@ -1,6 +1,6 @@
 import { History } from 'history';
 import { useSelector } from 'react-redux';
-import logo from '../../assets/image/logo.png';
+import logo from '../../assets/image/icon/green-logo.svg';
 import noti from '../../assets/image/icon/notification.png';
 import './index.scss';
 import { AppState } from '../../store/store';

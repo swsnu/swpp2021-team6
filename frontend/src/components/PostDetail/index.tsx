@@ -6,7 +6,7 @@ import { userInfo } from 'os';
 import { getKakaoMapWithMarker } from '../../utils/getKakaoMap';
 import Label from '../Label';
 import { PostEntity } from '../../backend/entity/post';
-import changeDateFormat from '../../utils/dateToString';
+import { changeDateFormat } from '../../utils/dateToString';
 import './index.scss';
 import gps from '../../assets/image/post-detail/gps.svg';
 import userIcon from '../../assets/image/post-detail/user-icon.svg';

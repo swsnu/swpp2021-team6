@@ -3,20 +3,29 @@
   padding: 0;
   width: 300px !important;
   height: 285px !important;
-  border: solid 1px #e9ecef;
+  border: none;
   text-align: left;
+  background-color: transparent;
 
-  .level-label {
+
+  .date {
     position: relative;
-    left: 10px;
-    bottom: 47px;
+    left: 108px;
+    bottom: 222px;
+    width: fit-content;
+    padding: 0px 8px;
+    border-radius: 3px;
+    color: white;
+    font-size: 12px;
+    background-color : rgba(0, 0, 0, 0.45);
   }
 
   .thumbnail {
-    width: 300px;
-    height: 150px;
+    width: 220px;
+    height: 220px;
     object-fit: cover;
     margin-bottom: 14px;
+    border-radius: 10px;
   }
 
   .post-body {
@@ -38,6 +47,7 @@
     .title {
       max-height: 2.3em;
       font-weight: 700;
+      font-size: 18px;
       margin-right: 10px;
       margin-bottom: 3px;
       overflow: hidden;

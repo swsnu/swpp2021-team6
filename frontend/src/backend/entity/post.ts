@@ -13,6 +13,7 @@ export type PlaceType = {
 export interface PostEntity {
   postId: number;
   hostId: number;
+  hostName: string;
   exerciseName: ExerciseType | string;
   expectedLevel: SkillLevelType | string;
   title: string;
