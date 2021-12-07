@@ -1,12 +1,18 @@
 .post {
   margin: 0 10px 20px 10px;
   padding: 0;
-  width: 300px !important;
-  height: 285px !important;
+  width: fit-content;
+  height: fit-content;
   border: none;
   text-align: left;
   background-color: transparent;
 
+  #place{
+    color: rgba(36, 113, 0, 0.49);
+    font-weight: 600;
+    margin-bottom: 8px;
+    margin-left: 8px;
+  }
 
   .date {
     position: relative;
@@ -28,21 +34,24 @@
     border-radius: 10px;
   }
 
-  .post-body {
-    display: flex;
-    height: 90px;
+  .post-capacity{
     position: relative;
-    bottom: 22px;
-
-    .user-icon {
-      margin: 0 10px 0 10px;
-      width: 24px;
+    left: 120px;
+    bottom: 70px;
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
+    img{
+      margin-right: 5px;
     }
+  }
 
-    p {
-      margin: 0;
-      color: black;
-    }
+  .post-body {
+    position: relative;
+    bottom: 55px;
+    display: flex;
+    flex-direction: column;
+    padding-left: 5px;
 
     .title {
       max-height: 2.3em;
@@ -58,23 +67,24 @@
       word-wrap: break-word;
       line-height: 1.2em;
     }
+    .host-name{
+      color: #B2B2B2;
+      font-weight: bold;
+    }
   }
 
   .post-footer {
-    height: 20px;
-    text-align: right;
-    margin: 0 10px 10px 10px;
     position: relative;
-    bottom: 22px;
+    bottom: 45px;
     display: flex;
     justify-content: space-between;
+    padding-left: 3px;
 
     .keyword-container {
-      position: relative;
-      bottom: 5px;
       span {
-        margin-right: 5px;
-      }
+        margin-right: 5px !important;
+        font-size: 12px;
+        border: 1px solid rgba(36, 113, 0, 0.49);      }
     }
 
     .anticon-user {

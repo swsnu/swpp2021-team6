@@ -56,8 +56,10 @@ const Detail: React.FC<Props> = ({ post, isHost = false, onDelete }) => {
             <h1>{post.title}</h1>
             <p>{post.description}</p>
             {/* post status에 맞게 color 수정 */}
-            <Label color="rgba(36, 113, 0, 0.49)">{post.status}</Label>
-            <Label color="rgba(36, 113, 0, 0.49)">
+            <Label font="white" color="rgba(36, 113, 0, 0.49)">
+              {post.status}
+            </Label>
+            <Label font="white" color="rgba(36, 113, 0, 0.49)">
               현재 {post.memberCount}명
             </Label>
           </div>

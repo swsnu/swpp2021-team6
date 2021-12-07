@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import { UserOutlined } from '@ant-design/icons';
 import { PostEntity } from '../../backend/entity/post';
 import * as thumbnails from '../../utils/thumbnails';
 import './index.scss';
 import { changeDateFormat2 } from '../../utils/dateToString';
 import Label from '../Label';
 import * as labelColors from '../../style/labelColors';
+import capacityIcon from '../../assets/image/main/capacity.svg';
 
 interface Props {
   post: PostEntity;
@@ -61,21 +61,21 @@ const Post: React.FC<Props> = ({ post }: Props) => {
       </div>
       <img className="thumbnail" src={imgSrc} alt="" />
       <div className="date">{dateTime}</div>
+      <div className="post-capacity">
+        <img className="capacity-icon" src={capacityIcon} alt="" />
+        {post.memberCount} / {post.maxCapacity}
+      </div>
       <div className="post-body">
-        <p className="title">{post.title}</p>
-        <p className="host-name">{post.hostName}</p>
+        <div className="title">{post.title}</div>
+        <div className="host-name">{post.hostName}</div>
       </div>
       <div className="post-footer">
         <div className="keyword-container">
           {post.keywords.map((keyword, idx) => (
-            <Label key={idx} color="#3B5BDB">
+            <Label key={idx} font="#247100" color="rgba(36, 113, 0, 0)">
               {keyword}
             </Label>
           ))}
-        </div>
-        <div className="post-capacity">
-          <UserOutlined />
-          {post.memberCount} / {post.maxCapacity}
         </div>
       </div>
     </button>
