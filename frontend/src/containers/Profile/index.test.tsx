@@ -1,14 +1,15 @@
 import { Provider } from 'react-redux';
 import * as reactRedux from 'react-redux';
+import router from 'react-router';
 import { mount } from 'enzyme';
 import * as userActionCreators from '../../store/actions/user';
 import Profile from './index';
 import mockStore, { history } from '../../store/store';
-import currentUser from '../../mocks/user.json';
 import userInfo from '../../mocks/userInfo.json';
 
 const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
 const useDispatchMock = jest.spyOn(reactRedux, 'useDispatch');
+const useParamsMock = jest.spyOn(router, 'useParams');
 
 describe('profile', () => {
   let profile: any;
@@ -22,8 +23,13 @@ describe('profile', () => {
       </Provider>
     );
 
-    useSelectorMock.mockReturnValue({ currentUser, userInfo });
+    // useSelectorMock.mockReturnValue({ user: userInfo });
+    useSelectorMock.mockImplementation((callback) =>
+      callback({ user: { user: userInfo } }),
+    );
     useDispatchMock.mockReturnValue(jest.fn());
+    useParamsMock.mockReturnValue({ id: '1' });
+
     spyLoginAction = jest
       .spyOn(userActionCreators, 'signout')
       .mockImplementation(() => jest.fn());
@@ -53,7 +59,6 @@ describe('profile', () => {
   it('signout button should push to signout page', () => {
     const component = mount(profile);
     const signoutButton = component.find('.signout-button');
-
     signoutButton.simulate('click');
     expect(spyHistoryPush).toBeCalledTimes(1);
     expect(spyHistoryPush).toBeCalledWith('/signout');

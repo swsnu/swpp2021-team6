@@ -1,13 +1,18 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
+import { Provider } from 'react-redux';
 import SignUp from './index';
-import { history } from '../../store/store';
+import mockStore, { history } from '../../store/store';
 import { mockNavigatorGeolocation } from '../../test-utils/mockNavigatorGeolocation';
 
 describe('SignUp', () => {
   let signup: any;
   beforeEach(() => {
-    signup = <SignUp history={history} />;
+    signup = (
+      <Provider store={mockStore}>
+        <SignUp history={history} />
+      </Provider>
+    );
     window.alert = jest.fn().mockImplementation();
     console.log = jest.fn().mockImplementation();
   });
@@ -17,7 +22,7 @@ describe('SignUp', () => {
   });
 
   it('should render without crashing', () => {
-    const component = mount(signup);
+    const component = shallow(signup);
     expect(component.find('SignUp').length).toBe(1);
   });
 
