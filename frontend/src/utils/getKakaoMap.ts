@@ -1,3 +1,5 @@
+import humps from 'humps';
+
 export const { kakao } = window as any;
 
 declare global {
@@ -32,7 +34,7 @@ export const getKakaoMap = (
         position: new window.kakao.maps.LatLng(result.y, result.x),
       });
       window.kakao.maps.event.addListener(marker, 'click', () => {
-        setSelectedPlace(result);
+        setSelectedPlace(humps.camelizeKeys(result));
         infowindow.setContent(
           `<div style="padding:5px;font-size:12px;">${result.place_name}</div>`,
         );
