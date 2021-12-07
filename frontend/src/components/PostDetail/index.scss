@@ -6,11 +6,15 @@
         display: flex;
         justify-content: space-between;
         font-size: 18px;
-        font-weight: 500;
+        font-weight: 600;
         margin-bottom: 20px;
         button{
             border-radius: 5px;
             font-size: small;
+        }
+        img{
+            margin-right: 15px;
+            width: 40px;
         }
     }
     #body-1{
@@ -43,7 +47,7 @@
             #card{
                 display: grid;
                 grid-template-columns: 1fr 1fr;
-                grid-template-rows: 1fr 2fr 1fr 2fr;
+                grid-template-rows: 1fr 2fr 1fr 1.5fr;
                 #title{
                     color: #7D7987;
                     font-size: 12px;
@@ -77,7 +81,7 @@
             flex-direction: column;
             justify-content: center;
             padding-left: 40px;
-            span{
+            img{
                 width: 130px;
                 height: 130px;
             }

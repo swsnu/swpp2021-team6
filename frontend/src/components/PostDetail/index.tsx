@@ -8,6 +8,8 @@ import Label from '../Label';
 import { PostEntity } from '../../backend/entity/post';
 import changeDateFormat from '../../utils/dateToString';
 import './index.scss';
+import gps from '../../assets/image/post-detail/gps.svg';
+import userIcon from '../../assets/image/post-detail/user-icon.svg';
 
 type PostItem = PostEntity & { hostName: string };
 
@@ -43,7 +45,10 @@ const Detail: React.FC<Props> = ({ post, isHost = false, onDelete }) => {
     <>
       <div id="post-detail-component">
         <div id="header">
-          {`${post.place.gu} ${post.place.dong}`}
+          <div>
+            <img src={gps} alt="gps" />
+            {`${post.place.gu} ${post.place.dong}`}
+          </div>
           <div id="edit-delete">{button}</div>
         </div>
         <div id="body-1">
@@ -79,7 +84,7 @@ const Detail: React.FC<Props> = ({ post, isHost = false, onDelete }) => {
         <div id="body-2">
           <div id="profile">
             <Link to={`/profile/${post.hostId}`}>
-              <Avatar size="small" icon={<UserOutlined />} />
+              <img src={userIcon} alt="userIcon" />
             </Link>
           </div>
           <div id="user-openkakao">
