@@ -5,6 +5,7 @@ import { history } from '../../store/store';
 const soccerMockPost = {
   postId: 1,
   hostId: 1,
+  hostName: 'gdori',
   exerciseName: '축구',
   expectedLevel: '상',
   title: '용산구에서 같이 축구하실 분~',
@@ -30,6 +31,7 @@ const soccerMockPost = {
 const basketballMockPost = {
   postId: 1,
   hostId: 1,
+  hostName: 'gdori',
   exerciseName: '농구',
   expectedLevel: '중',
   title: '용산구에서 같이 축구하실 분~',
@@ -55,6 +57,7 @@ const basketballMockPost = {
 const levelLowMockPost = {
   postId: 1,
   hostId: 1,
+  hostName: 'gdori',
   exerciseName: '농구',
   expectedLevel: '하',
   title: '용산구에서 같이 축구하실 분~',
@@ -80,6 +83,7 @@ const levelLowMockPost = {
 const levelNoneMockPost = {
   postId: 1,
   hostId: 1,
+  hostName: 'gdori',
   exerciseName: '축구',
   expectedLevel: '상관 없음',
   title: '용산구에서 같이 축구하실 분~',
@@ -105,6 +109,7 @@ const levelNoneMockPost = {
 const mockPostWithWrongData = {
   postId: 1,
   hostId: 1,
+  hostName: 'gdori',
   exerciseName: '양궁',
   expectedLevel: '고수',
   title: '용산구에서 같이 축구하실 분~',
@@ -147,27 +152,21 @@ describe('Post', () => {
   it('should render soccer image with level high label', () => {
     const post = <Post post={soccerMockPost} />;
     const component = mount(post);
-    expect(component.find('.level-label').at(0).text()).toBe('실력 : 상');
   });
 
   it('should render basketball image with level middle label', () => {
     const post = <Post post={basketballMockPost} />;
     const component = mount(post);
-    expect(component.find('.level-label').at(0).text()).toBe('실력 : 중');
   });
 
   it('should render basketball image with level low label', () => {
     const post = <Post post={levelLowMockPost} />;
     const component = mount(post);
-    expect(component.find('.level-label').at(0).text()).toBe('실력 : 하');
   });
 
   it('should render soccer image with level none label', () => {
     const post = <Post post={levelNoneMockPost} />;
     const component = mount(post);
-    expect(component.find('.level-label').at(0).text()).toBe(
-      '실력 : 상관 없음',
-    );
   });
 
   it('should alert with wrong data', () => {

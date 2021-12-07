@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import { Avatar } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
 import { PostEntity } from '../../backend/entity/post';
 import * as thumbnails from '../../utils/thumbnails';
 import './index.scss';
-import dateToString from '../../utils/dateToString';
+import { changeDateFormat2 } from '../../utils/dateToString';
 import Label from '../Label';
 import * as labelColors from '../../style/labelColors';
+import capacityIcon from '../../assets/image/main/capacity.svg';
 
 interface Props {
   post: PostEntity;
@@ -48,25 +47,8 @@ const Post: React.FC<Props> = ({ post }: Props) => {
         window.alert('운동 타입이 잘못 설정된 데이터가 있습니다.');
     }
     setImgSrc(imgArray[idx]);
-
-    switch (post.expectedLevel) {
-      case '상':
-        setLabelColor(labelColors.red);
-        break;
-      case '중':
-        setLabelColor(labelColors.green);
-        break;
-      case '하':
-        setLabelColor(labelColors.yellow);
-        break;
-      case '상관 없음':
-        setLabelColor(labelColors.blue);
-        break;
-      default:
-        window.alert('기대 실력이 잘못 설정된 데이터가 있습니다.');
-    }
   }, []);
-  const dateTime = dateToString(post.meetAt);
+  const dateTime = changeDateFormat2(post.meetAt);
 
   const onClickPost = (postId: number) => {
     history.push(`/post/${postId}`);
@@ -74,33 +56,26 @@ const Post: React.FC<Props> = ({ post }: Props) => {
 
   return (
     <button className="post" onClick={() => onClickPost(post.postId)}>
+      <div id="place">
+        {post.place.gu} {post.place.dong}
+      </div>
       <img className="thumbnail" src={imgSrc} alt="" />
-      <Label className="level-label" color={labelColor}>
-        실력 : {post.expectedLevel}
-      </Label>
+      <div className="date">{dateTime}</div>
+      <div className="post-capacity">
+        <img className="capacity-icon" src={capacityIcon} alt="" />
+        {post.memberCount} / {post.maxCapacity}
+      </div>
       <div className="post-body">
-        <div>
-          <Avatar className="user-icon" size={35} icon={<UserOutlined />} />
-        </div>
-        <div>
-          <p className="title">{post.title}</p>
-          <p className="place">
-            {post.place.gu} {post.place.dong}
-          </p>
-          <p className="date">{dateTime}</p>
-        </div>
+        <div className="title">{post.title}</div>
+        <div className="host-name">{post.hostName}</div>
       </div>
       <div className="post-footer">
         <div className="keyword-container">
           {post.keywords.map((keyword, idx) => (
-            <Label key={idx} color="#3B5BDB">
+            <Label key={idx} font="#247100" color="rgba(36, 113, 0, 0)">
               {keyword}
             </Label>
           ))}
-        </div>
-        <div className="post-capacity">
-          <UserOutlined />
-          {post.memberCount} / {post.maxCapacity}
         </div>
       </div>
     </button>

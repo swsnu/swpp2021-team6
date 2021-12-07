@@ -5,10 +5,12 @@ import Post from '../../components/Post';
 import Filter from '../Filter';
 import './index.scss';
 import { PostEntity } from '../../backend/entity/post';
-import AddButton from '../../components/AddButton';
 import { queryFilterPosts, queryPosts } from '../../backend/api/api';
 import { FilterInputDTO } from '../../backend/entity/exercise';
 import { AppState } from '../../store/store';
+import plusIcon from '../../assets/image/main/plus-icon.svg';
+import mainIcon from '../../assets/image/main/main-icon.svg';
+import bottomIcon from '../../assets/image/main/side-bar-bottom.svg';
 
 const Main = () => {
   const history = useHistory();
@@ -41,10 +43,26 @@ const Main = () => {
       .catch((reason) => console.log(reason));
   };
 
-  // const redirect = !user ? <Redirect to="/signin" /> : null;
+  const onClickAddButton = () => {
+    history.push('/post/new');
+  };
 
   return (
     <div className="main">
+      <div id="side-bar">
+        <div id="main-icon">
+          <img src={mainIcon} alt="main icon" />
+        </div>
+        <div id="create-post">
+          <button className="plus-button" onClick={onClickAddButton}>
+            <img src={plusIcon} alt="plus button" />
+          </button>
+        </div>
+        <div id="bottom-logo">
+          <img src={bottomIcon} alt="bottom icon" />
+        </div>
+      </div>
+
       <div className="filter-container">
         <Filter
           filterArray={filterArray}
@@ -57,7 +75,6 @@ const Main = () => {
           <Post key={post.postId} post={post} />
         ))}
       </div>
-      <AddButton />
     </div>
   );
 };
