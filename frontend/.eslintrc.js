@@ -15,6 +15,7 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   extends: ['plugin:prettier/recommended', 'airbnb'],
   rules: {
+    'no-shadow': 'off',
     'linebreak-style': 0,
     'react/jsx-filename-extension': [
       2,

@@ -9,7 +9,7 @@ export interface UserEntity {
   longitude: number;
   gu: string;
   dong: string;
-  gender: string;
+  gender: GenderType;
 }
 
 export interface UserSignInInputDTO {
@@ -29,7 +29,18 @@ export interface SignUpDTO {
   password: string;
 }
 
-/* TODO: 아래 DTO를 onboarding용으로 수정 */
+export interface ProfileDTO {
+  latitude: number;
+  longitude: number;
+  gu: string;
+  dong: string;
+  gender: GenderType | string;
+  nickname: string;
+  introduction: string;
+  preferredExercise: ExerciseAndSkill[];
+}
+
+/* TODO: SignUp, Onboarding DTO 생성 후 아래 라인 삭제 */
 export interface SignUpInputDTO {
   username: string;
   password: string;

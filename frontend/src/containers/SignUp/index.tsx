@@ -7,10 +7,10 @@ import Layout from '../../components/Layout';
 import defaultImage from '../../assets/image/auth/signup-left.jpg';
 import Divider from '../../components/Divider';
 import Button from '../../components/Button';
+import { SignUpDTO } from '../../backend/entity/user';
 import './index.scss';
 import googleIcon from '../../assets/image/auth/google.svg';
 import kakaotalkIcon from '../../assets/image/auth/kakaotalk.svg';
-import { SignUpDTO } from '../../backend/entity/user';
 import { AppState } from '../../store/store';
 
 const SignUp = () => {

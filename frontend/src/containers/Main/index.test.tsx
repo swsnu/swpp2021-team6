@@ -1,9 +1,7 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
-import { Provider } from 'react-redux';
+import { shallow } from 'enzyme';
 import * as reactRedux from 'react-redux';
 import userInfo from '../../mocks/userInfo.json';
-import mockStore, { history } from '../../store/store';
 import * as actionCreators from '../../backend/api/api';
 import { PostEntity } from '../../backend/entity/post';
 import Main from '.';

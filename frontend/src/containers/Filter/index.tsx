@@ -10,7 +10,7 @@ import greenHeart from '../../assets/image/icon/filled-heart.svg';
 import sort from '../../assets/image/icon/sort.svg';
 import exercise from '../../assets/image/icon/exercise.svg';
 import greenCircle from '../../assets/image/icon/green-circle.svg';
-import filterDelete from '../../assets/image/icon/filter-delete-button.svg';
+import filterDelete from '../../assets/image/icon/exercise-delete-button.svg';
 import level from '../../assets/image/icon/level.svg';
 import search from '../../assets/image/icon/search.svg';
 
