@@ -13,13 +13,20 @@ import { createApply } from '../../backend/api/api';
 interface Props {
   post: PostEntity;
   isHost: boolean | undefined;
+  isParticipant: boolean;
   onDelete: () => Promise<void>;
+  onParticipate: () => void;
 }
 
-const Detail: React.FC<Props> = ({ post, isHost = false, onDelete }) => {
+const Detail: React.FC<Props> = ({
+  post,
+  isHost = false,
+  isParticipant = false,
+  onDelete,
+  onParticipate,
+}) => {
   const history = useHistory();
   const postId: number = Number(useParams<{ id: string }>().id);
-  const [isParticipant, setIsParticipant] = useState<boolean>(false);
   useEffect(() => {
     const container = document.getElementById('map');
     getKakaoMapWithMarker(container, post.place.latitude, post.place.longitude);
@@ -35,17 +42,6 @@ const Detail: React.FC<Props> = ({ post, isHost = false, onDelete }) => {
     <></>
   );
 
-  const onClickParticipate = async () => {
-    await createApply(postId).then((status) => {
-      if (status === 204) {
-        alert('참가 신청이 완료되었습니다.');
-        setIsParticipant(true);
-      } else {
-        alert('참가 신청 중 문제가 발생했습니다.');
-      }
-    });
-  };
-
   const button2 = isHost ? (
     <button>
       <span>참여자 명단 확인</span>
@@ -53,7 +49,7 @@ const Detail: React.FC<Props> = ({ post, isHost = false, onDelete }) => {
   ) : (
     <button
       className={isParticipant ? 'disabled' : undefined}
-      onClick={onClickParticipate}
+      onClick={onParticipate}
       disabled={isParticipant}
     >
       <span>참여하기</span>

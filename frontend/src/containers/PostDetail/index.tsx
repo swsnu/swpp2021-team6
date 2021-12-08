@@ -8,6 +8,7 @@ import PostDetail from '../../components/PostDetail';
 import { AppState } from '../../store/store';
 import './index.scss';
 import {
+  createApply,
   createComment,
   deletePost,
   queryComments,
@@ -31,6 +32,7 @@ const PostDetailContainer: React.FC = () => {
   const [commentItems, setCommentItems] = React.useState<CommentItem[]>([]);
   const [newComment, setNewComment] = React.useState<string>('');
   const [commentsUpdated, setCommentsUpdated] = React.useState<boolean>(false);
+  const [isParticipant, setIsParticipant] = useState<boolean>(false);
   const { user } = useSelector((state: AppState) => state.user);
 
   const onCommentConfirm = async (comment: string | null) => {
@@ -71,6 +73,17 @@ const PostDetailContainer: React.FC = () => {
     setCommentItems(commentsList);
   };
 
+  const onClickParticipate = async () => {
+    await createApply(postId).then((status) => {
+      if (status === 204) {
+        alert('참가 신청이 완료되었습니다.');
+        setIsParticipant(true);
+      } else {
+        alert('참가 신청 중 문제가 발생했습니다.');
+      }
+    });
+  };
+
   // Redirect to sign-in page if not signed in
   useEffect(() => {
     if (user === null) history.push('/signin');
@@ -87,6 +100,17 @@ const PostDetailContainer: React.FC = () => {
       setCommentsUpdated(false);
     }
   }, [commentsUpdated]);
+
+  useEffect(() => {
+    if (postItem && user) {
+      const { participants } = postItem;
+      const found = participants.find(
+        (participant) => participant.userId === user.userId,
+      );
+      if (found) setIsParticipant(true);
+    }
+  }, [postItem]);
+
   // Render Component
   if (postItem === undefined) return null;
   return (
@@ -103,7 +127,9 @@ const PostDetailContainer: React.FC = () => {
           <PostDetail
             post={postItem}
             isHost={user?.userId === postItem.hostId}
+            isParticipant={isParticipant}
             onDelete={onPostDelete}
+            onParticipate={onClickParticipate}
           />
           <div id="post-detail-comment">
             <div id="comment-header">
