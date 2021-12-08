@@ -132,8 +132,8 @@ class Post(models.Model):
     objects = PostManager()
 
     class Status(models.TextChoices):
-        RECRUITING = "모집 중"
-        RECRUITED = "모집 완료"
+        RECRUITING = "RECRUITING"
+        RECRUITED = "RECRUITED"
 
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
     host = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -153,7 +153,7 @@ class Post(models.Model):
     member_count = models.IntegerField(default=0)
     kakaotalk_link = models.CharField(max_length=256)
     status = models.CharField(
-        max_length=5, choices=Status.choices, default=Status.RECRUITING
+        max_length=10, choices=Status.choices, default=Status.RECRUITING
     )
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
@@ -172,9 +172,9 @@ class Post_Keyword(models.Model):
 
 class Participation(models.Model):
     class Status(models.TextChoices):
-        PENDING = "승인 대기 중"
-        ACCEPTED = "참가 중"
-        DECLINED = "거절됨"
+        PENDING = "PENDING"
+        ACCEPTED = "ACCEPTED"
+        DECLINED = "DECLINED"
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
