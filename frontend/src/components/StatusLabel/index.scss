@@ -1,0 +1,22 @@
+.status-label {
+  width: 150px;
+  height: 50px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.pending {
+  background: #fff5e0;
+  color: #ef9610;
+}
+
+.accepted {
+  background: #d1e4ff;
+  color: #597bf2;
+}
+
+.declined {
+  background: #ffe1e1;
+  color: #f25959;
+}
