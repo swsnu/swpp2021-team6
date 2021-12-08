@@ -36,6 +36,25 @@ export const createApply = async (postId: number): Promise<number> => {
   const { status } = await axios.post(`/posts/${postId}/apply`);
   return status;
 };
+export const acceptApply = async (
+  postId: number,
+  userId: number,
+): Promise<number> => {
+  const { status } = await axios.post(
+    `/posts/${postId}/participants/${userId}/accept`,
+  );
+  return status;
+};
+
+export const declineApply = async (
+  postId: number,
+  userId: number,
+): Promise<number> => {
+  const { status } = await axios.post(
+    `/posts/${postId}/participants/${userId}/decline`,
+  );
+  return status;
+};
 
 export const queryComments = async ({
   postId,

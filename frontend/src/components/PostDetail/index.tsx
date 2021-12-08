@@ -1,36 +1,109 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable no-restricted-globals */
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Button } from 'antd';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { getKakaoMapWithMarker } from '../../utils/getKakaoMap';
 import Label from '../Label';
-import { PostEntity } from '../../backend/entity/post';
+import {
+  PostEntity,
+  StatusType,
+  ParticipantType,
+} from '../../backend/entity/post';
 import { changeDateFormat } from '../../utils/dateToString';
 import './index.scss';
 import gps from '../../assets/image/post-detail/gps.svg';
 import userIcon from '../../assets/image/post-detail/user-icon.svg';
-import { createApply } from '../../backend/api/api';
+import StatusLabel from '../StatusLabel';
+import deleteIcon from '../../assets/image/icon/exercise-delete-button.svg';
+import { acceptApply, declineApply } from '../../backend/api/api';
 
 interface Props {
   post: PostEntity;
   isHost: boolean | undefined;
   isParticipant: boolean;
+  applyStatus: StatusType | null;
   onDelete: () => Promise<void>;
   onParticipate: () => void;
+  participants: ParticipantType[];
+  setParticipants: Dispatch<SetStateAction<ParticipantType[]>>;
+  setPost: Dispatch<SetStateAction<PostEntity | undefined>>;
 }
 
 const Detail: React.FC<Props> = ({
   post,
   isHost = false,
   isParticipant = false,
+  applyStatus = null,
   onDelete,
   onParticipate,
+  participants,
+  setParticipants,
+  setPost,
 }) => {
   const history = useHistory();
   const postId: number = Number(useParams<{ id: string }>().id);
+  const [toggleOpen, setToggleOpen] = useState<boolean>(false);
+
   useEffect(() => {
     const container = document.getElementById('map');
     getKakaoMapWithMarker(container, post.place.latitude, post.place.longitude);
   }, []);
+
+  const acceptParticipant = async (participant: ParticipantType) => {
+    const response = confirm(
+      `'${participant.userName}'님의 참가 신청을 수락하시겠습니까?`,
+    );
+    if (response) {
+      await acceptApply(postId, participant.userId).then((status) => {
+        if (status === 204) {
+          alert('참가 신청을 수락했습니다.');
+          const others = participants.filter(
+            (v) => v.userId !== participant.userId,
+          );
+          setParticipants([...others, { ...participant, status: 'ACCEPTED' }]);
+          setPost({
+            ...post,
+            memberCount: post.memberCount + 1,
+            participants: [...others, { ...participant, status: 'ACCEPTED' }],
+          });
+        }
+      });
+    }
+  };
+
+  const declineParticipant = async (participant: ParticipantType) => {
+    const response = confirm(
+      `'${participant.userName}'님의 참가 신청을 거절하시겠습니까?`,
+    );
+    if (response) {
+      await declineApply(postId, participant.userId).then((status) => {
+        if (status === 204) {
+          alert('참가 신청을 거절했습니다.');
+          const others = participants.filter(
+            (v) => v.userId !== participant.userId,
+          );
+          setParticipants([...others]);
+        }
+      });
+    }
+  };
+
+  const participantStatus = (participant: ParticipantType) => {
+    if (participant.status === 'PENDING') {
+      return (
+        <button
+          id="pending-button"
+          onClick={() => acceptParticipant(participant)}
+        >
+          미승인
+        </button>
+      );
+    }
+    if (participant.status === 'ACCEPTED') {
+      return <button id="accepted-span">승인</button>;
+    }
+    return null;
+  };
 
   const meetAtText = changeDateFormat(post.meetAt);
   const button = isHost ? (
@@ -42,8 +115,13 @@ const Detail: React.FC<Props> = ({
     <></>
   );
 
+  const onClickToggleOpen = () => {
+    if (participants.length === 0) alert('참가자가 없습니다.');
+    else setToggleOpen(!toggleOpen);
+  };
+
   const button2 = isHost ? (
-    <button>
+    <button onClick={onClickToggleOpen}>
       <span>참여자 명단 확인</span>
     </button>
   ) : (
@@ -80,7 +158,10 @@ const Detail: React.FC<Props> = ({
           </div>
 
           <div id="right">
-            <div id="header"> Information </div>
+            <div id="header">
+              <span>Information</span>
+              <StatusLabel status={applyStatus} />
+            </div>
             <div id="card">
               <p id="title">종목</p>
               <p id="title">기대 실력</p>
@@ -93,7 +174,26 @@ const Detail: React.FC<Props> = ({
               </p>
               <p id="content">{meetAtText}</p>
             </div>
-            <div id="participation">{button2}</div>
+            <div>{button2}</div>
+            <div
+              id="participants-container"
+              className={toggleOpen ? undefined : 'invisible'}
+            >
+              {participants.map((participant) => (
+                <div className="participant-content" key={participant.userId}>
+                  <span id="participant-nickname">{participant.userName}</span>
+                  <div className="participant-button-container">
+                    {participantStatus(participant)}
+                    <button
+                      id="participant-delete-button"
+                      onClick={() => declineParticipant(participant)}
+                    >
+                      <img src={deleteIcon} alt="delete" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
         <div id="body-2">

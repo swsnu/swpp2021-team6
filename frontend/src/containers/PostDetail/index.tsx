@@ -3,7 +3,12 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useHistory } from 'react-router';
 import humps from 'humps';
-import { PostEntity } from '../../backend/entity/post';
+import {
+  PostEntity,
+  StatusType,
+  ApplyStatus,
+  ParticipantType,
+} from '../../backend/entity/post';
 import PostDetail from '../../components/PostDetail';
 import { AppState } from '../../store/store';
 import './index.scss';
@@ -29,10 +34,12 @@ const PostDetailContainer: React.FC = () => {
   const history = useHistory();
   const postId: number = Number(useParams<{ id: string }>().id);
   const [postItem, setPost] = useState<PostEntity>();
+  const [participants, setParticipants] = useState<ParticipantType[]>([]);
   const [commentItems, setCommentItems] = React.useState<CommentItem[]>([]);
   const [newComment, setNewComment] = React.useState<string>('');
   const [commentsUpdated, setCommentsUpdated] = React.useState<boolean>(false);
   const [isParticipant, setIsParticipant] = useState<boolean>(false);
+  const [applyStatus, setApplyStatus] = useState<StatusType | null>(null);
   const { user } = useSelector((state: AppState) => state.user);
 
   const onCommentConfirm = async (comment: string | null) => {
@@ -46,8 +53,6 @@ const PostDetailContainer: React.FC = () => {
       setNewComment('');
     }
   };
-
-  console.log(postItem);
 
   const onPostDelete = async () => {
     await deletePost({ id: postId });
@@ -63,7 +68,6 @@ const PostDetailContainer: React.FC = () => {
     const comments: CommentEntity[] = (
       await queryComments({ postId })
     ).items.filter((c) => c.post_id === postId);
-    console.log(comments);
     const commentsList: CommentItem[] = (
       await Promise.all(comments.map((c) => readUser({ id: c.author_id })))
     ).map((u, i) => ({
@@ -78,6 +82,7 @@ const PostDetailContainer: React.FC = () => {
       if (status === 204) {
         alert('참가 신청이 완료되었습니다.');
         setIsParticipant(true);
+        setApplyStatus(ApplyStatus.PENDING);
       } else {
         alert('참가 신청 중 문제가 발생했습니다.');
       }
@@ -103,13 +108,27 @@ const PostDetailContainer: React.FC = () => {
 
   useEffect(() => {
     if (postItem && user) {
-      const { participants } = postItem;
+      setParticipants(
+        postItem.participants.filter(
+          (participant) => participant.status !== 'DECLINED',
+        ),
+      );
+    }
+  }, [postItem]);
+
+  useEffect(() => {
+    if (user) {
       const found = participants.find(
         (participant) => participant.userId === user.userId,
       );
-      if (found) setIsParticipant(true);
+      if (found) {
+        setIsParticipant(true);
+        if (found.status === 'PENDING') setApplyStatus(ApplyStatus.PENDING);
+        if (found.status === 'ACCEPTED') setApplyStatus(ApplyStatus.ACCEPTED);
+        if (found.status === 'DECLINED') setApplyStatus(ApplyStatus.DECLINED);
+      }
     }
-  }, [postItem]);
+  }, [participants]);
 
   // Render Component
   if (postItem === undefined) return null;
@@ -128,8 +147,12 @@ const PostDetailContainer: React.FC = () => {
             post={postItem}
             isHost={user?.userId === postItem.hostId}
             isParticipant={isParticipant}
+            applyStatus={applyStatus}
             onDelete={onPostDelete}
             onParticipate={onClickParticipate}
+            participants={participants}
+            setParticipants={setParticipants}
+            setPost={setPost}
           />
           <div id="post-detail-comment">
             <div id="comment-header">
