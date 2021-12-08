@@ -41,6 +41,7 @@ const mockPosts: PostEntity[] = [
     maxCapacity: 10,
     memberCount: 0,
     kakaotalkLink: 'open.kakao.com',
+    participants: [{ userId: 3, userName: 'gdori', status: '승인 대기 중' }],
     status: '모집 중',
     keywords: ['뒷풀이', '이번 주말', 'MBTI E'],
   },
