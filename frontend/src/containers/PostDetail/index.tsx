@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useHistory } from 'react-router';
+import humps from 'humps';
 import { PostEntity } from '../../backend/entity/post';
 import PostDetail from '../../components/PostDetail';
 import { AppState } from '../../store/store';
@@ -14,8 +15,10 @@ import {
   readUser,
 } from '../../backend/api/api';
 import CommentsListItem from '../../components/Comment';
-import { UserEntity } from '../../backend/entity/user';
-import { CommentEntity } from '../../backend/entity/comment';
+import {
+  CommentEntity,
+  CreateCommentEntity,
+} from '../../backend/entity/comment';
 import background from '../../assets/image/post-detail/background.svg';
 import pencil from '../../assets/image/post-detail/comment.svg';
 
@@ -32,18 +35,17 @@ const PostDetailContainer: React.FC = () => {
 
   const onCommentConfirm = async (comment: string | null) => {
     if (user?.userId && comment) {
+      const payload = { authorId: user?.userId, content: comment, postId };
       await createComment({
-        createPayload: {
-          author_id: user?.userId,
-          content: comment,
-          post_id: postId,
-        },
+        createPayload: humps.decamelizeKeys(payload) as CreateCommentEntity,
         postId,
       });
       setCommentsUpdated(true);
       setNewComment('');
     }
   };
+
+  console.log(postItem);
 
   const onPostDelete = async () => {
     await deletePost({ id: postId });
