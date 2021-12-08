@@ -38,23 +38,25 @@
         }
       }
     }
+
     #bottom-logo {
       margin: 0 auto;
-      margin-bottom: 100px;
+      margin-bottom: 170px;
+
       img {
-        width: 200px;
+        width: 180px;
       }
     }
   }
 
   .post-container {
     position: absolute;
-
     left: 230px;
     background: rgba(36, 113, 0, 0.05);
     width: calc(100% - 230px);
     display: flex;
     flex-wrap: wrap;
+    column-gap: 20px;
     padding: 40px;
   }
 }
