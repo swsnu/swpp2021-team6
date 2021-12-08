@@ -136,6 +136,8 @@ const Detail: React.FC<Props> = ({
     </button>
   );
 
+  console.log(post);
+
   return (
     <>
       <div id="post-detail-component">
@@ -151,12 +153,21 @@ const Detail: React.FC<Props> = ({
             <h1>{post.title}</h1>
             <p>{post.description}</p>
             {/* post status에 맞게 color 수정 */}
-            <Label font="white" color="rgba(36, 113, 0, 0.49)">
-              {post.status}
-            </Label>
-            <Label font="white" color="rgba(36, 113, 0, 0.49)">
-              현재 {post.memberCount}명
-            </Label>
+            <div>
+              <Label font="white" color="rgba(36, 113, 0, 0.49)">
+                {post.status}
+              </Label>
+              <Label font="white" color="rgba(36, 113, 0, 0.49)">
+                현재 {post.memberCount}명
+              </Label>
+            </div>
+            <div id="keyword-container">
+              {post.keywords.map((keyword, idx) => (
+                <span key={idx} className="keyword">
+                  #{keyword}
+                </span>
+              ))}
+            </div>
           </div>
 
           <div id="right">
