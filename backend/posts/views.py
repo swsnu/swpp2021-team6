@@ -1,11 +1,9 @@
 from json.decoder import JSONDecodeError
 from django.contrib.auth.models import User
-from django.db.models.query import get_prefetcher
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_POST, require_http_methods
 import json
-
 from .models import Post, Comment, Post_Keyword, Participation
 from .filters import PostFilter
 from .sorts import PostSort
@@ -331,7 +329,6 @@ def accept(request, post_id, participant_id):
     Participation.objects.filter(user=participant, post=post).update(
         status=Participation.Status.ACCEPTED)
 
-    # TODO: 추후에 삭제
     Post.objects.filter(id=post_id).update(member_count=count+1)
 
     return HttpResponse(status=204)

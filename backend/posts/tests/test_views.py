@@ -222,7 +222,7 @@ class PostsViewsTestCase(TestCase):
         response = client.get("/posts/1")
         self.assertEqual(response.status_code, 200)  # Pass csrf protection
 
-        # GET -> 
+        # GET -> 200
         response = client.get("/posts/2")
         self.assertEqual(response.status_code, 200)
         ## PATCH -> 200

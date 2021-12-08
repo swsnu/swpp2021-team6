@@ -5,12 +5,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_POST, require_GET, require_http_methods
-
+from posts.models import Exercise, User_Exercise, Post, Participation
 from .models import Notification, Profile, ProxyUser
 from .decorators import signin_required
-from posts.models import Exercise, User_Exercise, Post, Participation
-
-
 @require_POST
 def signup(request):
     req_data = json.loads(request.body.decode())
@@ -110,7 +107,6 @@ def user_detail(request, user_id):
             "participating_post": participating_post,
             "hosting_post": hosting_post,
         }
-        print(response_dict)
         return JsonResponse(response_dict, status=200)
 
     elif request.method == "POST":
