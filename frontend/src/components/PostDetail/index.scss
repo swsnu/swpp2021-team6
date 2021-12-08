@@ -70,6 +70,17 @@
         width: 100%;
         padding: 15px 0px 15px 0px;
         margin-top: 10px;
+        span {
+          cursor: pointer;
+        }
+      }
+
+      .disabled {
+        background: #a9c39c;
+        cursor: not-allowed;
+        span {
+          cursor: not-allowed;
+        }
       }
     }
   }

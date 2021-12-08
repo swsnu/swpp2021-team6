@@ -32,6 +32,11 @@ export const queryFilterPosts = async (
   return { items: humps.camelizeKeys(res.data) as PostEntity[] };
 };
 
+export const createApply = async (postId: number): Promise<number> => {
+  const { status } = await axios.post(`/posts/${postId}/apply`);
+  return status;
+};
+
 export const queryComments = async ({
   postId,
 }: {

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from 'antd';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { getKakaoMapWithMarker } from '../../utils/getKakaoMap';
@@ -8,6 +8,7 @@ import { changeDateFormat } from '../../utils/dateToString';
 import './index.scss';
 import gps from '../../assets/image/post-detail/gps.svg';
 import userIcon from '../../assets/image/post-detail/user-icon.svg';
+import { createApply } from '../../backend/api/api';
 
 interface Props {
   post: PostEntity;
@@ -18,6 +19,7 @@ interface Props {
 const Detail: React.FC<Props> = ({ post, isHost = false, onDelete }) => {
   const history = useHistory();
   const postId: number = Number(useParams<{ id: string }>().id);
+  const [isParticipant, setIsParticipant] = useState<boolean>(false);
   useEffect(() => {
     const container = document.getElementById('map');
     getKakaoMapWithMarker(container, post.place.latitude, post.place.longitude);
@@ -33,10 +35,29 @@ const Detail: React.FC<Props> = ({ post, isHost = false, onDelete }) => {
     <></>
   );
 
+  const onClickParticipate = async () => {
+    await createApply(postId).then((status) => {
+      if (status === 204) {
+        alert('참가 신청이 완료되었습니다.');
+        setIsParticipant(true);
+      } else {
+        alert('참가 신청 중 문제가 발생했습니다.');
+      }
+    });
+  };
+
   const button2 = isHost ? (
-    <span>참여자 명단 확인</span>
+    <button>
+      <span>참여자 명단 확인</span>
+    </button>
   ) : (
-    <span>참여하기</span>
+    <button
+      className={isParticipant ? 'disabled' : undefined}
+      onClick={onClickParticipate}
+      disabled={isParticipant}
+    >
+      <span>참여하기</span>
+    </button>
   );
 
   return (
@@ -76,9 +97,7 @@ const Detail: React.FC<Props> = ({ post, isHost = false, onDelete }) => {
               </p>
               <p id="content">{meetAtText}</p>
             </div>
-            <div id="participation">
-              <button>{button2}</button>
-            </div>
+            <div id="participation">{button2}</div>
           </div>
         </div>
         <div id="body-2">
