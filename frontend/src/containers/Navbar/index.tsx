@@ -1,42 +1,29 @@
 import { History } from 'history';
-import { useSelector } from 'react-redux';
 import logo from '../../assets/image/icon/green-logo.svg';
-import noti from '../../assets/image/icon/notification.png';
+import profileIcon from '../../assets/image/icon/profile-icon.svg';
 import './index.scss';
-import { AppState } from '../../store/store';
+import Notification from '../Notification';
 
 interface NavbarProps {
   history: History;
 }
 
-const Navbar = ({ history }: NavbarProps) => {
-  const { user } = useSelector((state: AppState) => state.user);
-
-  const onClickNoti = () => {
-    alert('noti open!');
-  };
-
-  return (
-    <div className="nav-bar">
-      <button className="logo" onClick={() => history.push('/main')}>
-        <img src={logo} alt="woondongjang logo" />
-      </button>
-      <div className="button-container">
-        <span className="notification" aria-hidden="true" onClick={onClickNoti}>
-          알림
-          {/* TODO: 평소에는 visibility: hidden 이다가 알람 있을 경우 visibility: visible */}
-          <img src={noti} alt="notification" />
-        </span>
-        <span
-          className="mypage"
-          aria-hidden="true"
-          onClick={() => history.push(`/profile/${user?.userId}`)}
-        >
-          마이페이지
-        </span>
-      </div>
+const Navbar = ({ history }: NavbarProps) => (
+  <div className="nav-bar">
+    <button className="logo" onClick={() => history.push('/main')}>
+      <img src={logo} alt="woondongjang logo" />
+    </button>
+    <div className="nav-button-container">
+      <Notification history={history} />
+      <span
+        className="mypage"
+        aria-hidden="true"
+        onClick={() => history.push('/profile/my')}
+      >
+        <img src={profileIcon} alt="profile-icon" />
+      </span>
     </div>
-  );
-};
+  </div>
+);
 
 export default Navbar;
