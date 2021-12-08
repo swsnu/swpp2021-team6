@@ -1,0 +1,32 @@
+[
+  {
+    "user_id": 1,
+    "post_id": 1,
+    "noti_type": "request participation",
+    "is_read": false
+  },
+  {
+    "user_id": 1,
+    "post_id": 2,
+    "noti_type": "request approved",
+    "is_read": false
+  },
+  {
+    "user_id": 1,
+    "post_id": 3,
+    "noti_type": "request denied",
+    "is_read": true
+  },
+  {
+    "user_id": 1,
+    "post_id": 4,
+    "noti_type": "comment",
+    "is_read": true
+  },
+  {
+    "user_id": 1,
+    "post_id": 5,
+    "noti_type": "comment",
+    "is_read": true
+  }
+]

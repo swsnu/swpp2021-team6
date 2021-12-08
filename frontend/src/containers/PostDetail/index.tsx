@@ -2,11 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useHistory } from 'react-router';
-import { PostEntity } from '../../backend/entity/post';
+import humps from 'humps';
+import {
+  PostEntity,
+  StatusType,
+  ApplyStatus,
+  ParticipantType,
+} from '../../backend/entity/post';
 import PostDetail from '../../components/PostDetail';
 import { AppState } from '../../store/store';
 import './index.scss';
 import {
+  createApply,
   createComment,
   deletePost,
   queryComments,
@@ -14,8 +21,10 @@ import {
   readUser,
 } from '../../backend/api/api';
 import CommentsListItem from '../../components/Comment';
-import { UserEntity } from '../../backend/entity/user';
-import { CommentEntity } from '../../backend/entity/comment';
+import {
+  CommentEntity,
+  CreateCommentEntity,
+} from '../../backend/entity/comment';
 import background from '../../assets/image/post-detail/background.svg';
 import pencil from '../../assets/image/post-detail/comment.svg';
 
@@ -25,19 +34,19 @@ const PostDetailContainer: React.FC = () => {
   const history = useHistory();
   const postId: number = Number(useParams<{ id: string }>().id);
   const [postItem, setPost] = useState<PostEntity>();
+  const [participants, setParticipants] = useState<ParticipantType[]>([]);
   const [commentItems, setCommentItems] = React.useState<CommentItem[]>([]);
   const [newComment, setNewComment] = React.useState<string>('');
   const [commentsUpdated, setCommentsUpdated] = React.useState<boolean>(false);
+  const [isParticipant, setIsParticipant] = useState<boolean>(false);
+  const [applyStatus, setApplyStatus] = useState<StatusType | null>(null);
   const { user } = useSelector((state: AppState) => state.user);
 
   const onCommentConfirm = async (comment: string | null) => {
     if (user?.userId && comment) {
+      const payload = { authorId: user?.userId, content: comment, postId };
       await createComment({
-        createPayload: {
-          author_id: user?.userId,
-          content: comment,
-          post_id: postId,
-        },
+        createPayload: humps.decamelizeKeys(payload) as CreateCommentEntity,
         postId,
       });
       setCommentsUpdated(true);
@@ -59,7 +68,6 @@ const PostDetailContainer: React.FC = () => {
     const comments: CommentEntity[] = (
       await queryComments({ postId })
     ).items.filter((c) => c.post_id === postId);
-    console.log(comments);
     const commentsList: CommentItem[] = (
       await Promise.all(comments.map((c) => readUser({ id: c.author_id })))
     ).map((u, i) => ({
@@ -67,6 +75,18 @@ const PostDetailContainer: React.FC = () => {
       authorName: u.entity.nickname,
     }));
     setCommentItems(commentsList);
+  };
+
+  const onClickParticipate = async () => {
+    await createApply(postId).then((status) => {
+      if (status === 204) {
+        alert('참가 신청이 완료되었습니다.');
+        setIsParticipant(true);
+        setApplyStatus(ApplyStatus.PENDING);
+      } else {
+        alert('참가 신청 중 문제가 발생했습니다.');
+      }
+    });
   };
 
   // Redirect to sign-in page if not signed in
@@ -85,6 +105,31 @@ const PostDetailContainer: React.FC = () => {
       setCommentsUpdated(false);
     }
   }, [commentsUpdated]);
+
+  useEffect(() => {
+    if (postItem && user) {
+      setParticipants(
+        postItem.participants.filter(
+          (participant) => participant.status !== 'DECLINED',
+        ),
+      );
+    }
+  }, [postItem]);
+
+  useEffect(() => {
+    if (user) {
+      const found = participants.find(
+        (participant) => participant.userId === user.userId,
+      );
+      if (found) {
+        setIsParticipant(true);
+        if (found.status === 'PENDING') setApplyStatus(ApplyStatus.PENDING);
+        if (found.status === 'ACCEPTED') setApplyStatus(ApplyStatus.ACCEPTED);
+        if (found.status === 'DECLINED') setApplyStatus(ApplyStatus.DECLINED);
+      }
+    }
+  }, [participants]);
+
   // Render Component
   if (postItem === undefined) return null;
   return (
@@ -101,7 +146,13 @@ const PostDetailContainer: React.FC = () => {
           <PostDetail
             post={postItem}
             isHost={user?.userId === postItem.hostId}
+            isParticipant={isParticipant}
+            applyStatus={applyStatus}
             onDelete={onPostDelete}
+            onParticipate={onClickParticipate}
+            participants={participants}
+            setParticipants={setParticipants}
+            setPost={setPost}
           />
           <div id="post-detail-comment">
             <div id="comment-header">

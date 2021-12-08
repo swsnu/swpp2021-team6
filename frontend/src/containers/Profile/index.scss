@@ -1,0 +1,249 @@
+.body {
+  padding-top: 100px;
+}
+
+.button-div {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.button-container {
+  margin-right: 0;
+  display: flex;
+  align-content: center;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 250px;
+  height: 50px;
+  border: 1px solid #f0f0f0;
+  box-sizing: border-box;
+  border-radius: 10px;
+
+  span {
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 400;
+  }
+  img {
+    height: 25px;
+  }
+}
+
+.profile-div {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.profile-content-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-left: 20px;
+}
+
+.location-gender-container {
+  display: flex;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  color: #393939;
+  span {
+    padding: 5px;
+  }
+  .gender-container {
+    margin-left: 30px;
+  }
+}
+
+.nickname-introduction-container {
+  display: flex;
+  align-items: center;
+
+  .nickname-container {
+    min-width: 370px;
+    max-width: 370px;
+    span {
+      font-style: normal;
+      font-weight: bold;
+      font-size: 50px;
+      line-height: 96px;
+    }
+  }
+
+  .introduction-container {
+    min-width: 370px;
+    max-width: 370px;
+    margin-left: 30px;
+    span {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 15px;
+      line-height: 26px;
+      color: #646464;
+      text-align: left;
+    }
+  }
+}
+
+.pfexercise-header {
+  margin-top: 50px;
+  display: flex;
+  align-items: center;
+
+  img {
+    height: 40px;
+    width: 40px;
+  }
+
+  span {
+    margin-left: 15px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 23px;
+    line-height: 12px;
+    color: #191414;
+  }
+}
+
+.pfexercise-div {
+  margin-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  .pfexercise-box {
+    img {
+      padding: 20px;
+    }
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    width: 250px;
+    height: 68px;
+  }
+}
+
+.mypost-header {
+  margin-top: 10px;
+  margin-bottom: 24px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 24px;
+  color: #191414;
+}
+
+.my-post-div {
+  min-height: 100px;
+}
+
+.status-badge {
+  width: 56px;
+  height: 18px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 8px;
+  line-height: 10px;
+  text-align: center;
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  margin-right: 10px;
+
+  &.pending {
+    color: #ef9610;
+    background: #fff5e0;
+  }
+
+  &.complete {
+    color: #597bf2;
+    background: #d1e4ff;
+  }
+
+  &.denied {
+    color: #f25959;
+    background: #ffe1e1;
+  }
+}
+
+.appointment-container {
+  width: 192px;
+  height: 202px;
+  .appointment-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 192px;
+    height: 128px;
+    border-radius: 4px;
+    background-size: 192px 128px;
+    .card-top-section {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .card-bottom-section {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      height: 50px;
+      img {
+        width: 17px;
+        height: 17px;
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+      .place-name {
+        font-style: normal;
+        font-weight: bold;
+        font-size: 9px;
+        line-height: 11px;
+        display: flex;
+        align-items: center;
+        color: #ffffff;
+      }
+      .meet-at {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 15px;
+        line-height: 18px;
+        color: #ffffff;
+      }
+    }
+  }
+
+  .appointment-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    height: 62px;
+    .title-container {
+      font-style: normal;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 16px;
+      margin-bottom: 2px;
+      /* identical to box height, or 114% */
+
+      color: #191414;
+    }
+    .host-name-container {
+      font-style: normal;
+      font-weight: bold;
+      font-size: 12px;
+      line-height: 14px;
+      margin-top: 2px;
+      /* identical to box height, or 117% */
+
+      /* Neutral/Neutral 01 */
+
+      color: #b2b2b2;
+    }
+  }
+}

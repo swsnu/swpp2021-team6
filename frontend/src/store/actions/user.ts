@@ -64,8 +64,28 @@ export const getUserInfo_ = (userInfo: any) => ({
 export const getUserInfo = (id: any) => async (dispatch: any) => {
   try {
     const response = await axios.get(`/users/${id}`);
-    const returnedUserInfo = response.data;
+    console.log('response okay');
+    const returnedUserInfo = humps.camelizeKeys(response.data);
     dispatch(getUserInfo_(returnedUserInfo));
+    console.log('dispatch okay');
+  } catch (e: any) {
+    if (e?.response && e.response.status === 404) {
+      alert('존재하지 않는 유저입니다');
+    }
+    console.log('returnedUserInfo error');
+  }
+};
+
+export const getUserNotification_ = (userNotification: any) => ({
+  type: actionTypes.GET_USER_NOTIFICATION,
+  userNotification,
+});
+
+export const getUserNotification = (id: any) => async (dispatch: any) => {
+  try {
+    const response = await axios.get(`/users/${id}/notification`);
+    const userNotification = humps.camelizeKeys(response.data);
+    dispatch(getUserNotification_(userNotification));
   } catch (e: any) {
     if (e?.response && e.response.status === 404) {
       alert('존재하지 않는 유저입니다');
@@ -73,7 +93,36 @@ export const getUserInfo = (id: any) => async (dispatch: any) => {
   }
 };
 
+export const readNotification_ = (userNotification: any) => ({
+  type: actionTypes.READ_NOTIFICATION,
+  userNotification,
+});
+
+export const readNotification = (notiId: number) => async (dispatch: any) => {
+  const response = await axios.patch(`/users/notification/${notiId}`);
+  const userNotification = humps.camelizeKeys(response.data);
+  dispatch(readNotification_(userNotification));
+};
+
+export const createNotification_ = () => ({
+  type: actionTypes.CREATE_NOTIFICATION,
+});
+
+export function createNotification(
+  userId: number,
+  postId: number,
+  notiType: string,
+) {
+  return async (dispatch: any) => {
+    dispatch(createNotification_());
+    await axios.post(`/users/${userId}/notification/${postId}/${notiType}`);
+  };
+}
+
 export type UserAction =
   | ReturnType<typeof signin_>
   | ReturnType<typeof signout_>
-  | ReturnType<typeof getUserInfo_>;
+  | ReturnType<typeof getUserInfo_>
+  | ReturnType<typeof getUserNotification_>
+  | ReturnType<typeof readNotification_>
+  | ReturnType<typeof createNotification_>;
