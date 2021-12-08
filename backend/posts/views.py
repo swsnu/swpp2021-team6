@@ -138,8 +138,12 @@ def post_detail(request, post_id=0):
     # Retrieve a specified post
     if request.method == "GET":
         post_keyword = get_object_or_404(Post_Keyword, post_id=post.id)
-        post_participants = get_object_or_404(Participation, post_id = post.id)
-        participants_list = [{"userId" : participant.user.id, "userName" : participant.user.profile.nickname, "status" : participant.status} for participant in post_participants]
+        if Participation.objects.filter(post_id=post.id).exists():
+            post_participants = Participation.objects.filter(post_id = post.id) 
+            participants_list = [{"userId" : participant.user.id, "userName" : participant.user.profile.nickname, "status" : participant.status} for participant in post_participants]
+        else:
+            participants_list = []
+        
         
         response_dict = {
             "host_id": post.host.id,
