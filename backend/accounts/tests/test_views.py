@@ -8,15 +8,15 @@ from posts.models import Exercise, Participation, Post
 
 
 class AccountsTestCase(TestCase):
-    new_user = json.dumps(
+    new_user3= json.dumps(
         {
-            "username" : "username1",
-            "password" : "password1"
+            "username" : "username3",
+            "password" : "password3"
         }
     )
-    new_user_profile = json.dumps(
+    new_user3_profile = json.dumps(
         {
-            "user_id" : 1,
+            "user_id" : 3,
             "nickname": "닉네임3",
             "latitude": 37.47880163846696,
             "longitude": 126.94494429645442,
@@ -30,14 +30,14 @@ class AccountsTestCase(TestCase):
             ],
         }
     )
-    new_user2 = json.dumps({
-        "username" : "username2",
-        "password" : "password2"
+    new_user4 = json.dumps({
+        "username" : "username4",
+        "password" : "password4"
     })
 
-    new_user2_profile = json.dumps(
+    new_user4_profile = json.dumps(
         {
-            "userId": 2,
+            "userId": 4,
             "nickname": "닉네임4",
             "latitude": 37.47880163846696,
             "longitude": 126.94494429645442,
@@ -51,11 +51,10 @@ class AccountsTestCase(TestCase):
             ],
         }
     )
-    new_user3 = json.dumps({
-        "username" : "username3",
-        "password" : "password3"
+    new_user5 = json.dumps({
+        "username" : "username5",
     })
-    new_user3_profile = json.dumps(
+    new_user5_profile = json.dumps(
         {
             "username": "username5",
         }
@@ -63,9 +62,9 @@ class AccountsTestCase(TestCase):
 
     def setUp(self):
         test_exercise = Exercise.objects.create(name="축구")
-        User.objects.create(username="username4", password="password4")
-        test_user4 = ProxyUser.objects.create_user_with(
-            user_id=1,
+        test_user1 = User.objects.create_user(username="username1", password="password1")
+        test_user1 = ProxyUser.objects.create_user_with(
+            user_id=test_user1.id,
             nickname="닉네임1",
             latitude=37.47880163846696,
             longitude=126.94494429645442,
@@ -75,8 +74,8 @@ class AccountsTestCase(TestCase):
             introduction="안녕하세요 user1입니다.",
             preferred_exercises=[{"exercise_name": "축구", "skill_level": "중"}],
         )
-        User.objects.create(username="username5", password="password5")
-        test_user5 = ProxyUser.objects.create_user_with(
+        User.objects.create_user(username="username2", password="password2")
+        test_user2 = ProxyUser.objects.create_user_with(
             user_id=2,
             nickname="닉네임2",
             latitude=37.47880163846696,
@@ -87,11 +86,10 @@ class AccountsTestCase(TestCase):
             introduction="안녕하세요 user2입니다.",
             preferred_exercises=[{"exercise_name": "축구", "skill_level": "상"}],
         )
-        # User.objects.create(username="username3", password="password3")
 
         test_post2 = Post.objects.create(
             exercise=test_exercise,
-            host=test_user4,
+            host=test_user1,
             title="post2 title",
             description="post2 description",
             expected_level="상",
@@ -107,30 +105,16 @@ class AccountsTestCase(TestCase):
             max_capacity=5,
             kakaotalk_link="kakaotalk link 2",
         )
-        Participation.objects.create(user=test_user5, post=test_post2)
+        Participation.objects.create(user=test_user1, post=test_post2)
 
     def test_signup(self):
         client = Client()
 
         # 201 test (request successfully)
         response = client.post(
-            "/users/signup", self.new_user, content_type="application/json"
+            "/users/signup", self.new_user3, content_type="application/json"
         )
         self.assertEqual(response.status_code, 201)
-        
-        response = client.post("/users/3", self.new_user_profile, content_type="application/json")
-        self.assertEqual(response.status_code, 201)
-        # gender type이 enum에 맞지 않는 case
-        response = client.post(
-            "/users/2", self.new_user2_profile, content_type="application/json"
-        )
-        self.assertEqual(response.status_code, 400)
-
-        # KeyError test
-        response = client.post(
-            "/users/3", self.new_user3_profile, content_type="application/json"
-        )
-        self.assertEqual(response.status_code, 400)
 
         # 405 test
         response = client.get("/users/signup")
@@ -162,12 +146,12 @@ class AccountsTestCase(TestCase):
         # 400 test (when user is None)
         response = client.post(
             "/users/signin",
-            self.new_user3,
+            self.new_user5,
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
 
-        # 204 test (request successfully)
+        # 200 test (request successfully)
         response = client.post(
             "/users/signin",
             json.dumps({"username": "username1", "password": "password1"}),
@@ -202,8 +186,22 @@ class AccountsTestCase(TestCase):
         self.assertEqual(response.status_code, 401)
 
         # 405 test
-        response = client.post("/users/1", data=None)
+        response = client.patch("/users/1", data=None)
         self.assertEqual(response.status_code, 405)
+
+        # POST test 
+        # 201 test
+        User.objects.create_user(username="username3", password="password3")
+        response = client.post("/users/3", self.new_user3_profile, content_type="application/json")
+        self.assertEqual(response.status_code, 201)
+        
+        
+        User.objects.create_user(username="username4", password="password4")
+        response = client.post("/users/4", self.new_user4_profile, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+        
+        response = client.post("/users/4", self.new_user5_profile, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
 
         # after signin
         response = client.post(

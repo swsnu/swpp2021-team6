@@ -183,27 +183,23 @@ def post_detail(request, post_id=0):
         if request.user.id != post.host.id:
             return HttpResponse(status=403)
 
-        try:
-            req_data = json.loads(request.body.decode())
+        req_data = json.loads(request.body.decode())
 
-            if ("title" in req_data):
-                post.title = req_data["title"]
-            if ("description" in req_data):
-                post.description = req_data["description"]
+        if ("title" in req_data):
+            post.title = req_data["title"]
+        if ("description" in req_data):
+            post.description = req_data["description"]
 
-            post.save()
+        post.save()
 
-            response_dict = {
-                "post_id": post.id,
-                "host_id": post.host.id,
-                "title": post.title,
-                "description": post.description,
-            }
+        response_dict = {
+            "post_id": post.id,
+            "host_id": post.host.id,
+            "title": post.title,
+            "description": post.description,
+        }
 
-            return JsonResponse(response_dict, status=200)
-
-        except (KeyError, JSONDecodeError):
-            return HttpResponse(status=400)
+        return JsonResponse(response_dict, status=200)
 
     # Delete a specified psot
     elif request.method == "DELETE":

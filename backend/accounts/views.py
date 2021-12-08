@@ -57,11 +57,12 @@ def signout(request):
 
 
 @require_http_methods(["GET", "POST"])
-@signin_required
 def user_detail(request, user_id):
-    user = User.objects.get(id=user_id)
-
     if request.method == "GET":
+        if not request.user.is_authenticated:
+            return HttpResponse(status=401)
+        user = User.objects.get(id=user_id)
+
         user_exercise = [
             {
                 "exercise_name": user_exercise.exercise.name,
