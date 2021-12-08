@@ -30,8 +30,7 @@ class CustomUserManager(models.Manager):
     @transaction.atomic
     def create_user_with(
         self,
-        username,
-        password,
+        user_id,
         nickname,
         latitude,
         longitude,
@@ -41,7 +40,7 @@ class CustomUserManager(models.Manager):
         introduction,
         preferred_exercises,
     ):
-        user = User.objects.create_user(username=username, password=password)
+        user = User.objects.get(id=user_id)
 
         Profile.objects.create(
             user=user,
