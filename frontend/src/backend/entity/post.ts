@@ -10,6 +10,12 @@ export type PlaceType = {
   telephone: string | null;
 };
 
+export type ParticipantType = {
+  userId: number;
+  userName: string;
+  status: string;
+};
+
 export interface PostEntity {
   postId: number;
   hostId: number;
@@ -23,6 +29,7 @@ export interface PostEntity {
   maxCapacity: number;
   memberCount: number;
   place: PlaceType;
+  participants: ParticipantType[];
   kakaotalkLink: string;
   status: string;
   keywords: string[];

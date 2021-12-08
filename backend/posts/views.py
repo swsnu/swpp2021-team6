@@ -1,5 +1,6 @@
 from json.decoder import JSONDecodeError
 from django.contrib.auth.models import User
+from django.db.models.query import get_prefetcher
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_POST, require_http_methods
@@ -23,6 +24,7 @@ def posts(request):
             {
                 "post_id": post.id,
                 "host_id": post.host.id,
+                "host_name": post.host.profile.nickname,
                 "exercise_name": post.exercise.name,
                 "expected_level": post.expected_level,
                 "title": post.title,
@@ -136,9 +138,12 @@ def post_detail(request, post_id=0):
     # Retrieve a specified post
     if request.method == "GET":
         post_keyword = get_object_or_404(Post_Keyword, post_id=post.id)
-
+        post_participants = get_object_or_404(Participation, post_id = post.id)
+        participants_list = [{"userId" : participant.user.id, "userName" : participant.user.profile.nickname, "status" : participant.status} for participant in post_participants]
+        
         response_dict = {
             "host_id": post.host.id,
+            "host_name" : post.host.profile.nickname,
             "exercise_name": post.exercise.name,
             "title": post.title,
             "description": post.description,
@@ -156,6 +161,7 @@ def post_detail(request, post_id=0):
                 "address": post.place_address,
                 "telephone": post.place_telephone,
             },
+            "participants" : participants_list,
             "kakaotalk_link": post.kakaotalk_link,
             "status": post.status,
             "keywords": [

@@ -19,13 +19,12 @@ import { CommentEntity } from '../../backend/entity/comment';
 import background from '../../assets/image/post-detail/background.svg';
 import pencil from '../../assets/image/post-detail/comment.svg';
 
-type PostItem = PostEntity & { hostName: string };
 type CommentItem = CommentEntity & { authorName: string };
 
 const PostDetailContainer: React.FC = () => {
   const history = useHistory();
   const postId: number = Number(useParams<{ id: string }>().id);
-  const [postItem, setPost] = useState<PostItem>();
+  const [postItem, setPost] = useState<PostEntity>();
   const [commentItems, setCommentItems] = React.useState<CommentItem[]>([]);
   const [newComment, setNewComment] = React.useState<string>('');
   const [commentsUpdated, setCommentsUpdated] = React.useState<boolean>(false);
@@ -53,8 +52,7 @@ const PostDetailContainer: React.FC = () => {
 
   const fetchPostItem = async () => {
     const post: PostEntity = (await readPost({ id: postId })).entity;
-    const host: UserEntity = (await readUser({ id: post.hostId })).entity;
-    setPost({ ...post, hostName: host.nickname });
+    setPost({ ...post });
   };
 
   const fetchComments = async () => {
