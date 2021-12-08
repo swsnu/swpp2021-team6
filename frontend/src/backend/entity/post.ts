@@ -40,7 +40,7 @@ export interface CreatePostEntity {
   kakaotalkLink: string;
 }
 
-export interface UpdatePostEntity {
+export interface UpdatePostDTO {
   title?: string;
   description?: string;
 }

@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { DatePicker, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
 import { CreatePostEntity } from '../../backend/entity/post';
 import 'antd/dist/antd.css';
-import * as actionCreators from '../../store/actions';
 import getGuDong from '../../utils/getGuDong';
 import { AppState } from '../../store/store';
 import { getKakaoMap } from '../../utils/getKakaoMap';
-import { createPost, readUser } from '../../backend/api/api';
+import { createPost } from '../../backend/api/api';
 import whiteExercise from '../../assets/image/icon/white-exercise.svg';
 import whiteLevel from '../../assets/image/icon/white-level.svg';
 import './index.scss';
@@ -109,8 +108,6 @@ const PostCreate: React.FC = () => {
 
     alert('장소 정보가 입력되었습니다');
   };
-
-  console.log(post);
 
   const onClickSearch = () => {
     const container = document.getElementById('map');

@@ -1,59 +1,59 @@
-#background{
-    width: 100vw;
-    margin-top: 150px;
+#background {
+  width: 100vw;
+  padding-top: 150px;
 }
+
 #post-detail-page {
-    display: flex;
-    flex-direction: column;
-    width: 60vw;
-    margin: 0 auto;
-    min-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  width: 60vw;
+  margin: 0 auto;
+  min-width: 1000px;
 
-    #post-detail-comment{
-        #comment-header{
-            display: flex;
-            justify-content: flex-start;
-            margin-bottom: 20px;
-            img{
-                width: 35px;
-            }        
-            p{
-                font-size: 23px;
-                font-weight: bold;
-                vertical-align: middle;
-                margin: 0;
-                margin-right: 10px;
-            }
-        }
-        margin-bottom: 50px;
+  #post-detail-comment {
+    #comment-header {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 20px;
+      img {
+        width: 35px;
+      }
+      p {
+        font-size: 23px;
+        font-weight: bold;
+        vertical-align: middle;
+        margin: 0;
+        margin-right: 10px;
+      }
+    }
+    margin-bottom: 50px;
 
-        #comment-create{
-            position: relative;
-            vertical-align: middle;
-            input::placeholder{
-                font-size: 16px;
-                color: #B6B6B6;
-                font-weight: normal;
-            }
-            #new-comment-content-input{
-                padding-left: 15px;
-                width: 100%;
-                border-radius: 15px;
-                border: 1.5px solid #E9E9E9;
-                line-height: 50px;
-            }
-            #confirm-create-comment-button{
-                position: absolute;
-                top: 15%;
-                right: 0;
-                width: 55px;
-                margin-right: 5px;
-                border-radius: 12px;
-                color: white;
-                background: #247100;
-                line-height: 30px;
-            }
-        }
+    #comment-create {
+      position: relative;
+      vertical-align: middle;
+      input::placeholder {
+        font-size: 16px;
+        color: #b6b6b6;
+        font-weight: normal;
+      }
+      #new-comment-content-input {
+        padding-left: 15px;
+        width: 100%;
+        border-radius: 15px;
+        border: 1.5px solid #e9e9e9;
+        line-height: 50px;
+      }
+      #confirm-create-comment-button {
+        position: absolute;
+        top: 15%;
+        right: 0;
+        width: 55px;
+        margin-right: 5px;
+        border-radius: 12px;
+        color: white;
+        background: #247100;
+        line-height: 30px;
+      }
     }
   }
-  
+}

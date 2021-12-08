@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
-import { Avatar, Card, Divider, Button, Input } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
-import { userInfo } from 'os';
+import { Button } from 'antd';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { getKakaoMapWithMarker } from '../../utils/getKakaoMap';
 import Label from '../Label';
 import { PostEntity } from '../../backend/entity/post';
@@ -20,6 +18,8 @@ interface Props {
 }
 
 const Detail: React.FC<Props> = ({ post, isHost = false, onDelete }) => {
+  const history = useHistory();
+  const postId: number = Number(useParams<{ id: string }>().id);
   useEffect(() => {
     const container = document.getElementById('map');
     getKakaoMapWithMarker(container, post.place.latitude, post.place.longitude);
@@ -28,7 +28,7 @@ const Detail: React.FC<Props> = ({ post, isHost = false, onDelete }) => {
   const meetAtText = changeDateFormat(post.meetAt);
   const button = isHost ? (
     <>
-      <Button>수정</Button>
+      <Button onClick={() => history.push(`/post/${postId}/edit`)}>수정</Button>
       <Button onClick={onDelete}>삭제</Button>
     </>
   ) : (
@@ -130,7 +130,6 @@ const Detail: React.FC<Props> = ({ post, isHost = false, onDelete }) => {
           </div>
         </div>
       </div>
-      <Divider />
     </>
   );
 };

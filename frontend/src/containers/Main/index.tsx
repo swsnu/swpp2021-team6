@@ -50,13 +50,15 @@ const Main = () => {
   return (
     <div className="main">
       <div id="side-bar">
-        <div id="main-icon">
-          <img src={mainIcon} alt="main icon" />
-        </div>
-        <div id="create-post">
-          <button className="plus-button" onClick={onClickAddButton}>
-            <img src={plusIcon} alt="plus button" />
-          </button>
+        <div>
+          <div id="main-icon">
+            <img src={mainIcon} alt="main icon" />
+          </div>
+          <div id="create-post">
+            <button className="plus-button" onClick={onClickAddButton}>
+              <img src={plusIcon} alt="plus button" />
+            </button>
+          </div>
         </div>
         <div id="bottom-logo">
           <img src={bottomIcon} alt="bottom icon" />
