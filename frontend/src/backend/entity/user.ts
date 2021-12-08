@@ -29,6 +29,10 @@ export interface SignUpDTO {
   password: string;
 }
 
+export interface SignupInfo {
+  userId: number;
+}
+
 export interface ProfileDTO {
   latitude: number;
   longitude: number;
@@ -36,20 +40,6 @@ export interface ProfileDTO {
   dong: string;
   gender: GenderType | string;
   nickname: string;
-  introduction: string;
-  preferredExercise: ExerciseAndSkill[];
-}
-
-/* TODO: SignUp, Onboarding DTO 생성 후 아래 라인 삭제 */
-export interface SignUpInputDTO {
-  username: string;
-  password: string;
-  nickname: string;
-  latitude: number;
-  longitude: number;
-  gu: string;
-  dong: string;
-  gender: GenderType;
   introduction: string;
   preferredExercise: ExerciseAndSkill[];
 }

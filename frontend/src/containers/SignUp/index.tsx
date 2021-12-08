@@ -12,6 +12,7 @@ import './index.scss';
 import googleIcon from '../../assets/image/auth/google.svg';
 import kakaotalkIcon from '../../assets/image/auth/kakaotalk.svg';
 import { AppState } from '../../store/store';
+import { createUser } from '../../backend/api/api';
 
 const SignUp = () => {
   const [signUpForm, setSignUpForm] = useState<SignUpDTO>({
@@ -27,13 +28,14 @@ const SignUp = () => {
     if (user) history.push('/main');
   });
 
-  const onClickSignUp = () => {
+  const onClickSignUp = async () => {
     if (!signUpForm.username) alert('이름을 입력해주세요');
     else if (!signUpForm.password) alert('비밀번호를 입력해주세요');
     else if (signUpForm.password !== checkPassword) {
       alert('비밀번호가 일치하지 않습니다.');
     } else {
-      // axios.post
+      const newUser = (await createUser({ createPayload: signUpForm })).entity;
+      history.push(`/onboarding/${newUser.userId}`);
     }
   };
 

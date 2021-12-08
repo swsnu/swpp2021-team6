@@ -59,7 +59,6 @@ const PostDetailContainer: React.FC = () => {
     const comments: CommentEntity[] = (
       await queryComments({ postId })
     ).items.filter((c) => c.post_id === postId);
-    console.log(comments);
     const commentsList: CommentItem[] = (
       await Promise.all(comments.map((c) => readUser({ id: c.author_id })))
     ).map((u, i) => ({

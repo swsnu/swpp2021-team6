@@ -57,11 +57,13 @@ def signout(request):
 
 
 @require_http_methods(["GET", "POST"])
-@signin_required
 def user_detail(request, user_id):
-    user = User.objects.get(id=user_id)
-
+    
     if request.method == "GET":
+        if not request.user.is_authenticated:
+            return HttpResponse(status=401)
+        user = User.objects.get(id=user_id)
+
         user_exercise = [
             {
                 "exercise_name": user_exercise.exercise.name,
@@ -104,6 +106,7 @@ def user_detail(request, user_id):
             "hosting_post": hosting_post,
         }
         return JsonResponse(response_dict, status=200)
+
     elif request.method == "POST":
         def is_request_valid():
             if gender not in Profile.Gender.values:
@@ -119,7 +122,8 @@ def user_detail(request, user_id):
             dong = req_dict["dong"]
             gender = req_dict["gender"]
             introduction = req_dict["introduction"]
-            preferred_exercises = req_dict["preferred_exercises"]
+            preferred_exercises = req_dict["preferredExercise"]
+            
         except (KeyError, JSONDecodeError):
             return HttpResponse(status=400)
 
@@ -137,5 +141,16 @@ def user_detail(request, user_id):
             introduction,
             preferred_exercises,
         )
+        
+        
+        user = User.objects.get(id=user_id)
+        
+        login(request, user)
 
-        return HttpResponse(status=201)
+        response_dict = {
+            "userId": user.id,
+            "nickname": user.profile.nickname,
+            "latitude": user.profile.latitude,
+            "longitude": user.profile.longitude,
+        }
+        return JsonResponse(response_dict, safe=False, status=201)
