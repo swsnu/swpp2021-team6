@@ -1,7 +1,7 @@
 import axios from 'axios';
 import humps from 'humps';
 import { CommentEntity, CreateCommentEntity } from '../entity/comment';
-import { CreatePostEntity, PostEntity, UpdatePostEntity } from '../entity/post';
+import { CreatePostEntity, PostEntity, UpdatePostDTO } from '../entity/post';
 import { UserEntity } from '../entity/user';
 import {
   CreateProps,
@@ -19,7 +19,7 @@ export const createPost = produceCreateAPI<CreatePostEntity, PostEntity>(
 export const queryPosts = produceQueryAPI<PostEntity>('/posts');
 export const readPost = produceReadAPI<PostEntity>('/posts');
 export const deletePost = produceDeleteAPI('/posts');
-export const updatePost = produceUpdateAPI<UpdatePostEntity>('/posts');
+export const updatePost = produceUpdateAPI<UpdatePostDTO>('/posts');
 
 export const queryUsers = produceQueryAPI<UserEntity>('/users');
 export const readUser = produceReadAPI<UserEntity>('/users');
@@ -38,7 +38,6 @@ export const queryComments = async ({
   postId: number;
 }): Promise<queryReturnType<CommentEntity>> => {
   const res = await axios.get(`/posts/${postId}/comments`);
-  console.log(res);
   return { items: res.data };
 };
 
