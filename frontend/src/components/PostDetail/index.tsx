@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-restricted-globals */
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Button } from 'antd';
@@ -181,7 +183,14 @@ const Detail: React.FC<Props> = ({
             >
               {participants.map((participant) => (
                 <div className="participant-content" key={participant.userId}>
-                  <span id="participant-nickname">{participant.userName}</span>
+                  <span
+                    id="participant-nickname"
+                    onClick={() =>
+                      history.push(`/profile/${participant.userId}`)
+                    }
+                  >
+                    {participant.userName}
+                  </span>
                   <div className="participant-button-container">
                     {participantStatus(participant)}
                     <button
