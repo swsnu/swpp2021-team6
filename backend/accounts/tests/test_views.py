@@ -75,7 +75,7 @@ class AccountsTestCase(TestCase):
             preferred_exercises=[{"exercise_name": "축구", "skill_level": "중"}],
         )
         User.objects.create_user(username="username2", password="password2")
-        test_user2 = ProxyUser.objects.create_user_with(
+        ProxyUser.objects.create_user_with(
             user_id=2,
             nickname="닉네임2",
             latitude=37.47880163846696,
@@ -186,7 +186,7 @@ class AccountsTestCase(TestCase):
         self.assertEqual(response.status_code, 401)
 
         # 405 test
-        response = client.patch("/users/1", data=None)
+        response = client.delete("/users/1", data=None)
         self.assertEqual(response.status_code, 405)
 
         # POST test 
