@@ -1,22 +1,19 @@
+import { ApplyStatus, StatusType } from '../../backend/entity/post';
 import './index.scss';
 
-export enum StatusType {
-  PENDING = '승인 대기 중',
-  ACCEPTED = '승인됨',
-  DECLINED = '거절됨',
-}
-
-const StatusLabel = (status: StatusType) => {
+const StatusLabel = ({ status }: { status: StatusType | null }) => {
   switch (status) {
-    case StatusType.PENDING:
-      return <span className="pending status-label">{StatusType.PENDING}</span>;
-    case StatusType.ACCEPTED:
+    case ApplyStatus.PENDING:
       return (
-        <span className="accepted status-label">{StatusType.ACCEPTED}</span>
+        <span className="pending status-label">{ApplyStatus.PENDING}</span>
       );
-    case StatusType.DECLINED:
+    case ApplyStatus.ACCEPTED:
       return (
-        <span className="declined status-label">{StatusType.DECLINED}</span>
+        <span className="accepted status-label">{ApplyStatus.ACCEPTED}</span>
+      );
+    case ApplyStatus.DECLINED:
+      return (
+        <span className="declined status-label">{ApplyStatus.DECLINED}</span>
       );
     default:
       return null;
