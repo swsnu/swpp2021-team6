@@ -3,15 +3,12 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { History } from 'history';
-import { useParams } from 'react-router';
-import 'antd/dist/antd.css';
-import { Tabs, Card, Descriptions, Badge } from 'antd';
 import { AppState } from '../../store/store';
 import { getUserInfo } from '../../store/actions/index';
 import getGuDong from '../../utils/getGuDong';
-import { UpdateProfileEntity } from '../../backend/entity/user';
+import { UserInfoEntity, UpdateProfileEntity } from '../../backend/entity/user';
 import './index.scss';
-import { updateProfile } from '../../backend/api/api';
+import { readUserInfo, updateProfile } from '../../backend/api/api';
 import pfExerciseIcon from '../../assets/image/icon/pfexercise.svg';
 import greenDot from '../../assets/image/icon/green-circle.svg';
 import exerciseIcon from '../../assets/image/icon/exercise.svg';
@@ -23,8 +20,8 @@ interface ProfileProps {
 }
 
 const ProfileEdit = ({ history }: ProfileProps) => {
-  const dispatch = useDispatch();
-  const userState = useSelector((state: AppState) => state.user);
+  // const dispatch = useDispatch();
+  // const userState = useSelector((state: AppState) => state.user);
   const loginProfile = window.localStorage.getItem('profileInfo');
   let parsedloginProfile: any;
   if (loginProfile !== null) {
@@ -32,16 +29,61 @@ const ProfileEdit = ({ history }: ProfileProps) => {
   }
   const profileUserId = parsedloginProfile.userId;
 
+  const [userInfo, setUserInfo] = useState<UserInfoEntity>({
+    userId: 0,
+    nickname: '',
+    gu: '',
+    dong: '',
+    gender: '미선택',
+    introduction: '',
+    userExercise: [{ exerciseName: '', skillLevel: '상관 없음' }],
+    participatingPost: [
+      {
+        hostName: '',
+        postId: 0,
+        exerciseName: '',
+        title: '',
+        meetAt: '',
+        placeName: '',
+        status: '',
+      },
+    ],
+    hostingPost: [
+      {
+        hostName: '',
+        postId: 0,
+        exerciseName: '',
+        title: '',
+        meetAt: '',
+        placeName: '',
+        status: '',
+      },
+    ],
+  });
+
+  const fetchUserInfo = async () => {
+    const fetchedUserInfo: UserInfoEntity = (
+      await readUserInfo({ id: profileUserId })
+    ).entity;
+    setUserInfo(fetchedUserInfo);
+    console.log(fetchedUserInfo);
+  };
+
   useEffect(() => {
-    dispatch(getUserInfo(profileUserId));
+    fetchUserInfo();
   }, []);
 
+  // useEffect(() => {
+  //   dispatch(getUserInfo(profileUserId));
+  //   console.log(userState.userInfo);
+  // }, []);
+
   const initialProfileState: UpdateProfileEntity = {
-    nickname: userState.userInfo?.nickname,
-    gu: userState.userInfo?.gu,
-    dong: userState.userInfo?.dong,
-    introduction: userState.userInfo?.introduction,
-    userExercise: userState.userInfo?.userExercise,
+    nickname: userInfo?.nickname,
+    gu: userInfo?.gu,
+    dong: userInfo?.dong,
+    introduction: userInfo?.introduction,
+    userExercise: userInfo?.userExercise,
   };
   const [profile, setProfile] =
     useState<UpdateProfileEntity>(initialProfileState);
@@ -52,13 +94,19 @@ const ProfileEdit = ({ history }: ProfileProps) => {
     if (!('geolocation' in navigator)) {
       alert('위치 정보를 사용할 수 없습니다. 다른 브라우저를 이용해주세요.');
     } else {
+      const locationHolder = document.getElementById('location-holder');
+      if (locationHolder) {
+        locationHolder.setAttribute(
+          'value',
+          '위치 정보를 불러오는 중입니다...',
+        );
+      }
       navigator.geolocation.getCurrentPosition((position) => {
         console.log(position.coords);
         getGuDong(position.coords.longitude, position.coords.latitude).then(
           (value) => {
             const { gu, dong } = value;
             console.log(gu, dong);
-            const locationHolder = document.getElementById('location-holder');
             if (locationHolder) {
               locationHolder.setAttribute('value', gu.concat(' ', dong));
             }
@@ -86,7 +134,7 @@ const ProfileEdit = ({ history }: ProfileProps) => {
   };
 
   return (
-    <div>
+    <div className="body">
       <div className="profile-container">
         <div className="location-container">
           <div className="location-and-button-container">
@@ -98,10 +146,7 @@ const ProfileEdit = ({ history }: ProfileProps) => {
             <input
               id="location-holder"
               disabled
-              placeholder={userState.userInfo?.gu.concat(
-                ' ',
-                userState.userInfo?.dong,
-              )}
+              placeholder={userInfo?.gu.concat(' ', userInfo?.dong)}
               onChange={(e) =>
                 setProfile({
                   ...profile,
@@ -116,7 +161,7 @@ const ProfileEdit = ({ history }: ProfileProps) => {
           <div className="input-name">닉네임 변경</div>
           <div className="input-form">
             <input
-              placeholder={userState.userInfo?.nickname}
+              placeholder={userInfo?.nickname}
               onChange={(e) =>
                 setProfile({
                   ...profile,
@@ -130,7 +175,7 @@ const ProfileEdit = ({ history }: ProfileProps) => {
           <div className="input-name">소개글 변경</div>
           <div className="input-form">
             <input
-              placeholder={userState.userInfo?.introduction}
+              placeholder={userInfo?.introduction}
               onChange={(e) =>
                 setProfile({
                   ...profile,

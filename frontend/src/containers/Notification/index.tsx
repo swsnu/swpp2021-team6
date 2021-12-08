@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { History } from 'history';
@@ -6,8 +7,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Menu, Dropdown } from 'antd';
 import humps from 'humps';
 import { AppState } from '../../store/store';
-import notifications from '../../mocks/notification.json';
-import mockUserInfo from '../../mocks/userInfo.json';
 import notiIconWithDot from '../../assets/image/icon/noti-with-dot.svg';
 import notiIcon from '../../assets/image/icon/noti-without-dot.svg';
 import notiDot from '../../assets/image/icon/noti-dot.svg';
@@ -79,10 +78,11 @@ const Notification = ({ history }: NotificationProps) => {
 
   const myNotis = () => (
     <Menu>
-      {userState.userNotification === null ? (
-        <Menu.Item>
-          <span>표시할 알림이 없습니다</span>
-        </Menu.Item>
+      {userState.userNotification === null ||
+      userState.userNotification.length === 0 ? (
+        <div style={{ margin: '0 5 0 5' }}>
+          <span style={{ margin: '0 20 0 20' }}>표시할 알림이 없습니다</span>
+        </div>
       ) : (
         userState.userNotification.map((notification: any) => (
           // <Menu.Item

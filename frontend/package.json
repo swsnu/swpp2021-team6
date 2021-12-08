@@ -84,7 +84,9 @@
       "!src/utils/*",
       "!src/containers/PostCreate/*",
       "!src/containers/PostDetail/*",
-      "!src/containers/PostEdit/*"
+      "!src/containers/PostEdit/*",
+      "!src/containers/Profile/*",
+      "!src/containers/ProfileEdit/*"
     ]
   }
 }

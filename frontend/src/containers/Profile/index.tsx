@@ -73,6 +73,7 @@ const Profile = ({ history }: ProfileProps) => {
       await readUserInfo({ id: profileUserId })
     ).entity;
     setUserInfo(fetchedUserInfo);
+    console.log(fetchedUserInfo);
   };
 
   // useEffect(() => {
@@ -88,15 +89,15 @@ const Profile = ({ history }: ProfileProps) => {
 
   const returnPostStatus = (status: string) => {
     switch (status) {
-      case '승인 완료':
+      case 'ACCEPTED':
         return <span className="status-badge complete">승인 완료</span>;
-      case '승인 대기 중':
+      case 'PENDING':
         return <span className="status-badge pending">승인 대기 중</span>;
-      case '거절 됨':
+      case 'DECLINED':
         return <span className="status-badge denied">거절 됨</span>;
-      case '모집 중':
+      case 'RECRUITING':
         return <span className="status-badge pending">모집 중</span>;
-      case '모집 완료':
+      case 'RECRUITED':
         return <span className="status-badge complete">모집 완료</span>;
       default:
         return <span>dd</span>;
@@ -174,7 +175,7 @@ const Profile = ({ history }: ProfileProps) => {
   };
 
   return (
-    <div style={{ width: '70%', margin: 'auto' }}>
+    <div className="body" style={{ width: '70%', margin: 'auto' }}>
       {isLoggedInUser === true ? (
         <div className="button-div">
           <div className="button-container">

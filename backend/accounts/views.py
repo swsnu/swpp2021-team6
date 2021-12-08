@@ -108,7 +108,9 @@ def user_detail(request, user_id):
             "participating_post": participating_post,
             "hosting_post": hosting_post,
         }
+        print(response_dict)
         return JsonResponse(response_dict, status=200)
+
     elif request.method == "POST":
 
         def is_request_valid():
