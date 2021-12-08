@@ -95,6 +95,7 @@ const PostDetailContainer: React.FC = () => {
         id="background"
         style={{
           backgroundImage: `url(${background})`,
+          backgroundPosition: '0 150px',
           backgroundSize: '100vw',
         }}
       >

@@ -83,7 +83,8 @@
       "!src/serviceWorker.ts",
       "!src/utils/*",
       "!src/containers/PostCreate/*",
-      "!src/containers/PostDetail/*"
+      "!src/containers/PostDetail/*",
+      "!src/containers/PostEdit/*"
     ]
   }
 }

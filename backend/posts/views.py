@@ -174,23 +174,26 @@ def post_detail(request, post_id=0):
 
         try:
             req_data = json.loads(request.body.decode())
-            title = req_data["title"]
-            description = req_data["description"]
+
+            if ("title" in req_data):
+                post.title = req_data["title"]
+            if ("description" in req_data):
+                post.description = req_data["description"]
+
+            post.save()
+
+            response_dict = {
+                "post_id": post.id,
+                "host_id": post.host.id,
+                "title": post.title,
+                "description": post.description,
+            }
+
+            return JsonResponse(response_dict, status=200)
+
         except (KeyError, JSONDecodeError):
             return HttpResponse(status=400)
 
-        post.title = title
-        post.description = description
-        post.save()
-
-        response_dict = {
-            "post_id": post.id,
-            "host_id": post.host.id,
-            "title": post.title,
-            "description": post.description,
-        }
-
-        return JsonResponse(response_dict, status=200)
     # Delete a specified psot
     elif request.method == "DELETE":
         # 권한 확인
@@ -229,7 +232,8 @@ def comments(request, post_id=0):
             return HttpResponse(status=400)
 
         author = request.user
-        new_comment = Comment.objects.create(post=post, content=content, author=author)
+        new_comment = Comment.objects.create(
+            post=post, content=content, author=author)
 
         response_dict = {
             "comment_id": new_comment.id,
