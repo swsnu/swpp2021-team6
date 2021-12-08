@@ -1,16 +1,36 @@
 /* eslint-disable no-proto */
 import React from 'react';
 import { mount } from 'enzyme';
+import * as reactRedux from 'react-redux';
+import { Provider } from 'react-redux';
+import { createMemoryHistory } from 'history';
+import { connectRouter, routerMiddleware } from 'connected-react-router';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import Onboarding from '.';
-import { history } from '../../store/store';
 import { mockNavigatorGeolocation } from '../../test-utils/mockNavigatorGeolocation';
 import { ProfileDTO } from '../../backend/entity/user';
+import userInfo from '../../mocks/userInfo.json';
 
 window.alert = jest.fn().mockImplementation();
 const useStateMock = jest.spyOn(React, 'useState');
 const setFormMock = jest.fn();
 const setSelectedExerciseMock = jest.fn();
 const setGuDongMock = jest.fn();
+const mockPush = jest.fn();
+const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useHistory: () => ({ push: mockPush }),
+}));
+
+const history = createMemoryHistory({ initialEntries: ['/hello'] });
+const mockStore = createStore(
+  combineReducers({
+    router: connectRouter(history),
+    user: (state = { user: null }, action) => state,
+  }),
+  applyMiddleware(routerMiddleware(history)),
+);
 
 describe('Onboarding', () => {
   const mockForm: ProfileDTO = {
@@ -29,9 +49,6 @@ describe('Onboarding', () => {
   beforeEach(() => {
     onboarding = <Onboarding history={history} />;
 
-    jest.spyOn(window.localStorage.__proto__, 'getItem');
-    window.localStorage.__proto__.getItem = jest.fn().mockReturnValue(null);
-
     useStateMock
       .mockReturnValueOnce([mockForm, setFormMock])
       .mockReturnValueOnce([
@@ -42,9 +59,10 @@ describe('Onboarding', () => {
         { loading: true, text: '동네 정보 조회 중' },
         setGuDongMock,
       ]);
-    getGuDong = jest
-      .fn()
-      .mockResolvedValueOnce({ gu: '영등포구', dong: '당산동' });
+
+    useSelectorMock.mockImplementation((callback) =>
+      callback({ user: { user: userInfo } }),
+    );
   });
 
   afterEach(() => {
@@ -110,10 +128,15 @@ describe('Onboarding on submit', () => {
   let onboarding: any;
 
   beforeEach(() => {
-    onboarding = <Onboarding history={history} />;
+    onboarding = (
+      <Provider store={mockStore}>
+        <Onboarding history={history} />
+      </Provider>
+    );
 
-    jest.spyOn(window.localStorage.__proto__, 'getItem');
-    window.localStorage.__proto__.getItem = jest.fn().mockReturnValue(null);
+    useSelectorMock.mockImplementation((callback) =>
+      callback({ user: { user: userInfo } }),
+    );
   });
 
   afterEach(() => {

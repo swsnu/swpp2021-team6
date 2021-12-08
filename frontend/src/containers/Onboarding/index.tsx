@@ -38,6 +38,8 @@ const Onboarding = ({ history }: { history: History }) => {
   const { user } = useSelector((state: AppState) => state.user);
 
   useEffect(() => {
+    if (user) history.push('/main');
+
     if (!('geolocation' in navigator)) {
       alert('위치 정보를 사용할 수 없습니다. 다른 브라우저를 이용해주세요.');
     } else {
@@ -116,7 +118,7 @@ const Onboarding = ({ history }: { history: History }) => {
 
   return (
     <div className="onboarding">
-      {redirect}
+      {/* {redirect} */}
       <img
         id="small-dots"
         className="bg-deco"
