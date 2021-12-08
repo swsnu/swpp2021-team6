@@ -51,3 +51,11 @@ export interface UpdatePostDTO {
   title?: string;
   description?: string;
 }
+
+export const ApplyStatus = {
+  PENDING: '승인 대기 중',
+  ACCEPTED: '승인됨',
+  DECLINED: '거절됨',
+} as const;
+
+export type StatusType = typeof ApplyStatus[keyof typeof ApplyStatus];

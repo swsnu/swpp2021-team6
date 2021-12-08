@@ -5,9 +5,11 @@
   height: 100%;
 
   #side-bar {
+    position: fixed;
     display: flex;
-    flex-direction: column;
     width: 230px;
+    height: 100vh;
+    flex-direction: column;
     justify-content: space-between;
 
     #main-icon {
@@ -46,8 +48,11 @@
   }
 
   .post-container {
+    position: absolute;
+
+    left: 230px;
     background: rgba(36, 113, 0, 0.05);
-    width: 100%;
+    width: calc(100% - 230px);
     display: flex;
     flex-wrap: wrap;
     padding: 40px;

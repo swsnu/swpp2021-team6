@@ -138,17 +138,17 @@ def post_detail(request, post_id=0):
     # Retrieve a specified post
     if request.method == "GET":
         post_keyword = get_object_or_404(Post_Keyword, post_id=post.id)
-        
+
         if Participation.objects.filter(post_id=post.id).exists():
-            post_participants = Participation.objects.filter(post_id = post.id) 
-            participants_list = [{"userId" : participant.user.id, "userName" : participant.user.profile.nickname, "status" : participant.status} for participant in post_participants]
+            post_participants = Participation.objects.filter(post_id=post.id)
+            participants_list = [{"userId": participant.user.id, "userName": participant.user.profile.nickname,
+                                  "status": participant.status} for participant in post_participants]
         else:
             participants_list = []
-       
-        
+
         response_dict = {
             "host_id": post.host.id,
-            "host_name" : post.host.profile.nickname,
+            "host_name": post.host.profile.nickname,
             "exercise_name": post.exercise.name,
             "title": post.title,
             "description": post.description,
@@ -166,7 +166,7 @@ def post_detail(request, post_id=0):
                 "address": post.place_address,
                 "telephone": post.place_telephone,
             },
-            "participants" : participants_list,
+            "participants": participants_list,
             "kakaotalk_link": post.kakaotalk_link,
             "status": post.status,
             "keywords": [
@@ -325,14 +325,18 @@ def apply(request, post_id):
 def accept(request, post_id, participant_id):
     # Post 조회
     post = get_object_or_404(Post, id=post_id)
+    count = post.member_count
+    print(count)
 
     # User(participant) 조회
     participant = get_object_or_404(User, id=participant_id)
 
     # Participation 상태 변경
     Participation.objects.filter(user=participant, post=post).update(
-        status=Participation.Status.ACCEPTED
-    )
+        status=Participation.Status.ACCEPTED)
+
+    # TODO: 추후에 삭제
+    Post.objects.filter(id=post_id).update(member_count=count+1)
 
     return HttpResponse(status=204)
 
