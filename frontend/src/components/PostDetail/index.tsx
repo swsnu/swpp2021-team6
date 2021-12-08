@@ -9,10 +9,8 @@ import './index.scss';
 import gps from '../../assets/image/post-detail/gps.svg';
 import userIcon from '../../assets/image/post-detail/user-icon.svg';
 
-type PostItem = PostEntity & { hostName: string };
-
 interface Props {
-  post: PostItem;
+  post: PostEntity;
   isHost: boolean | undefined;
   onDelete: () => Promise<void>;
 }

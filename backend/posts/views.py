@@ -23,6 +23,7 @@ def posts(request):
             {
                 "post_id": post.id,
                 "host_id": post.host.id,
+                "host_name": post.host.profile.nickname,
                 "exercise_name": post.exercise.name,
                 "expected_level": post.expected_level,
                 "title": post.title,
@@ -139,6 +140,7 @@ def post_detail(request, post_id=0):
 
         response_dict = {
             "host_id": post.host.id,
+            "host_name" : post.host.profile.nickname,
             "exercise_name": post.exercise.name,
             "title": post.title,
             "description": post.description,
