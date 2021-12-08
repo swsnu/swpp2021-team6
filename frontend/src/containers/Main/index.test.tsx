@@ -21,6 +21,7 @@ const mockPosts: PostEntity[] = [
   {
     postId: 12,
     hostId: 1,
+    hostName: 'gdori',
     exerciseName: '축구',
     expectedLevel: '상관 없음',
     title: '제목 1',
