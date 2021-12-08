@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.test import TestCase
 
 from ..models import ProxyUser
@@ -8,11 +9,10 @@ class AccountsTestCase(TestCase):
     def test_create_user_with(self):
         # Given
         Exercise.objects.create(name="축구")
-
+        User.objects.create_user(username="username1", password="password1")
         # When
         user = ProxyUser.objects.create_user_with(
-            username="username1",
-            password="password1",
+            user_id=1,
             nickname="닉네임1",
             latitude=37.47880163846696,
             longitude=126.94494429645442,
@@ -25,7 +25,6 @@ class AccountsTestCase(TestCase):
 
         # Then
         self.assertEqual(user.id, 1)
-        self.assertEqual(user.username, "username1")
 
         profile = user.profile
         self.assertEqual(profile.id, 1)
