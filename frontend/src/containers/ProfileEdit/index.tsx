@@ -91,8 +91,11 @@ const ProfileEdit = ({ history }: ProfileProps) => {
     fetchUserInfo();
   }, []);
 
-  const [selectedExercise, setSelectedExercise] = useState('');
-  const [selectedSkill, setSelectedSkill] = useState('');
+  const [selectedExercise, setSelectedExercise] = useState({
+    exerciseName: '종목',
+    skillLevel: '실력',
+  });
+  // const [selectedSkill, setSelectedSkill] = useState('');
 
   const verifyLocation = () => {
     const response = confirm(
@@ -132,19 +135,23 @@ const ProfileEdit = ({ history }: ProfileProps) => {
   };
 
   const onClickAddExercise = () => {
-    const newArray = profile.userExercise;
-    newArray?.push({
-      exerciseName: selectedExercise,
-      skillLevel: selectedSkill,
-    });
-    setProfile({
-      ...profile,
-      userExercise: newArray,
-    });
+    if (
+      selectedExercise.exerciseName !== '종목' &&
+      selectedExercise.skillLevel !== '실력'
+    ) {
+      const newArray = profile.userExercise;
+      newArray?.push(selectedExercise);
+      setProfile({
+        ...profile,
+        userExercise: newArray,
+      });
+      setSelectedExercise({ exerciseName: '종목', skillLevel: '실력' });
+    } else {
+      alert('운동 종목과 실력을 선택해주세요.');
+    }
   };
 
   const onClickSubmit = async () => {
-    console.log(profile);
     await updateProfile({ id: profileUserId, updatePayload: profile });
     history.push('/profile/my');
   };
@@ -218,7 +225,7 @@ const ProfileEdit = ({ history }: ProfileProps) => {
               <img src={pfExerciseIcon} alt="pfexercise-icon" />
             </div>
             <div className="pf-title">좋아하는 운동</div>
-            <div className="add-button" onClick={() => onClickAddExercise()}>
+            <div className="add-button" onClick={onClickAddExercise}>
               <span>추가</span>
             </div>
           </div>
@@ -228,9 +235,17 @@ const ProfileEdit = ({ history }: ProfileProps) => {
               className="selector"
               name="exerciseType"
               id="exerciseType"
-              defaultValue="운동"
-              onChange={(e) => setSelectedExercise(e.target.value)}
+              value={selectedExercise.exerciseName}
+              onChange={(e) =>
+                setSelectedExercise({
+                  ...selectedExercise,
+                  exerciseName: e.target.value,
+                })
+              }
             >
+              <option value="종목" hidden>
+                종목
+              </option>
               <option value="축구">축구</option>
               <option value="농구">농구</option>
               <option value="배드민턴">배드민턴</option>
@@ -244,9 +259,17 @@ const ProfileEdit = ({ history }: ProfileProps) => {
               className="selector"
               name="level"
               id="level"
-              defaultValue="실력"
-              onChange={(e) => setSelectedSkill(e.target.value)}
+              value={selectedExercise.skillLevel}
+              onChange={(e) =>
+                setSelectedExercise({
+                  ...selectedExercise,
+                  skillLevel: e.target.value,
+                })
+              }
             >
+              <option value="실력" hidden>
+                실력
+              </option>
               <option value="상">상</option>
               <option value="중">중</option>
               <option value="하">하</option>
