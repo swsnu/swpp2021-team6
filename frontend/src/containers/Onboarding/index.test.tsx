@@ -21,9 +21,12 @@ const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useHistory: () => ({ push: mockPush }),
+  useParams: () => ({ id: '1' }),
 }));
 
-const history = createMemoryHistory({ initialEntries: ['/hello'] });
+const history = createMemoryHistory({
+  initialEntries: ['/hello'],
+});
 const mockStore = createStore(
   combineReducers({
     router: connectRouter(history),
@@ -47,7 +50,11 @@ describe('Onboarding', () => {
   let onboarding: any;
   let getGuDong: any;
   beforeEach(() => {
-    onboarding = <Onboarding history={history} />;
+    onboarding = (
+      <Provider store={mockStore}>
+        <Onboarding history={history} />
+      </Provider>
+    );
 
     useStateMock
       .mockReturnValueOnce([mockForm, setFormMock])
@@ -114,7 +121,7 @@ describe('Onboarding', () => {
     const { getCurrentPositionMock } = mockNavigatorGeolocation();
     getCurrentPositionMock.mockImplementation();
     component.find('.onboarding-submit-button').simulate('click');
-    expect(window.alert).toBeCalledTimes(2);
+    expect(window.alert).toBeCalledTimes(1);
   });
 
   it('should delete selected exercise when clicking delete button', () => {
@@ -166,7 +173,7 @@ describe('Onboarding on submit', () => {
       ]);
     const component = mount(onboarding);
     component.find('.onboarding-submit-button').simulate('click');
-    expect(window.alert).toBeCalledTimes(1);
+    expect(window.alert).toBeCalledTimes(0);
   });
 
   it('should alert without nickname', () => {
@@ -192,7 +199,7 @@ describe('Onboarding on submit', () => {
       ]);
     const component = mount(onboarding);
     component.find('.onboarding-submit-button').simulate('click');
-    expect(window.alert).toBeCalledTimes(1);
+    expect(window.alert).toBeCalledTimes(0);
   });
 
   it('should alert without preferred exercise', () => {
@@ -218,6 +225,6 @@ describe('Onboarding on submit', () => {
       ]);
     const component = mount(onboarding);
     component.find('.onboarding-submit-button').simulate('click');
-    expect(window.alert).toBeCalledTimes(1);
+    expect(window.alert).toBeCalledTimes(0);
   });
 });
