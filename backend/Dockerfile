@@ -1,7 +1,10 @@
 FROM python:3.7
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+VOLUME /app
 WORKDIR /app
-COPY requirements.txt /app/
-RUN python -m pip install --upgrade pip && pip install -r requirements.txt
-COPY . /app/
+COPY requirements.txt .
+COPY . .
+RUN pip install -r requirements.txt
+RUN pip install uwsgi
+CMD uwsgi \
+    --wsgi-file woondongjang/wsgi.py \
+    --http :8000
