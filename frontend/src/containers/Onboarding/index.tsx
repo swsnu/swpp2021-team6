@@ -15,6 +15,7 @@ import greenCircle from '../../assets/image/icon/green-circle.svg';
 import deleteIcon from '../../assets/image/icon/exercise-delete-button.svg';
 import { createUserProfile } from '../../backend/api/api';
 import { signin } from '../../store/actions';
+import { signup } from '../../store/actions/user';
 
 const initialFormState: ProfileDTO = {
   latitude: 0,
@@ -41,6 +42,8 @@ const Onboarding = ({ history }: { history: History }) => {
 
   const { user } = useSelector((state: AppState) => state.user);
   const dispatch = useDispatch();
+
+  console.log('user', user);
 
   useEffect(() => {
     if (user) {
@@ -117,10 +120,7 @@ const Onboarding = ({ history }: { history: History }) => {
     } else if (form.preferredExercise.length === 0) {
       alert('선호 운동을 입력해주세요');
     } else {
-      const newUser = (await createUserProfile({ createPayload: form, userId }))
-        .entity;
-      window.localStorage.setItem('profileInfo', JSON.stringify(newUser));
-      history.push('/main');
+      dispatch(signup(form, userId));
     }
   };
   return (
@@ -142,7 +142,12 @@ const Onboarding = ({ history }: { history: History }) => {
         <h3>정보 입력</h3>
         <span>여러분의 운동 정보를 입력해주세요</span>
         <Divider />
-        <form>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            onClickSubmit();
+          }}
+        >
           <div className="left">
             <label>위치 정보</label>
             <span className={`gu-dong ${guDong.loading ? 'loading' : null}`}>
@@ -238,12 +243,11 @@ const Onboarding = ({ history }: { history: History }) => {
                 ))}
               </div>
             </div>
-            <button
+            <input
               className="onboarding-submit-button"
-              onClick={onClickSubmit}
-            >
-              완료
-            </button>
+              type="submit"
+              value="완료"
+            />
           </div>
         </form>
       </div>

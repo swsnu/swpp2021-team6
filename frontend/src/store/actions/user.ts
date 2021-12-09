@@ -2,7 +2,33 @@ import axios from 'axios';
 import { push } from 'connected-react-router';
 import humps from 'humps';
 import * as actionTypes from './actionTypes';
-import { UserProfileInfo, UserSignInInputDTO } from '../../backend/entity/user';
+import {
+  ProfileDTO,
+  UserProfileInfo,
+  UserSignInInputDTO,
+} from '../../backend/entity/user';
+import { createUserProfile } from '../../backend/api/api';
+
+export const signup_ = (currentUser: UserProfileInfo) => ({
+  type: actionTypes.SIGNUP,
+  user: currentUser,
+});
+
+export const signup =
+  (user: ProfileDTO, userId: number) => async (dispatch: any) => {
+    try {
+      const newUser = (await createUserProfile({ createPayload: user, userId }))
+        .entity;
+
+      console.log(newUser);
+      window.localStorage.setItem('profileInfo', JSON.stringify(newUser));
+
+      dispatch(signup_(newUser));
+      dispatch(push('/main'));
+    } catch (e: any) {
+      console.log('error', e);
+    }
+  };
 
 /* LOGIN */
 export const autoSignin_ = (lastLoggedInUser: UserProfileInfo) => ({
