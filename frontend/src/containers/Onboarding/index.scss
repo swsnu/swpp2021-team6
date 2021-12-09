@@ -109,6 +109,12 @@
         justify-content: space-between;
         width: 50%;
 
+        .preferred-exercise-container {
+          display: flex;
+          flex-direction: column;
+          margin: 0;
+        }
+
         .exercise-array-container {
           height: 220px;
           overflow: scroll;
@@ -155,6 +161,8 @@
           border: 0;
           border-radius: 6px;
           height: 50px;
+          cursor: pointer;
+          margin: 0;
         }
       }
     }
