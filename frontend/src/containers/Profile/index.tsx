@@ -7,7 +7,6 @@ import { useState, useEffect } from 'react';
 import { History } from 'history';
 import { useParams } from 'react-router';
 import dividerIcon from '../../assets/image/icon/button-divider.svg';
-import profileIcon from '../../assets/image/icon/profile-icon.svg';
 import pfExerciseIcon from '../../assets/image/icon/pfexercise.svg';
 import greenDot from '../../assets/image/icon/green-circle.svg';
 import badge from '../../assets/image/icon/badge.svg';
@@ -15,7 +14,7 @@ import locationIcon from '../../assets/image/icon/location-icon.svg';
 import changeMyPostDateFormat from '../../utils/myPostDateFormat';
 import './index.scss';
 import * as thumbnails from '../../utils/thumbnails';
-import { UserInfoEntity, UserPostEntity } from '../../backend/entity/user';
+import { UserInfoEntity } from '../../backend/entity/user';
 import { readUserInfo } from '../../backend/api/api';
 // import userInfo from '../../mocks/userInfo.json';
 import { ApplyStatus } from '../../backend/entity/post';
@@ -74,7 +73,6 @@ const Profile = ({ history }: ProfileProps) => {
       await readUserInfo({ id: profileUserId })
     ).entity;
     setUserInfo(fetchedUserInfo);
-    console.log(fetchedUserInfo);
   };
 
   // useEffect(() => {
@@ -107,7 +105,7 @@ const Profile = ({ history }: ProfileProps) => {
       case 'RECRUITED':
         return <span className="status-badge complete">모집 완료</span>;
       default:
-        return <span>dd</span>;
+        return null;
     }
   };
 
@@ -145,7 +143,7 @@ const Profile = ({ history }: ProfileProps) => {
       return imgArray[idx];
     };
 
-    const returnedAppointment = (
+    return (
       <div
         className="appointment-container"
         onClick={() => history.push(`/post/${appointment.postId}`)}
@@ -177,8 +175,6 @@ const Profile = ({ history }: ProfileProps) => {
         </div>
       </div>
     );
-
-    return returnedAppointment;
   };
 
   return (
@@ -211,7 +207,10 @@ const Profile = ({ history }: ProfileProps) => {
       )}
 
       <div className="profile-div">
-        <img src={profileIcon} alt="profile-icon" />
+        <img
+          src="https://images.unsplash.com/photo-1586299485759-f62264d6b63f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
+          alt="profile-icon"
+        />
         <div className="profile-content-container">
           <div className="location-gender-container">
             <div className="location-container">
