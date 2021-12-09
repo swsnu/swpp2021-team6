@@ -1,3 +1,5 @@
+/* eslint-disable object-shorthand */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useSelector, useDispatch } from 'react-redux';
@@ -14,6 +16,7 @@ import greenDot from '../../assets/image/icon/green-circle.svg';
 import exerciseIcon from '../../assets/image/icon/exercise.svg';
 import levelIcon from '../../assets/image/icon/level.svg';
 import xIcon from '../../assets/image/icon/x-icon.svg';
+import profileIcon from '../../assets/image/icon/profile-icon.svg';
 
 interface ProfileProps {
   history: History;
@@ -60,33 +63,38 @@ const ProfileEdit = ({ history }: ProfileProps) => {
       },
     ],
   });
+  const [profile, setProfile] = useState<UpdateProfileEntity>({
+    nickname: 'dummy',
+    gu: 'dummy',
+    dong: 'dummy',
+    introduction: 'dummy',
+    userExercise: [
+      {
+        exerciseName: '축구',
+        skillLevel: 'dummy',
+      },
+    ],
+  });
 
   const fetchUserInfo = async () => {
     const fetchedUserInfo: UserInfoEntity = (
       await readUserInfo({ id: profileUserId })
     ).entity;
     setUserInfo(fetchedUserInfo);
-    console.log(fetchedUserInfo);
+    setProfile({
+      nickname: fetchedUserInfo.nickname,
+      gu: fetchedUserInfo.gu,
+      dong: fetchedUserInfo.dong,
+      introduction: fetchedUserInfo.introduction,
+      userExercise: fetchedUserInfo.userExercise,
+    });
   };
 
   useEffect(() => {
     fetchUserInfo();
   }, []);
 
-  // useEffect(() => {
-  //   dispatch(getUserInfo(profileUserId));
-  //   console.log(userState.userInfo);
-  // }, []);
-
-  const initialProfileState: UpdateProfileEntity = {
-    nickname: userInfo?.nickname,
-    gu: userInfo?.gu,
-    dong: userInfo?.dong,
-    introduction: userInfo?.introduction,
-    userExercise: userInfo?.userExercise,
-  };
-  const [profile, setProfile] =
-    useState<UpdateProfileEntity>(initialProfileState);
+  console.log(profile);
   const [selectedExercise, setSelectedExercise] = useState('');
   const [selectedSkill, setSelectedSkill] = useState('');
 
@@ -106,9 +114,14 @@ const ProfileEdit = ({ history }: ProfileProps) => {
         getGuDong(position.coords.longitude, position.coords.latitude).then(
           (value) => {
             const { gu, dong } = value;
-            console.log(gu, dong);
+            setProfile({
+              ...profile,
+              gu: gu,
+              dong: dong,
+            });
             if (locationHolder) {
               locationHolder.setAttribute('value', gu.concat(' ', dong));
+              console.log(locationHolder);
             }
           },
         );
@@ -129,6 +142,7 @@ const ProfileEdit = ({ history }: ProfileProps) => {
   };
 
   const onClickSubmit = async () => {
+    console.log(profile);
     await updateProfile({ id: profileUserId, updatePayload: profile });
     history.push('/profile/my');
   };
@@ -136,24 +150,31 @@ const ProfileEdit = ({ history }: ProfileProps) => {
   return (
     <div className="body">
       <div className="profile-container">
+        <img src={profileIcon} alt="profile-icon" />
         <div className="location-container">
           <div className="location-and-button-container">
             <div className="input-name">위치정보</div>
-            <button onClick={() => verifyLocation()}>재인증</button>
+            <div
+              className="verify-location-button"
+              onClick={() => verifyLocation()}
+            >
+              <span>재인증</span>
+            </div>
           </div>
 
           <div className="input-form">
             <input
               id="location-holder"
               disabled
-              placeholder={userInfo?.gu.concat(' ', userInfo?.dong)}
-              onChange={(e) =>
+              placeholder={userInfo.gu.concat(' ', userInfo?.dong)}
+              onChange={(e) => {
+                console.log(e.target.value);
                 setProfile({
                   ...profile,
                   gu: e.target.value.split(' ')[0],
                   dong: e.target.value.split(' ')[1],
-                })
-              }
+                });
+              }}
             />
           </div>
         </div>
@@ -161,7 +182,7 @@ const ProfileEdit = ({ history }: ProfileProps) => {
           <div className="input-name">닉네임 변경</div>
           <div className="input-form">
             <input
-              placeholder={userInfo?.nickname}
+              placeholder={userInfo.nickname}
               onChange={(e) =>
                 setProfile({
                   ...profile,
@@ -193,11 +214,14 @@ const ProfileEdit = ({ history }: ProfileProps) => {
               <img src={pfExerciseIcon} alt="pfexercise-icon" />
             </div>
             <div className="pf-title">좋아하는 운동</div>
-            <button onClick={() => onClickAddExercise()}>추가</button>
+            <div className="add-button" onClick={() => onClickAddExercise()}>
+              <span>추가</span>
+            </div>
           </div>
           <div className="exercise-add-container-right">
             <img src={exerciseIcon} alt="exercise-icon" />
             <select
+              className="selector"
               name="exerciseType"
               id="exerciseType"
               defaultValue="운동"
@@ -213,6 +237,7 @@ const ProfileEdit = ({ history }: ProfileProps) => {
             </select>
             <img src={levelIcon} alt="level-icon" />
             <select
+              className="selector"
               name="level"
               id="level"
               defaultValue="실력"
@@ -228,16 +253,17 @@ const ProfileEdit = ({ history }: ProfileProps) => {
           className="preferred-exercise-container"
           id="preferred-exercise-container"
         >
-          {profile.userExercise?.map((exerciseAndSkill: any) => (
-            <div>
+          {profile.userExercise?.map((exerciseAndSkill: any, idx: number) => (
+            <div key={idx} className="pfexercise-box">
               <div>
-                <img src={greenDot} alt="green-dot" />
+                <img className="green-dot" src={greenDot} alt="green-dot" />
                 <span>
                   {exerciseAndSkill.exerciseName}ㆍ{exerciseAndSkill.skillLevel}
                 </span>
               </div>
               <div>
                 <img
+                  className="x-icon"
                   src={xIcon}
                   alt="x-icon"
                   onClick={() =>
@@ -256,7 +282,9 @@ const ProfileEdit = ({ history }: ProfileProps) => {
           ))}
         </div>
       </div>
-      <button onClick={() => onClickSubmit()}>변경사항 저장</button>
+      <div className="submit-button" onClick={() => onClickSubmit()}>
+        <span>변경사항 저장</span>
+      </div>
     </div>
   );
 };
