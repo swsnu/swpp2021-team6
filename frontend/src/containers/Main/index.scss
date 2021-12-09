@@ -1,7 +1,7 @@
 .main {
   display: flex;
   min-width: 1200px;
-  padding-top: 68.28px;
+  padding-top: 64.28px;
   height: 100%;
 
   #side-bar {
@@ -54,6 +54,7 @@
     left: 230px;
     background: rgba(36, 113, 0, 0.05);
     width: calc(100% - 230px);
+    height: calc(100% - 64.28px);
     display: flex;
     flex-wrap: wrap;
     column-gap: 20px;
