@@ -145,6 +145,8 @@
 }
 
 .my-post-div {
+  display: flex;
+  column-gap: 20px;
   min-height: 100px;
 }
 
