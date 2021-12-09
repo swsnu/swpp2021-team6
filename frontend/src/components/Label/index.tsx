@@ -7,7 +7,7 @@ interface Props {
 
 const Label = ({ className, color, font = 'white', children }: Props) => {
   const labelStyle = {
-    padding: '5px 20px',
+    padding: '5px 14px',
     marginRight: '15px',
     borderRadius: '55px',
     fontSize: '10px',

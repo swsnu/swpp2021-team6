@@ -1,6 +1,6 @@
 #root {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
 }
 
 * {
@@ -22,6 +22,10 @@ span {
  */
 
 html {
+  position: absolute;
+  width: 100%;
+  min-height: 100%;
+  height: 100vh;
   line-height: 1.15; /* 1 */
   -webkit-text-size-adjust: 100%; /* 2 */
 }
@@ -35,6 +39,9 @@ html {
 
 body {
   margin: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(36, 113, 0, 0.05);
 }
 
 /**
