@@ -1,11 +1,11 @@
 from json.decoder import JSONDecodeError
 from django.contrib.auth.models import User
-from django.db.models.query import get_prefetcher
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_POST, require_http_methods
 import json
 
+from accounts.models import Notification
 from .models import Post, Comment, Post_Keyword, Participation
 from .filters import PostFilter
 from .sorts import PostSort
@@ -138,17 +138,23 @@ def post_detail(request, post_id=0):
     # Retrieve a specified post
     if request.method == "GET":
         post_keyword = get_object_or_404(Post_Keyword, post_id=post.id)
-        
+
         if Participation.objects.filter(post_id=post.id).exists():
-            post_participants = Participation.objects.filter(post_id = post.id) 
-            participants_list = [{"userId" : participant.user.id, "userName" : participant.user.profile.nickname, "status" : participant.status} for participant in post_participants]
+            post_participants = Participation.objects.filter(post_id=post.id)
+            participants_list = [
+                {
+                    "userId": participant.user.id,
+                    "userName": participant.user.profile.nickname,
+                    "status": participant.status,
+                }
+                for participant in post_participants
+            ]
         else:
             participants_list = []
-       
-        
+
         response_dict = {
             "host_id": post.host.id,
-            "host_name" : post.host.profile.nickname,
+            "host_name": post.host.profile.nickname,
             "exercise_name": post.exercise.name,
             "title": post.title,
             "description": post.description,
@@ -166,7 +172,7 @@ def post_detail(request, post_id=0):
                 "address": post.place_address,
                 "telephone": post.place_telephone,
             },
-            "participants" : participants_list,
+            "participants": participants_list,
             "kakaotalk_link": post.kakaotalk_link,
             "status": post.status,
             "keywords": [
@@ -183,27 +189,23 @@ def post_detail(request, post_id=0):
         if request.user.id != post.host.id:
             return HttpResponse(status=403)
 
-        try:
-            req_data = json.loads(request.body.decode())
+        req_data = json.loads(request.body.decode())
 
-            if ("title" in req_data):
-                post.title = req_data["title"]
-            if ("description" in req_data):
-                post.description = req_data["description"]
+        if "title" in req_data:
+            post.title = req_data["title"]
+        if "description" in req_data:
+            post.description = req_data["description"]
 
-            post.save()
+        post.save()
 
-            response_dict = {
-                "post_id": post.id,
-                "host_id": post.host.id,
-                "title": post.title,
-                "description": post.description,
-            }
+        response_dict = {
+            "post_id": post.id,
+            "host_id": post.host.id,
+            "title": post.title,
+            "description": post.description,
+        }
 
-            return JsonResponse(response_dict, status=200)
-
-        except (KeyError, JSONDecodeError):
-            return HttpResponse(status=400)
+        return JsonResponse(response_dict, status=200)
 
     # Delete a specified psot
     elif request.method == "DELETE":
@@ -243,8 +245,7 @@ def comments(request, post_id=0):
             return HttpResponse(status=400)
 
         author = request.user
-        new_comment = Comment.objects.create(
-            post=post, content=content, author=author)
+        new_comment = Comment.objects.create(post=post, content=content, author=author)
 
         response_dict = {
             "comment_id": new_comment.id,
@@ -252,6 +253,19 @@ def comments(request, post_id=0):
             "post_id": new_comment.post.id,
             "content": new_comment.content,
         }
+
+        # Create comment notification host and participants
+        recipient_list = [
+            participation.user
+            for participation in Participation.objects.filter(post=post)
+        ]
+        recipient_list.append(post.host)
+        recipient_list.remove(author)
+        for recipient in recipient_list:
+            new_notification = Notification.objects.create(
+                user=recipient, post=post, noti_type="comment"
+            )
+            new_notification.save()
 
         return JsonResponse(response_dict, status=201)
 
@@ -317,6 +331,11 @@ def apply(request, post_id):
     # Participation 생성
     Participation.objects.create(user=request.user, post=post)
 
+    # host에게 notification 생성
+    Notification.objects.create(
+        user=post.host, post=post, noti_type="request participation"
+    )
+
     return HttpResponse(status=204)
 
 
@@ -325,6 +344,8 @@ def apply(request, post_id):
 def accept(request, post_id, participant_id):
     # Post 조회
     post = get_object_or_404(Post, id=post_id)
+    count = post.member_count
+    print(count)
 
     # User(participant) 조회
     participant = get_object_or_404(User, id=participant_id)
@@ -332,6 +353,13 @@ def accept(request, post_id, participant_id):
     # Participation 상태 변경
     Participation.objects.filter(user=participant, post=post).update(
         status=Participation.Status.ACCEPTED
+    )
+
+    Post.objects.filter(id=post_id).update(member_count=count + 1)
+
+    # Notification 생성
+    Notification.objects.create(
+        user=participant, post=post, noti_type="request approved"
     )
 
     return HttpResponse(status=204)
@@ -350,5 +378,8 @@ def decline(request, post_id, participant_id):
     Participation.objects.filter(user=participant, post=post).update(
         status=Participation.Status.DECLINED
     )
+
+    # Notification 생성
+    Notification.objects.create(user=participant, post=post, noti_type="request denied")
 
     return HttpResponse(status=204)

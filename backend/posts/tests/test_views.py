@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.test import TestCase, Client
 import json
 from datetime import datetime
@@ -50,13 +51,16 @@ class PostsViewsTestCase(TestCase):
             "kakaotalk_link": "test_kakaotalk_link_123412",
         }
     )
+    invalid_post2 = json.dumps({
+        "title" : "test_title",
+    })
     invalid_comment = json.dumps({"content123": "invalid comment content"})
 
     def setUp(self):
         test_exercise = Exercise.objects.create(name="축구")
+        User.objects.create_user(username="username1", password="password1")
         test_user1 = ProxyUser.objects.create_user_with(
-            username="username1",
-            password="password1",
+            user_id=1,
             nickname="닉네임1",
             latitude=37.47880163846696,
             longitude=126.94494429645442,
@@ -66,9 +70,9 @@ class PostsViewsTestCase(TestCase):
             introduction="안녕하세요 user1입니다.",
             preferred_exercises=[{"exercise_name": "축구", "skill_level": "중"}],
         )
+        User.objects.create_user(username="username2", password="password2")
         test_user2 = ProxyUser.objects.create_user_with(
-            username="username2",
-            password="password2",
+            user_id=2,
             nickname="닉네임2",
             latitude=37.47880163846696,
             longitude=126.94494429645442,
@@ -218,11 +222,14 @@ class PostsViewsTestCase(TestCase):
         response = client.get("/posts/1")
         self.assertEqual(response.status_code, 200)  # Pass csrf protection
 
-        ## PATCH -> 400
+        # GET -> 200
+        response = client.get("/posts/2")
+        self.assertEqual(response.status_code, 200)
+        ## PATCH -> 200
         response = client.patch(
             "/posts/1", self.invalid_post, content_type="application/json"
         )
-        self.assertEqual(response.status_code, 400)  # Pass csrf protection
+        self.assertEqual(response.status_code, 200) 
 
         ## PATCH -> 200
         response = client.patch(

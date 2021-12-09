@@ -49,12 +49,20 @@ describe('App with signin user', () => {
     longitude: 127.12345,
   };
 
+  const mockUserNotification = [{ isRead: true }];
+
   beforeEach(() => {
     const history = createMemoryHistory({ initialEntries: ['/main'] });
     const mockStore = createStore(
       combineReducers({
         router: connectRouter(history),
-        user: (state = { user: mockUserProfile }, action) => state,
+        user: (
+          state = {
+            user: mockUserProfile,
+            userNotification: mockUserNotification,
+          },
+          action,
+        ) => state,
       }),
       applyMiddleware(thunk, routerMiddleware(history)),
     );

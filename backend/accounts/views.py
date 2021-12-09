@@ -3,20 +3,18 @@ from json.decoder import JSONDecodeError
 from django.http.response import HttpResponse, JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_POST, require_GET, require_http_methods
-
-from .models import Profile, ProxyUser
+from posts.models import Exercise, User_Exercise, Post, Participation
+from .models import Notification, Profile, ProxyUser
 from .decorators import signin_required
-from posts.models import User_Exercise, Post, Participation
-
-
 @require_POST
 def signup(request):
     req_data = json.loads(request.body.decode())
-    username = req_data['username']
-    password = req_data['password']
+    username = req_data["username"]
+    password = req_data["password"]
     user = User.objects.create_user(username=username, password=password)
-    return JsonResponse({'userId': user.id}, safe=False, status=201)
+    return JsonResponse({"userId": user.id}, safe=False, status=201)
 
 
 @require_POST
@@ -56,9 +54,10 @@ def signout(request):
     return HttpResponse(status=204)
 
 
-@require_http_methods(["GET", "POST"])
+
+
+@require_http_methods(["GET", "POST", "PATCH"])
 def user_detail(request, user_id):
-    
     if request.method == "GET":
         if not request.user.is_authenticated:
             return HttpResponse(status=401)
@@ -74,18 +73,22 @@ def user_detail(request, user_id):
 
         participating_post = [
             {
+                "host_name": participation.post.host.profile.nickname,
                 "post_id": participation.post.id,
+                "exercise_name": participation.post.exercise.name,
                 "title": participation.post.title,
                 "meet_at": participation.post.meet_at,
                 "place_name": participation.post.place_name,
-                "status": participation.post.status,
+                "status": participation.status,
             }
             for participation in Participation.objects.filter(user=user)
         ]
 
         hosting_post = [
             {
+                "host_name": post.host.profile.nickname,
                 "post_id": post.id,
+                "exercise_name": post.exercise.name,
                 "title": post.title,
                 "meet_at": post.meet_at,
                 "place_name": post.place_name,
@@ -108,6 +111,7 @@ def user_detail(request, user_id):
         return JsonResponse(response_dict, status=200)
 
     elif request.method == "POST":
+
         def is_request_valid():
             if gender not in Profile.Gender.values:
                 return False
@@ -154,3 +158,86 @@ def user_detail(request, user_id):
             "longitude": user.profile.longitude,
         }
         return JsonResponse(response_dict, safe=False, status=201)
+
+
+    elif request.method == "PATCH":
+        user = User.objects.get(id=user_id)
+        profile = Profile.objects.get(user=user)
+        req_data = json.loads(request.body.decode())
+        profile.nickname = req_data["nickname"]
+        profile.gu = req_data["gu"]
+        profile.dong = req_data["dong"]
+        profile.introduction = req_data["introduction"]
+        profile.save()
+
+        User_Exercise.objects.filter(user=user).delete()
+        for preferred_exercise in req_data["userExercise"]:
+            exercise = get_object_or_404(
+                Exercise, name=preferred_exercise["exerciseName"]
+            )
+            User_Exercise.objects.create(
+                user=user,
+                exercise=exercise,
+                skill_level=preferred_exercise["skillLevel"],
+            )
+
+        return HttpResponse(status=200)
+
+
+@require_POST
+@signin_required
+def create_notification(request, user_id, post_id, noti_type):
+    if request.method == "POST":
+        user = User.objects.get(id=user_id)
+        post = Post.objects.get(id=post_id)
+        new_notification = Notification.objects.create(
+            user=user,
+            post=post,
+            noti_type=noti_type,
+        )
+        new_notification.save()
+
+        return HttpResponse(status=201)
+
+    return
+
+
+@require_GET
+@signin_required
+def get_notification(request, user_id):
+    if request.method == "GET":
+        user = User.objects.get(id=user_id)
+        noti_list = [
+            {
+                "noti_id": noti.id,
+                "noti_type": noti.noti_type,
+                "post_id": noti.post.id,
+                "post_title": noti.post.title,
+                "is_read": noti.is_read,
+                "created_at": noti.created_string,
+            }
+            for noti in Notification.objects.filter(user=user).order_by("-created_at")
+        ]
+
+        return JsonResponse(noti_list, status=201, safe=False)
+
+
+def read_notification(request, noti_id):
+    if request.method == "PATCH":
+        target_noti = Notification.objects.get(id=noti_id)
+        target_noti.is_read = True
+        target_noti.save()
+        noti_list = [
+            {
+                "noti_id": noti.id,
+                "noti_type": noti.noti_type,
+                "post_id": noti.post.id,
+                "post_title": noti.post.title,
+                "is_read": noti.is_read,
+                "created_at": noti.created_string,
+            }
+            for noti in Notification.objects.filter(user=request.user).order_by(
+                "-created_at"
+            )
+        ]
+        return JsonResponse(noti_list, status=200, safe=False)

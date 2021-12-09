@@ -9,6 +9,8 @@ import {
   UserEntity,
   UserProfileInfo,
   UserSignInInputDTO,
+  UpdateProfileEntity,
+  UserInfoEntity,
 } from '../entity/user';
 import {
   CreateProps,
@@ -44,13 +46,39 @@ export const createUserProfile = async ({
 
 export const queryUsers = produceQueryAPI<UserEntity>('/users');
 export const readUser = produceReadAPI<UserEntity>('/users');
+export const readUserInfo = produceReadAPI<UserInfoEntity>('/users');
 export const updateUser = produceUpdateAPI<UserEntity>('/users');
+export const updateProfile = produceUpdateAPI<UpdateProfileEntity>('/users');
 
 export const queryFilterPosts = async (
   filterString: string,
 ): Promise<queryReturnType<PostEntity>> => {
   const res = await axios.get(`/posts/?${filterString}`);
   return { items: humps.camelizeKeys(res.data) as PostEntity[] };
+};
+
+export const createApply = async (postId: number): Promise<number> => {
+  const { status } = await axios.post(`/posts/${postId}/apply`);
+  return status;
+};
+export const acceptApply = async (
+  postId: number,
+  userId: number,
+): Promise<number> => {
+  const { status } = await axios.post(
+    `/posts/${postId}/participants/${userId}/accept`,
+  );
+  return status;
+};
+
+export const declineApply = async (
+  postId: number,
+  userId: number,
+): Promise<number> => {
+  const { status } = await axios.post(
+    `/posts/${postId}/participants/${userId}/decline`,
+  );
+  return status;
 };
 
 export const queryComments = async ({
