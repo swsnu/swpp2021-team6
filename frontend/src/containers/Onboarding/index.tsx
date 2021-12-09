@@ -1,7 +1,8 @@
 import { History } from 'history';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Redirect } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router';
+import { push } from 'connected-react-router';
 import getGuDong from '../../utils/getGuDong';
 import { AppState } from '../../store/store';
 import { ProfileDTO } from '../../backend/entity/user';
@@ -12,6 +13,9 @@ import smallDots from '../../assets/image/auth/green-small-dots.svg';
 import lineCircle from '../../assets/image/auth/green-line-circle.svg';
 import greenCircle from '../../assets/image/icon/green-circle.svg';
 import deleteIcon from '../../assets/image/icon/exercise-delete-button.svg';
+import { createUserProfile } from '../../backend/api/api';
+import { signin } from '../../store/actions';
+import { signup } from '../../store/actions/user';
 
 const initialFormState: ProfileDTO = {
   latitude: 0,
@@ -26,6 +30,7 @@ const initialFormState: ProfileDTO = {
 
 const Onboarding = ({ history }: { history: History }) => {
   const [form, setForm] = useState(initialFormState);
+  const userId: number = Number(useParams<{ id: string }>().id);
   const [selectedExercise, setSelectedExercise] = useState({
     exerciseName: '종목',
     skillLevel: '실력',
@@ -36,9 +41,14 @@ const Onboarding = ({ history }: { history: History }) => {
   });
 
   const { user } = useSelector((state: AppState) => state.user);
+  const dispatch = useDispatch();
+
+  console.log('user', user);
 
   useEffect(() => {
-    if (user) history.push('/main');
+    if (user) {
+      history.push('/main');
+    }
 
     if (!('geolocation' in navigator)) {
       alert('위치 정보를 사용할 수 없습니다. 다른 브라우저를 이용해주세요.');
@@ -100,7 +110,7 @@ const Onboarding = ({ history }: { history: History }) => {
     setForm({ ...form, preferredExercise: copiedFilterArray });
   };
 
-  const onClickSubmit = () => {
+  const onClickSubmit = async () => {
     if (!form.latitude || !form.longitude || !form.gu || !form.dong) {
       alert('위치 정보를 불러오는 중입니다');
     } else if (form.gender === '미선택') {
@@ -110,15 +120,11 @@ const Onboarding = ({ history }: { history: History }) => {
     } else if (form.preferredExercise.length === 0) {
       alert('선호 운동을 입력해주세요');
     } else {
-      // TODO: axios.post
+      dispatch(signup(form, userId));
     }
   };
-
-  const redirect = user && <Redirect to="/main" />;
-
   return (
     <div className="onboarding">
-      {/* {redirect} */}
       <img
         id="small-dots"
         className="bg-deco"
@@ -136,7 +142,12 @@ const Onboarding = ({ history }: { history: History }) => {
         <h3>정보 입력</h3>
         <span>여러분의 운동 정보를 입력해주세요</span>
         <Divider />
-        <form>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            onClickSubmit();
+          }}
+        >
           <div className="left">
             <label>위치 정보</label>
             <span className={`gu-dong ${guDong.loading ? 'loading' : null}`}>
@@ -232,12 +243,11 @@ const Onboarding = ({ history }: { history: History }) => {
                 ))}
               </div>
             </div>
-            <button
+            <input
               className="onboarding-submit-button"
-              onClick={onClickSubmit}
-            >
-              완료
-            </button>
+              type="submit"
+              value="완료"
+            />
           </div>
         </form>
       </div>

@@ -42,7 +42,7 @@ const App = ({ history }: Props) => {
         <Route path="/signin" exact component={SignIn} />
         <Route path="/signup" exact component={SignUp} />
         <Route path="/signout" exact component={SignOut} />
-        <Route path="/onboarding" exact component={Onboarding} />
+        <Route path="/onboarding/:id" exact component={Onboarding} />
         <Route path="/main" exact component={Main} />
         <Route path="/post/new" exact component={PostCreate} />
         <Route path="/post/:id" exact component={PostDetail} />

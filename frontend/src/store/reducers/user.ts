@@ -58,6 +58,9 @@ function userReducer(state: UserState = InitialState, action: any): UserState {
     case actionTypes.SIGNIN:
       return { ...state, user: action.user };
 
+    case actionTypes.SIGNUP:
+      return { ...state, user: action.user };
+
     /* LOGOUT */
     case actionTypes.SIGNOUT:
       return { ...state, user: null, userInfo: null, userNotification: null };

@@ -3,8 +3,13 @@ import humps from 'humps';
 import { CommentEntity, CreateCommentEntity } from '../entity/comment';
 import { CreatePostEntity, PostEntity, UpdatePostDTO } from '../entity/post';
 import {
-  UpdateProfileEntity,
+  ProfileDTO,
+  SignUpDTO,
+  SignupInfo,
   UserEntity,
+  UserProfileInfo,
+  UserSignInInputDTO,
+  UpdateProfileEntity,
   UserInfoEntity,
 } from '../entity/user';
 import {
@@ -24,6 +29,20 @@ export const queryPosts = produceQueryAPI<PostEntity>('/posts');
 export const readPost = produceReadAPI<PostEntity>('/posts');
 export const deletePost = produceDeleteAPI('/posts');
 export const updatePost = produceUpdateAPI<UpdatePostDTO>('/posts');
+
+export const createUser = produceCreateAPI<SignUpDTO, SignupInfo>(
+  '/users/signup',
+);
+export const createUserProfile = async ({
+  createPayload,
+  userId,
+}: CreateProps<ProfileDTO> & { userId: number }): Promise<{
+  entity: UserProfileInfo;
+}> => {
+  const res = await axios.post(`/users/${userId}`, createPayload);
+  console.log(`res${res}`);
+  return { entity: res.data };
+};
 
 export const queryUsers = produceQueryAPI<UserEntity>('/users');
 export const readUser = produceReadAPI<UserEntity>('/users');
