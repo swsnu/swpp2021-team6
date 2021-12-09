@@ -3,7 +3,6 @@ import {
   skillLevelNameType,
   exerciseNameType,
   FilterInputDTO,
-  ExerciseType,
 } from '../../backend/entity/exercise';
 import './index.scss';
 import greenHeart from '../../assets/image/icon/filled-heart.svg';

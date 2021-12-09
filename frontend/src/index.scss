@@ -1,6 +1,6 @@
 #root {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
 }
 
 * {
@@ -35,6 +35,14 @@ html {
 
 body {
   margin: 0;
+  background: rgba(36, 113, 0, 0.05);
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
 }
 
 /**
