@@ -6,22 +6,15 @@
 
 ### Backend
 
-```
-cd backend
-pip install -r requirements.txt
-python manage.py makemigrations accounts posts
-python manage.py migrate
-python manage.py loaddata exercise-data
-python manage.py runserver
-coverage run --source='.' manage.py test
-
+```shell
+$ cd backend
+$ docker-compose up
 ```
 
 ### Frontend
 
-```
-cd frontend
-yarn install
-yarn test
-yarn start
+```shell
+$ cd frontend
+$ yarn
+$ yarn start
 ```

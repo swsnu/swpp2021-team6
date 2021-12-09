@@ -3,7 +3,7 @@ jobs:
   include:
     - language: node_js
       node_js: 14
-      python: 3.7.9
+      python: 3.7
       addons:
         sonarcloud:
           organization: swsnu
@@ -12,6 +12,7 @@ jobs:
       install:
         - cd backend
         - source ~/virtualenv/python3.7/bin/activate
+        - python -m pip install --upgrade pip
         - pip install -r requirements.txt
         - pip install coveralls
         - cd ../frontend
