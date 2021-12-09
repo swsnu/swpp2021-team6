@@ -1,12 +1,11 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable object-shorthand */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { History } from 'history';
-import { AppState } from '../../store/store';
-import { getUserInfo } from '../../store/actions/index';
+import Button from '../../components/Button';
 import getGuDong from '../../utils/getGuDong';
 import { UserInfoEntity, UpdateProfileEntity } from '../../backend/entity/user';
 import './index.scss';
@@ -23,8 +22,6 @@ interface ProfileProps {
 }
 
 const ProfileEdit = ({ history }: ProfileProps) => {
-  // const dispatch = useDispatch();
-  // const userState = useSelector((state: AppState) => state.user);
   const loginProfile = window.localStorage.getItem('profileInfo');
   let parsedloginProfile: any;
   if (loginProfile !== null) {
@@ -94,38 +91,43 @@ const ProfileEdit = ({ history }: ProfileProps) => {
     fetchUserInfo();
   }, []);
 
-  console.log(profile);
   const [selectedExercise, setSelectedExercise] = useState('');
   const [selectedSkill, setSelectedSkill] = useState('');
 
   const verifyLocation = () => {
-    if (!('geolocation' in navigator)) {
-      alert('위치 정보를 사용할 수 없습니다. 다른 브라우저를 이용해주세요.');
-    } else {
-      const locationHolder = document.getElementById('location-holder');
-      if (locationHolder) {
-        locationHolder.setAttribute(
-          'value',
-          '위치 정보를 불러오는 중입니다...',
-        );
+    const response = confirm(
+      '현재 위치를 기반으로 프로필 정보를 재설정합니다.\n재인증하시겠습니까?',
+    );
+
+    if (response) {
+      if (!('geolocation' in navigator)) {
+        alert('위치 정보를 사용할 수 없습니다. 다른 브라우저를 이용해주세요.');
+      } else {
+        const locationHolder = document.getElementById('location-holder');
+        if (locationHolder) {
+          locationHolder.setAttribute(
+            'value',
+            '위치 정보를 불러오는 중입니다...',
+          );
+        }
+        navigator.geolocation.getCurrentPosition((position) => {
+          console.log(position.coords);
+          getGuDong(position.coords.longitude, position.coords.latitude).then(
+            (value) => {
+              const { gu, dong } = value;
+              setProfile({
+                ...profile,
+                gu: gu,
+                dong: dong,
+              });
+              if (locationHolder) {
+                locationHolder.setAttribute('value', gu.concat(' ', dong));
+                console.log(locationHolder);
+              }
+            },
+          );
+        });
       }
-      navigator.geolocation.getCurrentPosition((position) => {
-        console.log(position.coords);
-        getGuDong(position.coords.longitude, position.coords.latitude).then(
-          (value) => {
-            const { gu, dong } = value;
-            setProfile({
-              ...profile,
-              gu: gu,
-              dong: dong,
-            });
-            if (locationHolder) {
-              locationHolder.setAttribute('value', gu.concat(' ', dong));
-              console.log(locationHolder);
-            }
-          },
-        );
-      });
     }
   };
 
@@ -183,6 +185,7 @@ const ProfileEdit = ({ history }: ProfileProps) => {
           <div className="input-form">
             <input
               placeholder={userInfo.nickname}
+              value={profile.nickname}
               onChange={(e) =>
                 setProfile({
                   ...profile,
@@ -196,7 +199,8 @@ const ProfileEdit = ({ history }: ProfileProps) => {
           <div className="input-name">소개글 변경</div>
           <div className="input-form">
             <input
-              placeholder={userInfo?.introduction}
+              placeholder={userInfo.introduction || ''}
+              value={profile.introduction || ''}
               onChange={(e) =>
                 setProfile({
                   ...profile,
@@ -282,9 +286,9 @@ const ProfileEdit = ({ history }: ProfileProps) => {
           ))}
         </div>
       </div>
-      <div className="submit-button" onClick={() => onClickSubmit()}>
-        <span>변경사항 저장</span>
-      </div>
+      <Button id="submit-button" onClick={onClickSubmit}>
+        변경사항 저장
+      </Button>
     </div>
   );
 };
