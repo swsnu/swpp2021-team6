@@ -18,6 +18,7 @@ import * as thumbnails from '../../utils/thumbnails';
 import { UserInfoEntity, UserPostEntity } from '../../backend/entity/user';
 import { readUserInfo } from '../../backend/api/api';
 // import userInfo from '../../mocks/userInfo.json';
+import { ApplyStatus } from '../../backend/entity/post';
 
 interface ProfileProps {
   history: History;
@@ -90,11 +91,17 @@ const Profile = ({ history }: ProfileProps) => {
   const returnPostStatus = (status: string) => {
     switch (status) {
       case 'ACCEPTED':
-        return <span className="status-badge complete">승인 완료</span>;
+        return (
+          <span className="status-badge complete">{ApplyStatus.ACCEPTED}</span>
+        );
       case 'PENDING':
-        return <span className="status-badge pending">승인 대기 중</span>;
+        return (
+          <span className="status-badge pending">{ApplyStatus.PENDING}</span>
+        );
       case 'DECLINED':
-        return <span className="status-badge denied">거절 됨</span>;
+        return (
+          <span className="status-badge denied">{ApplyStatus.DECLINED}</span>
+        );
       case 'RECRUITING':
         return <span className="status-badge pending">모집 중</span>;
       case 'RECRUITED':
