@@ -195,7 +195,6 @@ class AccountsTestCase(TestCase):
         response = client.post("/users/3", self.new_user3_profile, content_type="application/json")
         self.assertEqual(response.status_code, 201)
         
-        
         User.objects.create_user(username="username4", password="password4")
         response = client.post("/users/4", self.new_user4_profile, content_type="application/json")
         self.assertEqual(response.status_code, 400)
@@ -212,4 +211,8 @@ class AccountsTestCase(TestCase):
 
         # 200 test (get)
         response = client.get("/users/get/1")
+        self.assertEqual(response.status_code, 200)
+
+        # 200 test (patch)
+        response = client.patch("/users/1", self.new_user4_profile, content_type="application/json")
         self.assertEqual(response.status_code, 200)

@@ -135,9 +135,6 @@ const Detail: React.FC<Props> = ({
       <span>참여하기</span>
     </button>
   );
-
-  console.log(post);
-
   return (
     <>
       <div id="post-detail-component">

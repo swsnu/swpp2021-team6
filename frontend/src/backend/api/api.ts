@@ -39,7 +39,6 @@ export const createUserProfile = async ({
   entity: UserProfileInfo;
 }> => {
   const res = await axios.post(`/users/${userId}`, createPayload);
-  console.log(`res${res}`);
   return { entity: res.data };
 };
 
