@@ -182,39 +182,23 @@ def user_detail(request, user_id):
 
         return HttpResponse(status=200)
 
-
-@require_POST
-@signin_required
-def create_notification(request, user_id, post_id, noti_type):
-    user = User.objects.get(id=user_id)
-    post = Post.objects.get(id=post_id)
-    new_notification = Notification.objects.create(
-        user=user,
-        post=post,
-        noti_type=noti_type,
-    )
-    new_notification.save()
-
-    return HttpResponse(status=201)
-
 @require_GET
 @signin_required
 def get_notification(request, user_id):
-    if request.method == "GET":
-        user = User.objects.get(id=user_id)
-        noti_list = [
-            {
-                "noti_id": noti.id,
-                "noti_type": noti.noti_type,
-                "post_id": noti.post.id,
-                "post_title": noti.post.title,
-                "is_read": noti.is_read,
-                "created_at": noti.created_string,
-            }
-            for noti in Notification.objects.filter(user=user).order_by("-created_at")
-        ]
+    user = User.objects.get(id=user_id)
+    noti_list = [
+        {
+            "noti_id": noti.id,
+            "noti_type": noti.noti_type,
+            "post_id": noti.post.id,
+            "post_title": noti.post.title,
+            "is_read": noti.is_read,
+            "created_at": noti.created_string,
+        }
+        for noti in Notification.objects.filter(user=user).order_by("-created_at")
+    ]
 
-        return JsonResponse(noti_list, status=201, safe=False)
+    return JsonResponse(noti_list, status=201, safe=False)
 
 @require_http_methods(["PATCH"])
 def read_notification(request, noti_id):

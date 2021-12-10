@@ -125,25 +125,9 @@ export const readNotification = (notiId: number) => async (dispatch: any) => {
   dispatch(readNotification_(userNotification));
 };
 
-export const createNotification_ = () => ({
-  type: actionTypes.CREATE_NOTIFICATION,
-});
-
-export function createNotification(
-  userId: number,
-  postId: number,
-  notiType: string,
-) {
-  return async (dispatch: any) => {
-    dispatch(createNotification_());
-    await axios.post(`/users/${userId}/notification/${postId}/${notiType}`);
-  };
-}
-
 export type UserAction =
   | ReturnType<typeof signin_>
   | ReturnType<typeof signout_>
   | ReturnType<typeof getUserInfo_>
   | ReturnType<typeof getUserNotification_>
-  | ReturnType<typeof readNotification_>
-  | ReturnType<typeof createNotification_>;
+  | ReturnType<typeof readNotification_>;

@@ -1,9 +1,10 @@
 from django.contrib.auth.models import User
+from django.http import response
 from django.test import TestCase, Client
 from django.utils import timezone
 import json
 
-from ..models import ProxyUser
+from ..models import Notification, ProxyUser
 from posts.models import Exercise, Participation, Post
 
 
@@ -87,11 +88,11 @@ class AccountsTestCase(TestCase):
             preferred_exercises=[{"exerciseName": "축구", "skillLevel": "상"}],
         )
 
-        test_post2 = Post.objects.create(
+        test_post1 = Post.objects.create(
             exercise=test_exercise,
             host=test_user1,
-            title="post2 title",
-            description="post2 description",
+            title="post1 title",
+            description="post1 description",
             expected_level="상",
             meet_at=timezone.now(),
             latitude=37.47880163846696,
@@ -105,7 +106,8 @@ class AccountsTestCase(TestCase):
             max_capacity=5,
             kakaotalk_link="kakaotalk link 2",
         )
-        Participation.objects.create(user=test_user1, post=test_post2)
+        Participation.objects.create(user=test_user1, post=test_post1)
+        Notification.objects.create(user=test_user1, post=test_post1, noti_type="comment")
 
     def test_signup(self):
         client = Client()
@@ -215,4 +217,18 @@ class AccountsTestCase(TestCase):
 
         # 200 test (patch)
         response = client.patch("/users/1", self.new_user4_profile, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+    def test_notification(self):
+        client = Client()
+        
+        response = client.post(
+            "/users/signin",
+            json.dumps({"username": "username1", "password": "password1"}),
+            content_type="application/json",
+        )
+        response = client.get("/users/1/notification")
+        self.assertEqual(response.status_code, 201)
+        
+        response = client.patch("/users/notification/1", json.dumps({}), content_type="application/type")
         self.assertEqual(response.status_code, 200)
