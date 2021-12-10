@@ -20,6 +20,7 @@ const Layout = ({ name, imageUrl = defaultImage, children }: Props) => {
     backgroundSize: 'cover',
   };
 
+  const date = new Date();
   return (
     <div className="layout">
       <div className="left" style={backgroundStyle}>
@@ -36,12 +37,8 @@ const Layout = ({ name, imageUrl = defaultImage, children }: Props) => {
             src={quoteStart}
             alt="quote start icon"
           />
-          <p className="content">
-            {quotes[Date.prototype.getTime() % 2].content}
-          </p>
-          <p className="speaker">
-            {quotes[Date.prototype.getTime() % 2].speaker}
-          </p>
+          <p className="content">{quotes[date.getTime() % 2].content}</p>
+          <p className="speaker">{quotes[date.getTime() % 2].speaker}</p>
           <img className="quote-end" src={quoteEnd} alt="quote end icon" />
         </div>
       </div>

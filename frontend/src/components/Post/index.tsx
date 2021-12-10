@@ -18,7 +18,9 @@ const Post: React.FC<Props> = ({ post }: Props) => {
   const [labelColor, setLabelColor] = useState<string>(labelColors.blue);
 
   useEffect(() => {
-    const idx = Date.prototype.getTime() % 4;
+    // const idx = Date.prototype.getTime() % 4;
+    const date = new Date();
+    const idx = date.getTime() % 4;
     let imgArray = thumbnails.soccer;
 
     switch (post.exerciseName) {
