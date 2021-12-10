@@ -10,26 +10,6 @@ import {
 import { createUserProfile } from '../../backend/api/api';
 import { NotificationEntity } from '../../backend/entity/notification';
 
-/* ONBOARDING */
-export const onboarding_ = (loginUserId: number) => ({
-  type: actionTypes.ONBOARDING,
-  userId: loginUserId,
-});
-
-export const onboarding =
-  (userProfile: UserProfileDTO, userId: number) => async (dispatch: any) => {
-    try {
-      await createUserProfile({ createPayload: userProfile, userId });
-
-      window.localStorage.setItem('loginUser', JSON.stringify(userId));
-
-      dispatch(onboarding_(userId));
-      dispatch(push('/main'));
-    } catch (e: any) {
-      console.log('error', e);
-    }
-  };
-
 /* SIGNIN */
 export const autoSignin_ = (lastLoggedInUser: number) => ({
   type: actionTypes.AUTO_SIGNIN,
@@ -59,7 +39,6 @@ export const signin = (user: SignInDTO) => async (dispatch: any) => {
     dispatch(signin_(loginUser.userId));
     dispatch(push('/main'));
   } catch (e: any) {
-    console.log(e);
     if (e?.response && e.response.status === 404) {
       alert('존재하지 않는 아이디입니다.');
     } else if (e?.response && e.response.status === 401) {
@@ -68,19 +47,37 @@ export const signin = (user: SignInDTO) => async (dispatch: any) => {
   }
 };
 
+/* ONBOARDING */
+export const onboarding_ = (loginUserId: number) => ({
+  type: actionTypes.ONBOARDING,
+  userId: loginUserId,
+});
+
+export const onboarding =
+  (userProfile: UserProfileDTO, userId: number) => async (dispatch: any) => {
+    try {
+      await createUserProfile({ createPayload: userProfile, userId });
+
+      window.localStorage.setItem('loginUser', JSON.stringify(userId));
+
+      dispatch(onboarding_(userId));
+      dispatch(push('/main'));
+    } catch (e: any) {
+      console.log('error', e);
+    }
+  };
+
 /* SIGNOUT */
 export const signout_ = () => ({
   type: actionTypes.SIGNOUT,
 });
 
-export function signout() {
-  return async (dispatch: any) => {
-    alert('안녕히 가세요!');
-    localStorage.clear();
-    dispatch(signout_());
-    await axios.get('/users/signout');
-  };
-}
+export const signout = () => async (dispatch: any) => {
+  alert('안녕히 가세요!');
+  localStorage.clear();
+  dispatch(signout_());
+  await axios.get('/users/signout');
+};
 
 /* NOTIFICATION */
 // TODO: api.ts에 함수 만들어서 사용하기
