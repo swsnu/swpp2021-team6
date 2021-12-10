@@ -8,7 +8,6 @@ import {
   SignupInfo,
   UserEntity,
   UserProfileInfo,
-  UserSignInInputDTO,
   UpdateProfileEntity,
   UserInfoEntity,
 } from '../entity/user';
@@ -25,8 +24,8 @@ import {
 export const createPost = produceCreateAPI<CreatePostEntity, PostEntity>(
   '/posts/',
 );
-export const queryPosts = produceQueryAPI<PostEntity>('/posts');
-export const readPost = produceReadAPI<PostEntity>('/posts');
+export const queryPosts = produceQueryAPI<PostEntity>('/posts/get');
+export const readPost = produceReadAPI<PostEntity>('/posts/get');
 export const deletePost = produceDeleteAPI('/posts');
 export const updatePost = produceUpdateAPI<UpdatePostDTO>('/posts');
 
@@ -85,7 +84,7 @@ export const queryComments = async ({
 }: {
   postId: number;
 }): Promise<queryReturnType<CommentEntity>> => {
-  const res = await axios.get(`/posts/${postId}/comments`);
+  const res = await axios.get(`/posts/get/${postId}/comments`);
   return { items: res.data };
 };
 
@@ -99,6 +98,6 @@ export const createComment = async ({
   return { entityId: `${res.data.id}` };
 };
 
-export const readComment = produceReadAPI<CommentEntity>('/posts/comments');
+export const readComment = produceReadAPI<CommentEntity>('/posts/get/comments');
 export const updateComment = produceUpdateAPI<CommentEntity>('/posts/comments');
 export const deleteComment = produceDeleteAPI('/posts/comments');
