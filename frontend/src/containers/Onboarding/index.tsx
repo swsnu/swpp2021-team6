@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import getGuDong from '../../utils/getGuDong';
 import { AppState } from '../../store/store';
-import { ProfileDTO } from '../../backend/entity/user';
+import { UserProfileDTO } from '../../backend/entity/user';
 import Divider from '../../components/Divider';
 import './index.scss';
 import dots from '../../assets/image/auth/green-dots.svg';
@@ -12,9 +12,9 @@ import smallDots from '../../assets/image/auth/green-small-dots.svg';
 import lineCircle from '../../assets/image/auth/green-line-circle.svg';
 import greenCircle from '../../assets/image/icon/green-circle.svg';
 import deleteIcon from '../../assets/image/icon/exercise-delete-button.svg';
-import { signup } from '../../store/actions/user';
+import { onboarding } from '../../store/actions/user';
 
-const initialFormState: ProfileDTO = {
+const initialFormState: UserProfileDTO = {
   latitude: 0,
   longitude: 0,
   gu: '',
@@ -37,11 +37,11 @@ const Onboarding = ({ history }: { history: History }) => {
     text: '동네 정보 조회 중',
   });
 
-  const { user } = useSelector((state: AppState) => state.user);
+  const { loginUserId } = useSelector((state: AppState) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (user) {
+    if (loginUserId) {
       history.push('/main');
     }
 
@@ -109,7 +109,7 @@ const Onboarding = ({ history }: { history: History }) => {
     } else if (form.preferredExercise.length === 0) {
       alert('선호 운동을 입력해주세요');
     } else {
-      dispatch(signup(form, userId));
+      dispatch(onboarding(form, userId));
     }
   };
 

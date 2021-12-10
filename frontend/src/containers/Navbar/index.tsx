@@ -1,29 +1,29 @@
-import { History } from 'history';
+import { useHistory } from 'react-router';
 import logo from '../../assets/image/icon/green-logo.svg';
 import profileIcon from '../../assets/image/icon/profile-icon.svg';
-import './index.scss';
 import Notification from '../Notification';
+import './index.scss';
 
-interface NavbarProps {
-  history: History;
-}
+const Navbar = () => {
+  const history = useHistory();
 
-const Navbar = ({ history }: NavbarProps) => (
-  <div className="nav-bar">
-    <button className="logo" onClick={() => history.push('/main')}>
-      <img src={logo} alt="woondongjang logo" />
-    </button>
-    <div className="nav-button-container">
-      <Notification history={history} />
-      <span
-        className="mypage"
-        aria-hidden="true"
-        onClick={() => history.push('/profile/my')}
-      >
-        <img src={profileIcon} alt="profile-icon" />
-      </span>
+  return (
+    <div className="nav-bar">
+      <button className="logo" onClick={() => history.push('/main')}>
+        <img src={logo} alt="woondongjang logo" />
+      </button>
+      <div className="nav-button-container">
+        <Notification history={history} />
+        <span
+          className="mypage"
+          aria-hidden="true"
+          onClick={() => history.push('/profile/my')}
+        >
+          <img src={profileIcon} alt="profile-icon" />
+        </span>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Navbar;

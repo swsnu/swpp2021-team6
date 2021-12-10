@@ -2,27 +2,23 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
-import { DatePicker, TimePicker } from 'antd';
-import moment, { Moment } from 'moment';
 import { UpdatePostDTO, PostEntity } from '../../backend/entity/post';
-import 'antd/dist/antd.css';
-import getGuDong from '../../utils/getGuDong';
 import { AppState } from '../../store/store';
 import { readPost, updatePost } from '../../backend/api/api';
 import whiteExercise from '../../assets/image/icon/white-exercise.svg';
 import whiteLevel from '../../assets/image/icon/white-level.svg';
-import './index.scss';
-import Divider from '../../components/Divider';
-import searchIcon from '../../assets/image/icon/search.svg';
 import participateIcon from '../../assets/image/icon/participate.svg';
 import { changeDateFormat } from '../../utils/dateToString';
+import './index.scss';
 
 const PostCreate: React.FC = () => {
   const history = useHistory();
   const postId: number = Number(useParams<{ id: string }>().id);
-  const { user } = useSelector((state: AppState) => state.user);
+
   const [post, setPost] = useState<PostEntity>();
   const [postUpdate, setPostUpdate] = useState<UpdatePostDTO>();
+
+  const { loginUserId } = useSelector((state: AppState) => state.user);
 
   const fetchPostItem = async () => {
     const fetchedPost: PostEntity = (await readPost({ id: postId })).entity;
@@ -34,11 +30,11 @@ const PostCreate: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (user === null || user === undefined) history.push('/signin');
-  }, [user]);
+    if (loginUserId === null) history.push('/signin');
+  }, [loginUserId]);
 
   useEffect(() => {
-    if (user && post && user.userId !== post.hostId) {
+    if (post && loginUserId !== post.hostId) {
       alert('모임을 수정할 권한이 없습니다.');
       history.push('/main');
     }
@@ -56,8 +52,6 @@ const PostCreate: React.FC = () => {
       if (cancelConfirm) history.push(`/post/${postId}`);
     }
   };
-
-  console.log(postUpdate);
 
   const verifyForm = () => {
     if (postUpdate) {

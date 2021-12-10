@@ -8,6 +8,8 @@ from django.views.decorators.http import require_POST, require_GET, require_http
 from posts.models import Exercise, User_Exercise, Post, Participation
 from .models import Notification, Profile, ProxyUser
 from .decorators import signin_required
+
+
 @require_POST
 def signup(request):
     req_data = json.loads(request.body.decode())
@@ -39,9 +41,9 @@ def signin(request):
 
     response_dict = {
         "user_id": user.id,
-        "nickname": user.profile.nickname,
-        "latitude": user.profile.latitude,
-        "longitude": user.profile.longitude,
+        # "nickname": user.profile.nickname,
+        # "latitude": user.profile.latitude,
+        # "longitude": user.profile.longitude,
     }
     return JsonResponse(response_dict, safe=False, status=200)
 
@@ -53,19 +55,20 @@ def signout(request):
 
     return HttpResponse(status=204)
 
+
 @require_GET
 def get_user_detail(request, user_id):
     if not request.user.is_authenticated:
-            return HttpResponse(status=401)
+        return HttpResponse(status=401)
 
     user = User.objects.get(id=user_id)
 
-    user_exercise = [
+    preferred_exercise = [
         {
-            "exercise_name": user_exercise.exercise.name,
-            "skill_level": user_exercise.skill_level,
+            "exercise_name": preferred_exercise.exercise.name,
+            "skill_level": preferred_exercise.skill_level,
         }
-        for user_exercise in User_Exercise.objects.filter(user=user)
+        for preferred_exercise in User_Exercise.objects.filter(user=user)
     ]
 
     participating_post = [
@@ -97,15 +100,19 @@ def get_user_detail(request, user_id):
     response_dict = {
         "user_id": user.id,
         "nickname": user.profile.nickname,
+        "latitude": user.profile.latitude,
+        "longitude": user.profile.longitude,
         "gu": user.profile.gu,
         "dong": user.profile.dong,
         "gender": user.profile.gender,
         "introduction": user.profile.introduction,
-        "user_exercise": user_exercise,
+        "preferred_exercise": preferred_exercise,
         "participating_post": participating_post,
         "hosting_post": hosting_post,
     }
+
     return JsonResponse(response_dict, status=200)
+
 
 @require_http_methods(["POST", "PATCH"])
 def user_detail(request, user_id):
@@ -144,20 +151,19 @@ def user_detail(request, user_id):
             introduction,
             preferred_exercises,
         )
-        
-        
+
         user = User.objects.get(id=user_id)
-        
+
         login(request, user)
 
-        response_dict = {
-            "userId": user.id,
-            "nickname": user.profile.nickname,
-            "latitude": user.profile.latitude,
-            "longitude": user.profile.longitude,
-        }
-        return JsonResponse(response_dict, safe=False, status=201)
-
+        # response_dict = {
+        # "user_id": user.id,
+        # "nickname": user.profile.nickname,
+        # "latitude": user.profile.latitude,
+        # "longitude": user.profile.longitude,
+        # }
+        # return JsonResponse(response_dict, safe=False, status=201)
+        return HttpResponse(status=201)
 
     elif request.method == "PATCH":
         user = User.objects.get(id=user_id)
@@ -182,6 +188,7 @@ def user_detail(request, user_id):
 
         return HttpResponse(status=200)
 
+
 @require_GET
 @signin_required
 def get_notification(request, user_id):
@@ -199,6 +206,7 @@ def get_notification(request, user_id):
     ]
 
     return JsonResponse(noti_list, status=201, safe=False)
+
 
 @require_http_methods(["PATCH"])
 def read_notification(request, noti_id):

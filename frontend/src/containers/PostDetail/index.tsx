@@ -40,11 +40,15 @@ const PostDetailContainer: React.FC = () => {
   const [commentsUpdated, setCommentsUpdated] = React.useState<boolean>(false);
   const [isParticipant, setIsParticipant] = useState<boolean>(false);
   const [applyStatus, setApplyStatus] = useState<StatusType | null>(null);
-  const { user } = useSelector((state: AppState) => state.user);
+  const { loginUserId } = useSelector((state: AppState) => state.user);
 
   const onCommentConfirm = async (comment: string | null) => {
-    if (user?.userId && comment) {
-      const payload = { authorId: user?.userId, content: comment, postId };
+    if (loginUserId && comment) {
+      const payload = {
+        authorId: loginUserId,
+        content: comment,
+        postId,
+      };
       await createComment({
         createPayload: humps.decamelizeKeys(payload) as CreateCommentEntity,
         postId,
@@ -91,8 +95,8 @@ const PostDetailContainer: React.FC = () => {
 
   // Redirect to sign-in page if not signed in
   useEffect(() => {
-    if (user === null) history.push('/signin');
-  }, [user]);
+    if (loginUserId === null) history.push('/signin');
+  }, [loginUserId]);
 
   useEffect(() => {
     fetchPostItem();
@@ -107,7 +111,7 @@ const PostDetailContainer: React.FC = () => {
   }, [commentsUpdated]);
 
   useEffect(() => {
-    if (postItem && user) {
+    if (postItem && loginUserId) {
       setParticipants(
         postItem.participants.filter(
           (participant) => participant.status !== 'DECLINED',
@@ -117,9 +121,9 @@ const PostDetailContainer: React.FC = () => {
   }, [postItem]);
 
   useEffect(() => {
-    if (user) {
+    if (loginUserId) {
       const found = participants.find(
-        (participant) => participant.userId === user.userId,
+        (participant) => participant.userId === loginUserId,
       );
       if (found) {
         setIsParticipant(true);
@@ -145,7 +149,7 @@ const PostDetailContainer: React.FC = () => {
         <div id="post-detail-page">
           <PostDetail
             post={postItem}
-            isHost={user?.userId === postItem.hostId}
+            isHost={loginUserId === postItem.hostId}
             isParticipant={isParticipant}
             applyStatus={applyStatus}
             onDelete={onPostDelete}

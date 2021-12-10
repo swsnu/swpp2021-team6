@@ -8,11 +8,11 @@ import defaultImage from '../../assets/image/auth/signup-left.jpg';
 import Divider from '../../components/Divider';
 import Button from '../../components/Button';
 import { SignUpDTO } from '../../backend/entity/user';
-import './index.scss';
 import googleIcon from '../../assets/image/auth/google.svg';
 import kakaotalkIcon from '../../assets/image/auth/kakaotalk.svg';
 import { AppState } from '../../store/store';
 import { createUser } from '../../backend/api/api';
+import './index.scss';
 
 const SignUp = () => {
   const [signUpForm, setSignUpForm] = useState<SignUpDTO>({
@@ -21,11 +21,11 @@ const SignUp = () => {
   });
   const [checkPassword, setCheckPassword] = useState<string>();
 
-  const { user } = useSelector((state: AppState) => state.user);
+  const { loginUserId } = useSelector((state: AppState) => state.user);
   const history = useHistory();
 
   useEffect(() => {
-    if (user) history.push('/main');
+    if (loginUserId) history.push('/main');
   });
 
   const onClickSignUp = async () => {

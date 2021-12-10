@@ -8,8 +8,8 @@ import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import Onboarding from '.';
 import { mockNavigatorGeolocation } from '../../test-utils/mockNavigatorGeolocation';
-import { ProfileDTO } from '../../backend/entity/user';
 import userInfo from '../../mocks/userInfo.json';
+import { UserProfileDTO } from '../../backend/entity/user';
 
 window.alert = jest.fn().mockImplementation();
 const useStateMock = jest.spyOn(React, 'useState');
@@ -37,7 +37,7 @@ const mockStore = createStore(
 );
 
 describe('Onboarding', () => {
-  const mockForm: ProfileDTO = {
+  const mockForm: UserProfileDTO = {
     latitude: 37.12345,
     longitude: 127.12345,
     gu: '',

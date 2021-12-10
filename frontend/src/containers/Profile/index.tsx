@@ -24,10 +24,8 @@ interface ProfileProps {
 }
 
 const Profile = ({ history }: ProfileProps) => {
-  // const dispatch = useDispatch();
-  // const userState = useSelector((state: AppState) => state.user);
   const { id }: any = useParams();
-  const loginProfile = window.localStorage.getItem('profileInfo');
+  const loginProfile = window.localStorage.getItem('loginUser');
   let parsedloginProfile: any;
   if (loginProfile !== null) {
     parsedloginProfile = JSON.parse(loginProfile);
@@ -39,11 +37,13 @@ const Profile = ({ history }: ProfileProps) => {
   const [userInfo, setUserInfo] = useState<UserInfoEntity>({
     userId: 0,
     nickname: '',
+    latitude: 0,
+    longitude: 0,
     gu: '',
     dong: '',
     gender: '미선택',
     introduction: '',
-    userExercise: [{ exerciseName: '', skillLevel: '상관 없음' }],
+    preferredExercise: [{ exerciseName: '', skillLevel: '상관 없음' }],
     participatingPost: [
       {
         hostName: '',
@@ -75,17 +75,11 @@ const Profile = ({ history }: ProfileProps) => {
     setUserInfo(fetchedUserInfo);
   };
 
-  // useEffect(() => {
-  //   isLoggedInUser = id === 'my';
-  //   profileUserId = isLoggedInUser ? parsedloginProfile.userId : id;
-  //   dispatch(getUserInfo(profileUserId));
-  //   await readUser({ id: profileUserId });
-  // }, [profileUserId]);
-
   useEffect(() => {
     fetchUserInfo();
   }, []);
 
+  // TODO: PostStatusType 만들기
   const returnPostStatus = (status: string) => {
     switch (status) {
       case 'ACCEPTED':
@@ -137,7 +131,7 @@ const Profile = ({ history }: ProfileProps) => {
           imgArray = thumbnails.riding;
           break;
         default:
-          // window.alert('운동 타입이 잘못 설정된 데이터가 있습니다.');
+          console.log('Profile: 운동 타입이 잘못 설정된 데이터가 있습니다.');
           break;
       }
       return imgArray[idx];
@@ -238,10 +232,10 @@ const Profile = ({ history }: ProfileProps) => {
         <span>좋아하는 운동</span>
       </div>
       <div className="pfexercise-div">
-        {userInfo?.userExercise.map((pfexercise, idx) => (
+        {userInfo?.preferredExercise.map((exercise, idx) => (
           <div key={idx} className="pfexercise-box">
             <img src={greenDot} alt="green-dot" />
-            {pfexercise.exerciseName}ㆍ실력 {pfexercise.skillLevel}
+            {exercise.exerciseName}ㆍ실력 {exercise.skillLevel}
           </div>
         ))}
       </div>

@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { DatePicker, TimePicker } from 'antd';
 import moment, { Moment } from 'moment';
 import { CreatePostEntity } from '../../backend/entity/post';
-import 'antd/dist/antd.css';
 import getGuDong from '../../utils/getGuDong';
-import { AppState } from '../../store/store';
 import { getKakaoMap } from '../../utils/getKakaoMap';
-import { createPost } from '../../backend/api/api';
+import { createPost, readUserInfo } from '../../backend/api/api';
 import whiteExercise from '../../assets/image/icon/white-exercise.svg';
 import whiteLevel from '../../assets/image/icon/white-level.svg';
-import './index.scss';
 import Divider from '../../components/Divider';
 import searchIcon from '../../assets/image/icon/search.svg';
 import participateIcon from '../../assets/image/icon/participate.svg';
+import { UserInfoEntity } from '../../backend/entity/user';
+import 'antd/dist/antd.css';
+import './index.scss';
 
 const initialPostState: CreatePostEntity = {
   exerciseName: '종목',
@@ -38,13 +37,13 @@ const initialPostState: CreatePostEntity = {
 
 const PostCreate: React.FC = () => {
   const history = useHistory();
-  const { user } = useSelector((state: AppState) => state.user);
-
+  const loginUserId = Number(localStorage.getItem('loginUser'));
+  const [userInfo, setUserInfo] = useState<UserInfoEntity>();
   const [post, setPost] = useState<CreatePostEntity>(initialPostState);
   const [date, setDate] = useState<Moment | null>(moment());
   const [time, setTime] = useState<Moment | null>(moment('7:00', 'h:mm a'));
 
-  // 지도 검색 관련 state
+  /* KAKAOMAP */
   const [keyword, setKeyword] = useState<string>();
   const [selectedPlace, setSelectedPlace] = useState<any>(null);
   const [center, setCenter] = useState({
@@ -52,13 +51,22 @@ const PostCreate: React.FC = () => {
     Ma: 37.480584,
   });
 
+  const fetchUserInfo = async () => {
+    const fetcheduserInfo = (await readUserInfo({ id: loginUserId })).entity;
+    setUserInfo(fetcheduserInfo);
+  };
+
   useEffect(() => {
-    if (user === null) history.push('/signin');
-    else if (user !== undefined) {
+    if (loginUserId === null) history.push('/signin');
+    fetchUserInfo();
+  }, []);
+
+  useEffect(() => {
+    if (loginUserId && userInfo) {
       const container = document.getElementById('map');
-      getKakaoMap(container, user.latitude, user.longitude, setCenter);
+      getKakaoMap(container, userInfo.latitude, userInfo.longitude, setCenter);
     }
-  }, [user]);
+  }, [userInfo]);
 
   useEffect(() => {
     if (date && time) {

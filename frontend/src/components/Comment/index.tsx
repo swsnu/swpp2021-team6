@@ -23,8 +23,8 @@ const CommentsListItem: React.FunctionComponent<Props> = ({
   createdAt,
   setCommentsUpdated,
 }) => {
-  const { user } = useSelector((state: AppState) => state.user);
-  const isAuthor = user?.userId === authorId;
+  const { loginUserId } = useSelector((state: AppState) => state.user);
+  const isAuthor = loginUserId === authorId;
 
   const onDelete = async () => {
     await deleteComment({ id: commentId });
