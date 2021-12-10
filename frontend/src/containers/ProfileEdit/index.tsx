@@ -129,8 +129,6 @@ const ProfileEdit = () => {
     }
   };
 
-  console.log(userInfo);
-
   const onClickAddExercise = () => {
     if (
       selectedExercise.exerciseName !== '종목' &&

@@ -16,7 +16,6 @@ import './index.scss';
 import * as thumbnails from '../../utils/thumbnails';
 import { UserInfoEntity } from '../../backend/entity/user';
 import { readUserInfo } from '../../backend/api/api';
-// import userInfo from '../../mocks/userInfo.json';
 import { ApplyStatus } from '../../backend/entity/post';
 
 interface ProfileProps {
@@ -24,15 +23,11 @@ interface ProfileProps {
 }
 
 const Profile = ({ history }: ProfileProps) => {
-  const { id }: any = useParams();
-  const loginProfile = window.localStorage.getItem('loginUser');
-  let parsedloginProfile: any;
-  if (loginProfile !== null) {
-    parsedloginProfile = JSON.parse(loginProfile);
-  }
-  const isLoggedInUser = id === 'my';
-  let profileUserId = isLoggedInUser ? parsedloginProfile.userId : id;
-  profileUserId = isLoggedInUser ? parsedloginProfile.userId : id;
+  const { id }: { id: string | undefined } = useParams();
+
+  const loginUserId = localStorage.getItem('loginUser');
+  const isLoginUser = id && id === loginUserId;
+  const profileUserId = isLoginUser ? loginUserId : id;
 
   const [userInfo, setUserInfo] = useState<UserInfoEntity>({
     userId: 0,
@@ -70,7 +65,7 @@ const Profile = ({ history }: ProfileProps) => {
 
   const fetchUserInfo = async () => {
     const fetchedUserInfo: UserInfoEntity = (
-      await readUserInfo({ id: profileUserId })
+      await readUserInfo({ id: Number(profileUserId) })
     ).entity;
     setUserInfo(fetchedUserInfo);
   };
@@ -173,7 +168,7 @@ const Profile = ({ history }: ProfileProps) => {
 
   return (
     <div className="body" style={{ width: '70%', margin: 'auto' }}>
-      {isLoggedInUser === true ? (
+      {isLoginUser ? (
         <div className="button-div">
           <div className="button-container">
             <span
@@ -241,7 +236,7 @@ const Profile = ({ history }: ProfileProps) => {
       </div>
       <br />
       <br />
-      {isLoggedInUser === true && (
+      {isLoginUser && (
         <div className="mypost-section">
           <div className="mypost-header">참가 신청한 모임</div>
           <div className="my-post-div">

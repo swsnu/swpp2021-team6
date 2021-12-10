@@ -6,6 +6,7 @@ import './index.scss';
 
 const Navbar = () => {
   const history = useHistory();
+  const loginUserId = Number(localStorage.getItem('loginUser'));
 
   return (
     <div className="nav-bar">
@@ -17,7 +18,7 @@ const Navbar = () => {
         <span
           className="mypage"
           aria-hidden="true"
-          onClick={() => history.push('/profile/my')}
+          onClick={() => history.push(`/profile/${loginUserId}`)}
         >
           <img src={profileIcon} alt="profile-icon" />
         </span>
