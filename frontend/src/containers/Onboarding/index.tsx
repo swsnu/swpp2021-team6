@@ -26,7 +26,16 @@ const initialFormState: UserProfileDTO = {
 };
 
 const Onboarding = ({ history }: { history: History }) => {
-  const [form, setForm] = useState(initialFormState);
+  const [form, setForm] = useState<UserProfileDTO>({
+    latitude: 0,
+    longitude: 0,
+    gu: '',
+    dong: '',
+    gender: '미선택',
+    nickname: '',
+    introduction: '',
+    preferredExercise: [],
+  });
   const userId: number = Number(useParams<{ id: string }>().id);
   const [selectedExercise, setSelectedExercise] = useState({
     exerciseName: '종목',
@@ -48,12 +57,20 @@ const Onboarding = ({ history }: { history: History }) => {
     if (!('geolocation' in navigator)) {
       alert('위치 정보를 사용할 수 없습니다. 다른 브라우저를 이용해주세요.');
     } else {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setForm({
-          ...form,
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        });
+      navigator.permissions.query({ name: 'geolocation' }).then((status) => {
+        if (status.state === 'granted') {
+          navigator.geolocation.getCurrentPosition((position) => {
+            setForm({
+              ...form,
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            });
+          });
+        } else {
+          alert(
+            '위치 정보 사용에 동의하지 않을 경우 운동장 서비스를 이용하실 수 없습니다.',
+          );
+        }
       });
     }
   }, []);
@@ -112,14 +129,6 @@ const Onboarding = ({ history }: { history: History }) => {
       dispatch(onboarding(form, userId));
     }
   };
-
-  const guDongSpan = guDong.loading ? (
-    <span className="gu-dong loading">{guDong.text}</span>
-  ) : (
-    <span className="gu-dong">{guDong.text}</span>
-  );
-
-  console.log(form);
 
   return (
     <div className="onboarding">
