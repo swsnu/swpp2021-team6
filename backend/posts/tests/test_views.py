@@ -283,7 +283,7 @@ class PostsViewsTestCase(TestCase):
 
         ## POST -> 201
         response = client.post(
-            "/posts/1/comments", self.new_comment, content_type="application/json"
+            "/posts/2/comments", self.new_comment, content_type="application/json"
         )
         self.assertEqual(response.status_code, 201)
 
