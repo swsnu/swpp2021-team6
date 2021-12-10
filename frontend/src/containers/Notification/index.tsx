@@ -9,10 +9,7 @@ import { AppState } from '../../store/store';
 import notiIconWithDot from '../../assets/image/icon/noti-with-dot.svg';
 import notiIcon from '../../assets/image/icon/noti-without-dot.svg';
 import notiDot from '../../assets/image/icon/noti-dot.svg';
-import {
-  getUserNotification,
-  readNotification,
-} from '../../store/actions/user';
+import { getNotification, readNotification } from '../../store/actions/user';
 import './index.scss';
 
 interface NotificationProps {
@@ -29,7 +26,7 @@ const Notification = ({ history }: NotificationProps) => {
 
   useEffect(() => {
     if (loginUserId) {
-      dispatch(getUserNotification(loginUserId));
+      dispatch(getNotification(loginUserId));
     }
   }, [loginUserId]);
 

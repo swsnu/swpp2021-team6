@@ -30,9 +30,6 @@ function userReducer(state: UserState = InitialState, action: any): UserState {
     case actionTypes.READ_NOTIFICATION:
       return { ...state, notification: action.notification };
 
-    case actionTypes.CREATE_NOTIFICATION:
-      return state;
-
     default:
       return state;
   }

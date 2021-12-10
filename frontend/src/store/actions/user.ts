@@ -109,7 +109,7 @@ export const readNotification_ = (notification: NotificationEntity[]) => ({
 });
 
 export const readNotification = (notiId: number) => async (dispatch: any) => {
-  const response = await axios.patch(`/users/notification/${notiId}`);
+  const response = await axios.get(`/users/notification/${notiId}`);
   const notification = humps.camelizeKeys(
     response.data,
   ) as unknown as NotificationEntity[];
