@@ -2,7 +2,7 @@ dist: bionic
 jobs:
   include:
     - language: node_js
-      node_js: 14
+      node_js: 16.3
       python: 3.7
       addons:
         sonarcloud:
