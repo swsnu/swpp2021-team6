@@ -271,7 +271,6 @@ def comments(request, post_id=0):
         participation.user
         for participation in Participation.objects.filter(post=post)
     ]
-    print()
     recipient_list.append(post.host)
     if author in recipient_list:
         recipient_list.remove(author)

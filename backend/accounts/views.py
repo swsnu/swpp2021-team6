@@ -170,7 +170,7 @@ def user_detail(request, user_id):
         profile.save()
 
         User_Exercise.objects.filter(user=user).delete()
-        for preferred_exercise in req_data["userExercise"]:
+        for preferred_exercise in req_data["preferredExercise"]:
             exercise = get_object_or_404(
                 Exercise, name=preferred_exercise["exerciseName"]
             )
