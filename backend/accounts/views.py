@@ -53,64 +53,63 @@ def signout(request):
 
     return HttpResponse(status=204)
 
-
-
-
-@require_http_methods(["GET", "POST", "PATCH"])
-def user_detail(request, user_id):
-    if request.method == "GET":
-        if not request.user.is_authenticated:
+@require_GET
+def get_user_detail(request, user_id):
+    if not request.user.is_authenticated:
             return HttpResponse(status=401)
-        user = User.objects.get(id=user_id)
 
-        user_exercise = [
-            {
-                "exercise_name": user_exercise.exercise.name,
-                "skill_level": user_exercise.skill_level,
-            }
-            for user_exercise in User_Exercise.objects.filter(user=user)
-        ]
+    user = User.objects.get(id=user_id)
 
-        participating_post = [
-            {
-                "host_name": participation.post.host.profile.nickname,
-                "post_id": participation.post.id,
-                "exercise_name": participation.post.exercise.name,
-                "title": participation.post.title,
-                "meet_at": participation.post.meet_at,
-                "place_name": participation.post.place_name,
-                "status": participation.status,
-            }
-            for participation in Participation.objects.filter(user=user)
-        ]
-
-        hosting_post = [
-            {
-                "host_name": post.host.profile.nickname,
-                "post_id": post.id,
-                "exercise_name": post.exercise.name,
-                "title": post.title,
-                "meet_at": post.meet_at,
-                "place_name": post.place_name,
-                "status": post.status,
-            }
-            for post in Post.objects.filter(host=user)
-        ]
-
-        response_dict = {
-            "user_id": user.id,
-            "nickname": user.profile.nickname,
-            "gu": user.profile.gu,
-            "dong": user.profile.dong,
-            "gender": user.profile.gender,
-            "introduction": user.profile.introduction,
-            "user_exercise": user_exercise,
-            "participating_post": participating_post,
-            "hosting_post": hosting_post,
+    user_exercise = [
+        {
+            "exercise_name": user_exercise.exercise.name,
+            "skill_level": user_exercise.skill_level,
         }
-        return JsonResponse(response_dict, status=200)
+        for user_exercise in User_Exercise.objects.filter(user=user)
+    ]
 
-    elif request.method == "POST":
+    participating_post = [
+        {
+            "host_name": participation.post.host.profile.nickname,
+            "post_id": participation.post.id,
+            "exercise_name": participation.post.exercise.name,
+            "title": participation.post.title,
+            "meet_at": participation.post.meet_at,
+            "place_name": participation.post.place_name,
+            "status": participation.status,
+        }
+        for participation in Participation.objects.filter(user=user)
+    ]
+
+    hosting_post = [
+        {
+            "host_name": post.host.profile.nickname,
+            "post_id": post.id,
+            "exercise_name": post.exercise.name,
+            "title": post.title,
+            "meet_at": post.meet_at,
+            "place_name": post.place_name,
+            "status": post.status,
+        }
+        for post in Post.objects.filter(host=user)
+    ]
+
+    response_dict = {
+        "user_id": user.id,
+        "nickname": user.profile.nickname,
+        "gu": user.profile.gu,
+        "dong": user.profile.dong,
+        "gender": user.profile.gender,
+        "introduction": user.profile.introduction,
+        "user_exercise": user_exercise,
+        "participating_post": participating_post,
+        "hosting_post": hosting_post,
+    }
+    return JsonResponse(response_dict, status=200)
+
+@require_http_methods(["POST", "PATCH"])
+def user_detail(request, user_id):
+    if request.method == "POST":
 
         def is_request_valid():
             if gender not in Profile.Gender.values:
@@ -187,20 +186,16 @@ def user_detail(request, user_id):
 @require_POST
 @signin_required
 def create_notification(request, user_id, post_id, noti_type):
-    if request.method == "POST":
-        user = User.objects.get(id=user_id)
-        post = Post.objects.get(id=post_id)
-        new_notification = Notification.objects.create(
-            user=user,
-            post=post,
-            noti_type=noti_type,
-        )
-        new_notification.save()
+    user = User.objects.get(id=user_id)
+    post = Post.objects.get(id=post_id)
+    new_notification = Notification.objects.create(
+        user=user,
+        post=post,
+        noti_type=noti_type,
+    )
+    new_notification.save()
 
-        return HttpResponse(status=201)
-
-    return
-
+    return HttpResponse(status=201)
 
 @require_GET
 @signin_required
@@ -221,23 +216,22 @@ def get_notification(request, user_id):
 
         return JsonResponse(noti_list, status=201, safe=False)
 
-
+@require_http_methods(["PATCH"])
 def read_notification(request, noti_id):
-    if request.method == "PATCH":
-        target_noti = Notification.objects.get(id=noti_id)
-        target_noti.is_read = True
-        target_noti.save()
-        noti_list = [
-            {
-                "noti_id": noti.id,
-                "noti_type": noti.noti_type,
-                "post_id": noti.post.id,
-                "post_title": noti.post.title,
-                "is_read": noti.is_read,
-                "created_at": noti.created_string,
-            }
-            for noti in Notification.objects.filter(user=request.user).order_by(
-                "-created_at"
-            )
-        ]
-        return JsonResponse(noti_list, status=200, safe=False)
+    target_noti = Notification.objects.get(id=noti_id)
+    target_noti.is_read = True
+    target_noti.save()
+    noti_list = [
+        {
+            "noti_id": noti.id,
+            "noti_type": noti.noti_type,
+            "post_id": noti.post.id,
+            "post_title": noti.post.title,
+            "is_read": noti.is_read,
+            "created_at": noti.created_string,
+        }
+        for noti in Notification.objects.filter(user=request.user).order_by(
+            "-created_at"
+        )
+    ]
+    return JsonResponse(noti_list, status=200, safe=False)

@@ -18,7 +18,7 @@ import {
   deletePost,
   queryComments,
   readPost,
-  readUser,
+  readUserInfo,
 } from '../../backend/api/api';
 import CommentsListItem from '../../components/Comment';
 import {
@@ -69,7 +69,7 @@ const PostDetailContainer: React.FC = () => {
       await queryComments({ postId })
     ).items.filter((c) => c.post_id === postId);
     const commentsList: CommentItem[] = (
-      await Promise.all(comments.map((c) => readUser({ id: c.author_id })))
+      await Promise.all(comments.map((c) => readUserInfo({ id: c.author_id })))
     ).map((u, i) => ({
       ...comments[i],
       authorName: u.entity.nickname,

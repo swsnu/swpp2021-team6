@@ -45,8 +45,7 @@ export const createUserProfile = async ({
 };
 
 export const queryUsers = produceQueryAPI<UserEntity>('/users');
-export const readUser = produceReadAPI<UserEntity>('/users');
-export const readUserInfo = produceReadAPI<UserInfoEntity>('/users');
+export const readUserInfo = produceReadAPI<UserInfoEntity>('/users/get');
 export const updateUser = produceUpdateAPI<UserEntity>('/users');
 export const updateProfile = produceUpdateAPI<UpdateProfileEntity>('/users');
 
