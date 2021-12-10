@@ -43,8 +43,6 @@ const Onboarding = ({ history }: { history: History }) => {
   const { user } = useSelector((state: AppState) => state.user);
   const dispatch = useDispatch();
 
-  console.log('user', user);
-
   useEffect(() => {
     if (user) {
       history.push('/main');

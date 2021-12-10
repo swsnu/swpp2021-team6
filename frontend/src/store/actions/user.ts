@@ -19,10 +19,7 @@ export const signup =
     try {
       const newUser = (await createUserProfile({ createPayload: user, userId }))
         .entity;
-
-      console.log(newUser);
       window.localStorage.setItem('profileInfo', JSON.stringify(newUser));
-
       dispatch(signup_(newUser));
       dispatch(push('/main'));
     } catch (e: any) {
@@ -90,10 +87,8 @@ export const getUserInfo_ = (userInfo: any) => ({
 export const getUserInfo = (id: any) => async (dispatch: any) => {
   try {
     const response = await axios.get(`/users/${id}`);
-    console.log('response okay');
     const returnedUserInfo = humps.camelizeKeys(response.data);
     dispatch(getUserInfo_(returnedUserInfo));
-    console.log('dispatch okay');
   } catch (e: any) {
     if (e?.response && e.response.status === 404) {
       alert('존재하지 않는 유저입니다');

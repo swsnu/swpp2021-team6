@@ -19,11 +19,6 @@ const Layout = ({ name, imageUrl = defaultImage, children }: Props) => {
     background: `linear-gradient(0deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${imageUrl})`,
     backgroundSize: 'cover',
   };
-  const [randomIndex, setRandomIndex] = useState<number>(0);
-
-  useEffect(() => {
-    setRandomIndex(Math.floor(Math.random() * quotes.length));
-  }, []);
 
   return (
     <div className="layout">
@@ -41,8 +36,12 @@ const Layout = ({ name, imageUrl = defaultImage, children }: Props) => {
             src={quoteStart}
             alt="quote start icon"
           />
-          <p className="content">{quotes[randomIndex].content}</p>
-          <p className="speaker">{quotes[randomIndex].speaker}</p>
+          <p className="content">
+            {quotes[Date.prototype.getTime() % 2].content}
+          </p>
+          <p className="speaker">
+            {quotes[Date.prototype.getTime() % 2].speaker}
+          </p>
           <img className="quote-end" src={quoteEnd} alt="quote end icon" />
         </div>
       </div>

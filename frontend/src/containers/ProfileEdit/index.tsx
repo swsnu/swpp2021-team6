@@ -114,7 +114,6 @@ const ProfileEdit = ({ history }: ProfileProps) => {
           );
         }
         navigator.geolocation.getCurrentPosition((position) => {
-          console.log(position.coords);
           getGuDong(position.coords.longitude, position.coords.latitude).then(
             (value) => {
               const { gu, dong } = value;
@@ -125,7 +124,6 @@ const ProfileEdit = ({ history }: ProfileProps) => {
               });
               if (locationHolder) {
                 locationHolder.setAttribute('value', gu.concat(' ', dong));
-                console.log(locationHolder);
               }
             },
           );

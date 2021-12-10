@@ -84,8 +84,6 @@ const PostCreate: React.FC = () => {
           payload.description = postUpdate.description;
         }
       }
-      console.log(payload);
-      console.log(postId);
       updatePost({ id: postId, updatePayload: payload }).then(() => {
         history.push(`/post/${postId}`);
       });
