@@ -127,7 +127,7 @@ def user_detail(request, user_id):
             gender = req_dict["gender"]
             introduction = req_dict["introduction"]
             preferred_exercises = req_dict["preferredExercise"]
-            
+
         except (KeyError, JSONDecodeError):
             return HttpResponse(status=400)
 

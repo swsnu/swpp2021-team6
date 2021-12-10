@@ -24,9 +24,9 @@ class AccountsTestCase(TestCase):
             "dong": "동3",
             "gender": "남성",
             "introduction": "안ㄴ여하세여ㅁㄴ이ㅏ럼ㄴ아ㅣ러ㅣㅏㄴ어라ㅣㄴㅁ어리ㅏㅓㄴ이ㅏ럼ㄴ이러ㅏㅇ",
-            "preferred_exercises": [
-                {"exercise_name": "축구", "skill_level": "상"},
-                {"exercise_name": "축구", "skill_level": "중"},
+            "preferredExercise": [
+                {"exerciseName": "축구", "skillLevel": "상"},
+                {"exerciseName": "축구", "skillLevel": "중"},
             ],
         }
     )
@@ -45,9 +45,9 @@ class AccountsTestCase(TestCase):
             "dong": "동4",
             "gender": "M",
             "introduction": "gender type이 enum에 맞지 않는 corner case입니다.",
-            "preferred_exercises": [
-                {"exercise_name": "축구", "skill_level": "상"},
-                {"exercise_name": "축구", "skill_level": "중"},
+            "preferredExercise": [
+                {"exerciseName": "축구", "skillLevel": "상"},
+                {"exerciseName": "축구", "skillLevel": "중"},
             ],
         }
     )
@@ -72,7 +72,7 @@ class AccountsTestCase(TestCase):
             dong="동1",
             gender="남성",
             introduction="안녕하세요 user1입니다.",
-            preferred_exercises=[{"exercise_name": "축구", "skill_level": "중"}],
+            preferred_exercises=[{"exerciseName": "축구", "skillLevel": "중"}],
         )
         User.objects.create_user(username="username2", password="password2")
         ProxyUser.objects.create_user_with(
@@ -84,7 +84,7 @@ class AccountsTestCase(TestCase):
             dong="동2",
             gender="여성",
             introduction="안녕하세요 user2입니다.",
-            preferred_exercises=[{"exercise_name": "축구", "skill_level": "상"}],
+            preferred_exercises=[{"exerciseName": "축구", "skillLevel": "상"}],
         )
 
         test_post2 = Post.objects.create(
@@ -186,7 +186,7 @@ class AccountsTestCase(TestCase):
         self.assertEqual(response.status_code, 401)
 
         # 405 test
-        response = client.delete("/users/1", data=None)
+        response = client.put("/users/1", data=None)
         self.assertEqual(response.status_code, 405)
 
         # POST test 

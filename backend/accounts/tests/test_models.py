@@ -20,7 +20,7 @@ class AccountsTestCase(TestCase):
             dong="동1",
             gender="남성",
             introduction="안녕하세요 user1입니다.",
-            preferred_exercises=[{"exercise_name": "축구", "skill_level": "중"}],
+            preferred_exercises=[{"exerciseName": "축구", "skillLevel": "중"}],
         )
 
         # Then

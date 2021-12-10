@@ -68,7 +68,7 @@ class PostsViewsTestCase(TestCase):
             dong="동1",
             gender="MALE",
             introduction="안녕하세요 user1입니다.",
-            preferred_exercises=[{"exercise_name": "축구", "skill_level": "중"}],
+            preferred_exercises=[{"exerciseName": "축구", "skillLevel": "중"}],
         )
         User.objects.create_user(username="username2", password="password2")
         test_user2 = ProxyUser.objects.create_user_with(
@@ -80,7 +80,7 @@ class PostsViewsTestCase(TestCase):
             dong="동2",
             gender="FEMALE",
             introduction="안녕하세요 user2입니다.",
-            preferred_exercises=[{"exercise_name": "축구", "skill_level": "상"}],
+            preferred_exercises=[{"exerciseName": "축구", "skillLevel": "상"}],
         )
         test_post1 = Post.objects.create(
             exercise=test_exercise,
