@@ -156,13 +156,6 @@ def user_detail(request, user_id):
 
         login(request, user)
 
-        # response_dict = {
-        # "user_id": user.id,
-        # "nickname": user.profile.nickname,
-        # "latitude": user.profile.latitude,
-        # "longitude": user.profile.longitude,
-        # }
-        # return JsonResponse(response_dict, safe=False, status=201)
         return HttpResponse(status=201)
 
     elif request.method == "PATCH":

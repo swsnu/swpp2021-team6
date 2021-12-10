@@ -14,13 +14,6 @@ export interface SignUpDTO {
   password: string;
 }
 
-// TODO: Remove
-// export interface UserProfileInfo {
-//   userId: number;
-//   nickname: string;
-//   latitude: number;
-//   longitude: number;
-// }
 export interface UserIdEntity {
   userId: number;
 }
