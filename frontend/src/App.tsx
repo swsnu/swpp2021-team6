@@ -32,7 +32,6 @@ const App = ({ history }: { history: History }) => {
 
   return (
     <ConnectedRouter history={history}>
-      {/* 로그인 user 있을 경우에만 (= SignIn, SignUp 페이지 아닐 경우) Navbar 보여주기 */}
       {loginUserId ? <Navbar /> : null}
       <Switch>
         <Route path="/signin" exact component={SignIn} />

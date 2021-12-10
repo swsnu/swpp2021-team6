@@ -2,43 +2,11 @@ import * as actionTypes from '../actions/actionTypes';
 
 export type UserState = {
   loginUserId: number | null;
-  // userInfo: UserInfoEntity | null;
   notification: any | null; // TODO: NotificationEntity 만들어주세요
 };
 
 const InitialState: UserState = {
   loginUserId: null,
-  // userInfo: {
-  //   userId: 0,
-  //   nickname: '',
-  //   gu: '',
-  //   dong: '',
-  //   gender: '미선택',
-  //   introduction: '',
-  //   userExercise: [{ exerciseName: '', skillLevel: '상관 없음' }],
-  //   participatingPost: [
-  //     {
-  //       hostName: '',
-  //       postId: 0,
-  //       exerciseName: '',
-  //       title: '',
-  //       meetAt: '',
-  //       placeName: '',
-  //       status: '',
-  //     },
-  //   ],
-  //   hostingPost: [
-  //     {
-  //       hostName: '',
-  //       postId: 0,
-  //       exerciseName: '',
-  //       title: '',
-  //       meetAt: '',
-  //       placeName: '',
-  //       status: '',
-  //     },
-  //   ],
-  // },
   notification: null,
 };
 
