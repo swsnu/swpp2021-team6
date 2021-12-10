@@ -9,15 +9,15 @@ from posts.models import Exercise, Participation, Post
 
 
 class AccountsTestCase(TestCase):
-    new_user3= json.dumps(
+    new_user3 = json.dumps(
         {
-            "username" : "username3",
-            "password" : "password3"
+            "username": "username3",
+            "password": "password3"
         }
     )
     new_user3_profile = json.dumps(
         {
-            "user_id" : 3,
+            "user_id": 3,
             "nickname": "닉네임3",
             "latitude": 37.47880163846696,
             "longitude": 126.94494429645442,
@@ -32,8 +32,8 @@ class AccountsTestCase(TestCase):
         }
     )
     new_user4 = json.dumps({
-        "username" : "username4",
-        "password" : "password4"
+        "username": "username4",
+        "password": "password4"
     })
 
     new_user4_profile = json.dumps(
@@ -53,7 +53,7 @@ class AccountsTestCase(TestCase):
         }
     )
     new_user5 = json.dumps({
-        "username" : "username5",
+        "username": "username5",
     })
     new_user5_profile = json.dumps(
         {
@@ -63,7 +63,8 @@ class AccountsTestCase(TestCase):
 
     def setUp(self):
         test_exercise = Exercise.objects.create(name="축구")
-        test_user1 = User.objects.create_user(username="username1", password="password1")
+        test_user1 = User.objects.create_user(
+            username="username1", password="password1")
         test_user1 = ProxyUser.objects.create_user_with(
             user_id=test_user1.id,
             nickname="닉네임1",
@@ -107,7 +108,8 @@ class AccountsTestCase(TestCase):
             kakaotalk_link="kakaotalk link 2",
         )
         Participation.objects.create(user=test_user1, post=test_post1)
-        Notification.objects.create(user=test_user1, post=test_post1, noti_type="comment")
+        Notification.objects.create(
+            user=test_user1, post=test_post1, noti_type="comment")
 
     def test_signup(self):
         client = Client()
@@ -191,17 +193,20 @@ class AccountsTestCase(TestCase):
         response = client.put("/users/1", data=None)
         self.assertEqual(response.status_code, 405)
 
-        # POST test 
+        # POST test
         # 201 test
         User.objects.create_user(username="username3", password="password3")
-        response = client.post("/users/3", self.new_user3_profile, content_type="application/json")
+        response = client.post(
+            "/users/3", self.new_user3_profile, content_type="application/json")
         self.assertEqual(response.status_code, 201)
-        
+
         User.objects.create_user(username="username4", password="password4")
-        response = client.post("/users/4", self.new_user4_profile, content_type="application/json")
+        response = client.post(
+            "/users/4", self.new_user4_profile, content_type="application/json")
         self.assertEqual(response.status_code, 400)
-        
-        response = client.post("/users/4", self.new_user5_profile, content_type="application/json")
+
+        response = client.post(
+            "/users/4", self.new_user5_profile, content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
         # after signin
@@ -216,12 +221,13 @@ class AccountsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         # 200 test (patch)
-        response = client.patch("/users/1", self.new_user4_profile, content_type="application/json")
+        response = client.patch(
+            "/users/1", self.new_user4_profile, content_type="application/json")
         self.assertEqual(response.status_code, 200)
 
     def test_notification(self):
         client = Client()
-        
+
         response = client.post(
             "/users/signin",
             json.dumps({"username": "username1", "password": "password1"}),
@@ -229,6 +235,6 @@ class AccountsTestCase(TestCase):
         )
         response = client.get("/users/1/notification")
         self.assertEqual(response.status_code, 201)
-        
-        response = client.patch("/users/notification/1", json.dumps({}), content_type="application/type")
+
+        response = client.get("/users/notification/1")
         self.assertEqual(response.status_code, 200)
