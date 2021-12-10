@@ -146,7 +146,7 @@ class PostsViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 405)
 
         # GET, POST -> 401
-        response = client.get("/posts/")
+        response = client.get("/posts/get")
         self.assertEqual(response.status_code, 401)
         response = client.post("/posts/", data=None)
         self.assertEqual(response.status_code, 401)
@@ -159,7 +159,7 @@ class PostsViewsTestCase(TestCase):
         )
 
         # GET -> 200
-        response = client.get("/posts/")
+        response = client.get("/posts/get")
         self.assertEqual(response.status_code, 200)
 
         # POST -> 400
@@ -182,7 +182,7 @@ class PostsViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 405)
 
         # GET, PATCH, DELETE -> 401
-        response = client.get("/posts/1")
+        response = client.get("/posts/get/1")
         self.assertEqual(response.status_code, 401)
         response = client.patch("/posts/1", data=None)
         self.assertEqual(response.status_code, 401)
@@ -197,7 +197,7 @@ class PostsViewsTestCase(TestCase):
         )
 
         # GET, PATCH, DELETE -> 404
-        response = client.get("/posts/3")
+        response = client.get("/posts/get/3")
         self.assertEqual(response.status_code, 404)
         response = client.patch(
             "/posts/3",
@@ -219,11 +219,11 @@ class PostsViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 403)
 
         # GET -> 200
-        response = client.get("/posts/1")
+        response = client.get("/posts/get/1")
         self.assertEqual(response.status_code, 200)  # Pass csrf protection
 
         # GET -> 200
-        response = client.get("/posts/2")
+        response = client.get("/posts/get/2")
         self.assertEqual(response.status_code, 200)
         ## PATCH -> 200
         response = client.patch(
@@ -251,7 +251,7 @@ class PostsViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 405)
 
         # GET, POST -> 401
-        response = client.get("/posts/1/comments")
+        response = client.get("/posts/get/1/comments")
         self.assertEqual(response.status_code, 401)
         response = client.post("/posts/1/comments", data=None)
         self.assertEqual(response.status_code, 401)
@@ -264,7 +264,7 @@ class PostsViewsTestCase(TestCase):
         )
 
         # GET, POST -> 404
-        response = client.get("/posts/3/comments")
+        response = client.get("/posts/get/4/comments")
         self.assertEqual(response.status_code, 404)
         response = client.post(
             "/posts/3/comments", data=self.new_comment, content_type="application/json"
@@ -272,7 +272,7 @@ class PostsViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 404)
 
         ## GET -> 200
-        response = client.get("/posts/1/comments")
+        response = client.get("/posts/get/1/comments")
         self.assertEqual(response.status_code, 200)
 
         ## POST -> 201
@@ -295,7 +295,7 @@ class PostsViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 405)
 
         # GET, PATCH, DELETE -> 401
-        response = client.get("/posts/comments/1")
+        response = client.get("/posts/get/comments/1")
         self.assertEqual(response.status_code, 401)
         response = client.patch("/posts/comments/1", data=None)
         self.assertEqual(response.status_code, 401)
@@ -310,7 +310,7 @@ class PostsViewsTestCase(TestCase):
         )
 
         # GET, PATCH, DELETE -> 404
-        response = client.get("/posts/comments/3")
+        response = client.get("/posts/get/comments/3")
         self.assertEqual(response.status_code, 404)
         response = client.patch(
             "/posts/comments/3", data=self.new_comment, content_type="application/json"
@@ -330,7 +330,7 @@ class PostsViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 403)
 
         # GET -> 200
-        response = client.get("/posts/comments/1")
+        response = client.get("/posts/get/comments/1")
         self.assertEqual(response.status_code, 200)  # Pass csrf protection
 
         ## PATCH -> 400

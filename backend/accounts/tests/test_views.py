@@ -182,7 +182,7 @@ class AccountsTestCase(TestCase):
     def test_user_detail(self):
         client = Client()
         # 401 test (user is None (get, post 둘다!)
-        response = client.get("/users/1")
+        response = client.get("/users/get/1")
         self.assertEqual(response.status_code, 401)
 
         # 405 test
@@ -211,5 +211,5 @@ class AccountsTestCase(TestCase):
         )
 
         # 200 test (get)
-        response = client.get("/users/1")
+        response = client.get("/users/get/1")
         self.assertEqual(response.status_code, 200)
