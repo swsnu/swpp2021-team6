@@ -18,13 +18,13 @@ function userReducer(state: UserState = InitialState, action: any): UserState {
     case actionTypes.SIGNIN:
       return { ...state, loginUserId: action.userId };
 
-    case actionTypes.SIGNUP:
+    case actionTypes.ONBOARDING:
       return { ...state, loginUserId: action.userId };
 
     case actionTypes.SIGNOUT:
       return { loginUserId: null, notification: null };
 
-    case actionTypes.GET_USER_NOTIFICATION:
+    case actionTypes.GET_NOTIFICATION:
       return { ...state, notification: action.notification };
 
     case actionTypes.READ_NOTIFICATION:

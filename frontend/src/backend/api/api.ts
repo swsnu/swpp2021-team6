@@ -43,7 +43,7 @@ export const updateProfile = produceUpdateAPI<UpdateProfileDTO>('/users');
 export const queryFilterPosts = async (
   filterString: string,
 ): Promise<queryReturnType<PostEntity>> => {
-  const res = await axios.get(`/posts/?${filterString}`);
+  const res = await axios.get(`/posts/?${filterString}`); 
   return { items: humps.camelizeKeys(res.data) as PostEntity[] };
 };
 

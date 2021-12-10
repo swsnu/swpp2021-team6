@@ -8,10 +8,11 @@ import {
   UserIdEntity,
 } from '../../backend/entity/user';
 import { createUserProfile } from '../../backend/api/api';
+import { NotificationEntity } from '../../backend/entity/notification';
 
 /* ONBOARDING */
 export const onboarding_ = (loginUserId: number) => ({
-  type: actionTypes.SIGNUP,
+  type: actionTypes.ONBOARDING,
   userId: loginUserId,
 });
 
@@ -81,16 +82,20 @@ export function signout() {
   };
 }
 
-export const getUserNotification_ = (notification: any) => ({
-  type: actionTypes.GET_USER_NOTIFICATION,
+/* NOTIFICATION */
+// TODO: api.ts에 함수 만들어서 사용하기
+export const getNotification_ = (notification: NotificationEntity[]) => ({
+  type: actionTypes.GET_NOTIFICATION,
   notification,
 });
 
-export const getUserNotification = (id: any) => async (dispatch: any) => {
+export const getNotification = (id: any) => async (dispatch: any) => {
   try {
     const response = await axios.get(`/users/${id}/notification`);
-    const notification = humps.camelizeKeys(response.data);
-    dispatch(getUserNotification_(notification));
+    const notification = humps.camelizeKeys(
+      response.data,
+    ) as unknown as NotificationEntity[];
+    dispatch(getNotification_(notification));
   } catch (e: any) {
     if (e?.response && e.response.status === 404) {
       alert('존재하지 않는 유저입니다');
@@ -98,19 +103,21 @@ export const getUserNotification = (id: any) => async (dispatch: any) => {
   }
 };
 
-export const readNotification_ = (notification: any) => ({
+export const readNotification_ = (notification: NotificationEntity[]) => ({
   type: actionTypes.READ_NOTIFICATION,
   notification,
 });
 
 export const readNotification = (notiId: number) => async (dispatch: any) => {
   const response = await axios.patch(`/users/notification/${notiId}`);
-  const notification = humps.camelizeKeys(response.data);
+  const notification = humps.camelizeKeys(
+    response.data,
+  ) as unknown as NotificationEntity[];
   dispatch(readNotification_(notification));
 };
 
 export type UserAction =
   | ReturnType<typeof signin_>
   | ReturnType<typeof signout_>
-  | ReturnType<typeof getUserNotification_>
+  | ReturnType<typeof getNotification_>
   | ReturnType<typeof readNotification_>;
