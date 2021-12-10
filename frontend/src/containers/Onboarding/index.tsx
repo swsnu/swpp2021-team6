@@ -2,7 +2,6 @@ import { History } from 'history';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
-import { push } from 'connected-react-router';
 import getGuDong from '../../utils/getGuDong';
 import { AppState } from '../../store/store';
 import { ProfileDTO } from '../../backend/entity/user';
@@ -13,8 +12,6 @@ import smallDots from '../../assets/image/auth/green-small-dots.svg';
 import lineCircle from '../../assets/image/auth/green-line-circle.svg';
 import greenCircle from '../../assets/image/icon/green-circle.svg';
 import deleteIcon from '../../assets/image/icon/exercise-delete-button.svg';
-import { createUserProfile } from '../../backend/api/api';
-import { signin } from '../../store/actions';
 import { signup } from '../../store/actions/user';
 
 const initialFormState: ProfileDTO = {
@@ -70,13 +67,7 @@ const Onboarding = ({ history }: { history: History }) => {
     }
   }, [form.latitude, form.longitude]);
 
-  const checkDuplicate = ({
-    exerciseName,
-    skillLevel,
-  }: {
-    exerciseName: string;
-    skillLevel: string;
-  }) => {
+  const checkDuplicate = ({ exerciseName }: { exerciseName: string }) => {
     let isDuplicate = false;
     form.preferredExercise.some((exercise) => {
       if (exercise.exerciseName === exerciseName) isDuplicate = true;
@@ -121,6 +112,15 @@ const Onboarding = ({ history }: { history: History }) => {
       dispatch(signup(form, userId));
     }
   };
+
+  const guDongSpan = guDong.loading ? (
+    <span className="gu-dong loading">{guDong.text}</span>
+  ) : (
+    <span className="gu-dong">{guDong.text}</span>
+  );
+
+  console.log(form);
+
   return (
     <div className="onboarding">
       <img
@@ -176,7 +176,6 @@ const Onboarding = ({ history }: { history: History }) => {
               id="introduction"
               className="introduction-input"
               placeholder="자신을 소개하는 문장을 입력해주세요"
-              value={form.introduction}
               onChange={(e) =>
                 setForm({ ...form, introduction: e.target.value })
               }

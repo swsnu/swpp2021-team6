@@ -18,6 +18,7 @@ const setSelectedExerciseMock = jest.fn();
 const setGuDongMock = jest.fn();
 const mockPush = jest.fn();
 const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
+
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useHistory: () => ({ push: mockPush }),
@@ -56,6 +57,85 @@ describe('Onboarding', () => {
       </Provider>
     );
 
+    useSelectorMock.mockImplementation((callback) =>
+      callback({ user: { user: userInfo } }),
+    );
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should render without error', () => {
+    useStateMock
+      .mockReturnValueOnce([mockForm, setFormMock])
+      .mockReturnValueOnce([
+        { exerciseName: '종목', skillLevel: '실력' },
+        setSelectedExerciseMock,
+      ])
+      .mockReturnValueOnce([
+        { loading: true, text: '동네 정보 조회 중' },
+        setGuDongMock,
+      ]);
+    const component = mount(onboarding);
+    expect(component.find('.onboarding').length).toBe(1);
+  });
+
+  it('should change gender select', () => {
+    useStateMock
+      .mockReturnValueOnce([mockForm, setFormMock])
+      .mockReturnValueOnce([
+        { exerciseName: '종목', skillLevel: '실력' },
+        setSelectedExerciseMock,
+      ])
+      .mockReturnValueOnce([
+        { loading: true, text: '동네 정보 조회 중' },
+        setGuDongMock,
+      ]);
+    const component = mount(onboarding);
+    component
+      .find('#gender-dropdown')
+      .simulate('change', { target: { value: '남성' } });
+    expect(setFormMock).toBeCalledTimes(1);
+  });
+
+  it('should change nickname input', () => {
+    useStateMock
+      .mockReturnValueOnce([mockForm, setFormMock])
+      .mockReturnValueOnce([
+        { exerciseName: '종목', skillLevel: '실력' },
+        setSelectedExerciseMock,
+      ])
+      .mockReturnValueOnce([
+        { loading: true, text: '동네 정보 조회 중' },
+        setGuDongMock,
+      ]);
+    const component = mount(onboarding);
+    component
+      .find('#nickname')
+      .simulate('change', { target: { value: 'test nickname' } });
+    expect(setFormMock).toBeCalledTimes(1);
+  });
+
+  it('should change introduction input', () => {
+    useStateMock
+      .mockReturnValueOnce([mockForm, setFormMock])
+      .mockReturnValueOnce([
+        { exerciseName: '종목', skillLevel: '실력' },
+        setSelectedExerciseMock,
+      ])
+      .mockReturnValueOnce([
+        { loading: true, text: '동네 정보 조회 중' },
+        setGuDongMock,
+      ]);
+    const component = mount(onboarding);
+    component
+      .find('#introduction')
+      .simulate('change', { target: { value: 'test introduction' } });
+    expect(setFormMock).toBeCalledTimes(1);
+  });
+
+  it('should set preferred exercise', () => {
     useStateMock
       .mockReturnValueOnce([mockForm, setFormMock])
       .mockReturnValueOnce([
@@ -67,46 +147,18 @@ describe('Onboarding', () => {
         setGuDongMock,
       ]);
 
-    useSelectorMock.mockImplementation((callback) =>
-      callback({ user: { user: userInfo } }),
-    );
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('should render without error', () => {
     const component = mount(onboarding);
-    expect(component.find('.onboarding').length).toBe(1);
-  });
 
-  it('should change gender select', () => {
-    const component = mount(onboarding);
-    component
-      .find('#gender-dropdown')
-      .simulate('change', { target: { value: '남성' } });
-    expect(setFormMock).toBeCalledTimes(1);
-  });
-
-  it('should change nickname input', () => {
-    const component = mount(onboarding);
-    component
-      .find('#nickname')
-      .simulate('change', { target: { value: 'test nickname' } });
-    expect(setFormMock).toBeCalledTimes(1);
-  });
-
-  it('should change introduction input', () => {
-    const component = mount(onboarding);
-    component
-      .find('#introduction')
-      .simulate('change', { target: { value: 'test introduction' } });
-    expect(setFormMock).toBeCalledTimes(1);
-  });
-
-  it('should set preferred exercise', () => {
-    const component = mount(onboarding);
+    useStateMock
+      .mockReturnValueOnce([mockForm, setFormMock])
+      .mockReturnValueOnce([
+        { exerciseName: '종목', skillLevel: '실력' },
+        setSelectedExerciseMock,
+      ])
+      .mockReturnValueOnce([
+        { loading: true, text: '동네 정보 조회 중' },
+        setGuDongMock,
+      ]);
     component
       .find('.exercise')
       .simulate('change', { target: { value: '축구' } });
@@ -117,6 +169,16 @@ describe('Onboarding', () => {
   });
 
   it('should alert when submitting before getting location', () => {
+    useStateMock
+      .mockReturnValueOnce([mockForm, setFormMock])
+      .mockReturnValueOnce([
+        { exerciseName: '종목', skillLevel: '실력' },
+        setSelectedExerciseMock,
+      ])
+      .mockReturnValueOnce([
+        { loading: true, text: '동네 정보 조회 중' },
+        setGuDongMock,
+      ]);
     const component = mount(onboarding);
     const { getCurrentPositionMock } = mockNavigatorGeolocation();
     getCurrentPositionMock.mockImplementation();
@@ -124,30 +186,30 @@ describe('Onboarding', () => {
     expect(window.alert).toBeCalledTimes(1);
   });
 
-  it('should delete selected exercise when clicking delete button', () => {
+  it('should alert without gu, dong', () => {
+    const mockForm = {
+      latitude: 37.12345,
+      longitude: 127.12345,
+      gu: '',
+      dong: '',
+      gender: '미선택',
+      nickname: '',
+      introduction: '',
+      preferredExercise: [{ exerciseName: '축구', skillLevel: '상' }],
+    };
+    useStateMock
+      .mockReturnValueOnce([mockForm, setFormMock])
+      .mockReturnValueOnce([
+        { exerciseName: '종목', skillLevel: '실력' },
+        setSelectedExerciseMock,
+      ])
+      .mockReturnValueOnce([
+        { loading: true, text: '동네 정보 조회 중' },
+        setGuDongMock,
+      ]);
     const component = mount(onboarding);
-    component.find('.exercise-in-array button').simulate('click');
-    expect(setFormMock).toBeCalledTimes(1);
-  });
-});
-
-describe('Onboarding on submit', () => {
-  let onboarding: any;
-
-  beforeEach(() => {
-    onboarding = (
-      <Provider store={mockStore}>
-        <Onboarding history={history} />
-      </Provider>
-    );
-
-    useSelectorMock.mockImplementation((callback) =>
-      callback({ user: { user: userInfo } }),
-    );
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
+    component.find('.onboarding-submit-button').simulate('click');
+    expect(window.alert).toBeCalledTimes(0);
   });
 
   it('should alert without gender', () => {
@@ -226,5 +288,21 @@ describe('Onboarding on submit', () => {
     const component = mount(onboarding);
     component.find('.onboarding-submit-button').simulate('click');
     expect(window.alert).toBeCalledTimes(0);
+  });
+
+  it('should delete selected exercise when clicking delete button', () => {
+    useStateMock
+      .mockReturnValueOnce([mockForm, setFormMock])
+      .mockReturnValueOnce([
+        { exerciseName: '종목', skillLevel: '실력' },
+        setSelectedExerciseMock,
+      ])
+      .mockReturnValueOnce([
+        { loading: true, text: '동네 정보 조회 중' },
+        setGuDongMock,
+      ]);
+    const component = mount(onboarding);
+    component.find('.exercise-in-array button').simulate('click');
+    expect(setFormMock).toBeCalledTimes(1);
   });
 });
