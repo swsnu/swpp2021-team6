@@ -208,7 +208,7 @@ def get_notification(request, user_id):
     return JsonResponse(noti_list, status=201, safe=False)
 
 
-@require_http_methods(["PATCH"])
+@require_GET
 def read_notification(request, noti_id):
     target_noti = Notification.objects.get(id=noti_id)
     target_noti.is_read = True
