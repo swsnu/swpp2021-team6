@@ -3,13 +3,11 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
-import postReducer from './reducers/post';
 import userReducer from './reducers/user';
 
 export const history = createBrowserHistory();
 
 const rootReducer = combineReducers({
-  post: postReducer,
   user: userReducer,
   router: connectRouter(history),
 });

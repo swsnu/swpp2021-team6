@@ -1,16 +1,14 @@
 import axios from 'axios';
 import humps from 'humps';
+import {
+  SignUpDTO,
+  UserProfileDTO,
+  UserInfoEntity,
+  UpdateProfileDTO,
+  UserIdEntity,
+} from '../entity/user';
 import { CommentEntity, CreateCommentEntity } from '../entity/comment';
 import { CreatePostEntity, PostEntity, UpdatePostDTO } from '../entity/post';
-import {
-  ProfileDTO,
-  SignUpDTO,
-  SignupInfo,
-  UserEntity,
-  UserProfileInfo,
-  UpdateProfileEntity,
-  UserInfoEntity,
-} from '../entity/user';
 import {
   CreateProps,
   produceCreateAPI,
@@ -29,23 +27,18 @@ export const readPost = produceReadAPI<PostEntity>('/posts/get');
 export const deletePost = produceDeleteAPI('/posts');
 export const updatePost = produceUpdateAPI<UpdatePostDTO>('/posts');
 
-export const createUser = produceCreateAPI<SignUpDTO, SignupInfo>(
+export const createUser = produceCreateAPI<SignUpDTO, UserIdEntity>(
   '/users/signup',
 );
 export const createUserProfile = async ({
   createPayload,
   userId,
-}: CreateProps<ProfileDTO> & { userId: number }): Promise<{
-  entity: UserProfileInfo;
-}> => {
-  const res = await axios.post(`/users/${userId}`, createPayload);
-  return { entity: res.data };
+}: CreateProps<UserProfileDTO> & { userId: number }) => {
+  await axios.post(`/users/${userId}`, createPayload);
 };
 
-export const queryUsers = produceQueryAPI<UserEntity>('/users');
 export const readUserInfo = produceReadAPI<UserInfoEntity>('/users/get');
-export const updateUser = produceUpdateAPI<UserEntity>('/users');
-export const updateProfile = produceUpdateAPI<UpdateProfileEntity>('/users');
+export const updateProfile = produceUpdateAPI<UpdateProfileDTO>('/users');
 
 export const queryFilterPosts = async (
   filterString: string,

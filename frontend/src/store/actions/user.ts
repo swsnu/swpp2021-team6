@@ -3,59 +3,62 @@ import { push } from 'connected-react-router';
 import humps from 'humps';
 import * as actionTypes from './actionTypes';
 import {
-  ProfileDTO,
-  UserProfileInfo,
-  UserSignInInputDTO,
+  UserProfileDTO,
+  SignInDTO,
+  UserIdEntity,
 } from '../../backend/entity/user';
 import { createUserProfile } from '../../backend/api/api';
 
-export const signup_ = (currentUser: UserProfileInfo) => ({
+/* ONBOARDING */
+export const onboarding_ = (loginUserId: number) => ({
   type: actionTypes.SIGNUP,
-  user: currentUser,
+  userId: loginUserId,
 });
 
-export const signup =
-  (user: ProfileDTO, userId: number) => async (dispatch: any) => {
+export const onboarding =
+  (userProfile: UserProfileDTO, userId: number) => async (dispatch: any) => {
     try {
-      const newUser = (await createUserProfile({ createPayload: user, userId }))
-        .entity;
-      window.localStorage.setItem('profileInfo', JSON.stringify(newUser));
-      dispatch(signup_(newUser));
+      await createUserProfile({ createPayload: userProfile, userId });
+
+      window.localStorage.setItem('loginUser', JSON.stringify(userId));
+
+      dispatch(onboarding_(userId));
       dispatch(push('/main'));
     } catch (e: any) {
       console.log('error', e);
     }
   };
 
-/* LOGIN */
-export const autoSignin_ = (lastLoggedInUser: UserProfileInfo) => ({
+/* SIGNIN */
+export const autoSignin_ = (lastLoggedInUser: number) => ({
   type: actionTypes.AUTO_SIGNIN,
-  user: lastLoggedInUser,
+  userId: lastLoggedInUser,
 });
 
 export const autoSignin = () => async (dispatch: any) => {
-  const lastLoggedInUserString = localStorage.getItem('profileInfo');
-  const lastLoggedInUser: UserProfileInfo = lastLoggedInUserString
-    ? JSON.parse(lastLoggedInUserString)
-    : null;
+  const lastLoggedInUserString = localStorage.getItem('loginUser');
+  const lastLoggedInUser: number | null = Number(lastLoggedInUserString);
   dispatch(autoSignin_(lastLoggedInUser));
 };
 
-export const signin_ = (currentUser: UserProfileInfo) => ({
+export const signin_ = (loginUserId: number) => ({
   type: actionTypes.SIGNIN,
-  user: currentUser,
+  userId: loginUserId,
 });
 
-export const signin = (user: UserSignInInputDTO) => async (dispatch: any) => {
+export const signin = (user: SignInDTO) => async (dispatch: any) => {
   try {
     const response = await axios.post('/users/signin', user);
-    const currentUser = humps.camelizeKeys(
+    const loginUser = humps.camelizeKeys(
       response.data,
-    ) as unknown as UserProfileInfo;
-    window.localStorage.setItem('profileInfo', JSON.stringify(currentUser));
-    dispatch(signin_(currentUser));
+    ) as unknown as UserIdEntity;
+
+    window.localStorage.setItem('loginUser', loginUser.userId.toString());
+
+    dispatch(signin_(loginUser.userId));
     dispatch(push('/main'));
   } catch (e: any) {
+    console.log(e);
     if (e?.response && e.response.status === 404) {
       alert('존재하지 않는 아이디입니다.');
     } else if (e?.response && e.response.status === 401) {
@@ -64,7 +67,7 @@ export const signin = (user: UserSignInInputDTO) => async (dispatch: any) => {
   }
 };
 
-/* LOGOUT */
+/* SIGNOUT */
 export const signout_ = () => ({
   type: actionTypes.SIGNOUT,
 });
@@ -78,35 +81,16 @@ export function signout() {
   };
 }
 
-/* Get User Profile info */
-export const getUserInfo_ = (userInfo: any) => ({
-  type: actionTypes.GET_USER_INFO,
-  userInfo,
-});
-
-export const getUserInfo = (id: any) => async (dispatch: any) => {
-  try {
-    const response = await axios.get(`/users/${id}`);
-    const returnedUserInfo = humps.camelizeKeys(response.data);
-    dispatch(getUserInfo_(returnedUserInfo));
-  } catch (e: any) {
-    if (e?.response && e.response.status === 404) {
-      alert('존재하지 않는 유저입니다');
-    }
-    console.log('returnedUserInfo error');
-  }
-};
-
-export const getUserNotification_ = (userNotification: any) => ({
+export const getUserNotification_ = (notification: any) => ({
   type: actionTypes.GET_USER_NOTIFICATION,
-  userNotification,
+  notification,
 });
 
 export const getUserNotification = (id: any) => async (dispatch: any) => {
   try {
     const response = await axios.get(`/users/${id}/notification`);
-    const userNotification = humps.camelizeKeys(response.data);
-    dispatch(getUserNotification_(userNotification));
+    const notification = humps.camelizeKeys(response.data);
+    dispatch(getUserNotification_(notification));
   } catch (e: any) {
     if (e?.response && e.response.status === 404) {
       alert('존재하지 않는 유저입니다');
@@ -114,20 +98,19 @@ export const getUserNotification = (id: any) => async (dispatch: any) => {
   }
 };
 
-export const readNotification_ = (userNotification: any) => ({
+export const readNotification_ = (notification: any) => ({
   type: actionTypes.READ_NOTIFICATION,
-  userNotification,
+  notification,
 });
 
 export const readNotification = (notiId: number) => async (dispatch: any) => {
   const response = await axios.patch(`/users/notification/${notiId}`);
-  const userNotification = humps.camelizeKeys(response.data);
-  dispatch(readNotification_(userNotification));
+  const notification = humps.camelizeKeys(response.data);
+  dispatch(readNotification_(notification));
 };
 
 export type UserAction =
   | ReturnType<typeof signin_>
   | ReturnType<typeof signout_>
-  | ReturnType<typeof getUserInfo_>
   | ReturnType<typeof getUserNotification_>
   | ReturnType<typeof readNotification_>;

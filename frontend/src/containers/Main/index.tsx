@@ -16,10 +16,10 @@ const Main = () => {
   const history = useHistory();
   const [posts, setPosts] = useState<PostEntity[]>();
   const [filterArray, setFilterArray] = useState<FilterInputDTO[]>([]);
-  const { user } = useSelector((state: AppState) => state.user);
+  const { loginUserId } = useSelector((state: AppState) => state.user);
 
   useEffect(() => {
-    if (!user) history.push('/signin');
+    if (!loginUserId) history.push('/signin');
 
     queryPosts()
       .then((res) => setPosts(res.items))

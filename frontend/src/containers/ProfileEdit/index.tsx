@@ -4,11 +4,10 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useEffect, useState } from 'react';
-import { History } from 'history';
+import { useHistory } from 'react-router-dom';
 import Button from '../../components/Button';
 import getGuDong from '../../utils/getGuDong';
-import { UserInfoEntity, UpdateProfileEntity } from '../../backend/entity/user';
-import './index.scss';
+import { UserInfoEntity, UpdateProfileDTO } from '../../backend/entity/user';
 import { readUserInfo, updateProfile } from '../../backend/api/api';
 import pfExerciseIcon from '../../assets/image/icon/pfexercise.svg';
 import greenDot from '../../assets/image/icon/green-circle.svg';
@@ -16,86 +15,92 @@ import exerciseIcon from '../../assets/image/icon/exercise.svg';
 import levelIcon from '../../assets/image/icon/level.svg';
 import xIcon from '../../assets/image/icon/x-icon.svg';
 import profileIcon from '../../assets/image/icon/profile-icon.svg';
+import 'antd/dist/antd.css';
+import './index.scss';
 
-interface ProfileProps {
-  history: History;
-}
+const initialUserInfoState: UserInfoEntity = {
+  userId: 0,
+  nickname: '',
+  latitude: 0,
+  longitude: 0,
+  gu: '',
+  dong: '',
+  gender: '미선택',
+  introduction: '',
+  preferredExercise: [{ exerciseName: '', skillLevel: '' }],
+  participatingPost: [
+    {
+      hostName: '',
+      postId: 0,
+      exerciseName: '',
+      title: '',
+      meetAt: '',
+      placeName: '',
+      status: '',
+    },
+  ],
+  hostingPost: [
+    {
+      hostName: '',
+      postId: 0,
+      exerciseName: '',
+      title: '',
+      meetAt: '',
+      placeName: '',
+      status: '',
+    },
+  ],
+};
 
-const ProfileEdit = ({ history }: ProfileProps) => {
-  const loginProfile = window.localStorage.getItem('profileInfo');
-  let parsedloginProfile: any;
-  if (loginProfile !== null) {
-    parsedloginProfile = JSON.parse(loginProfile);
-  }
-  const profileUserId = parsedloginProfile.userId;
+const initialUpdateProfileState = {
+  nickname: '',
+  gu: '',
+  dong: '',
+  introduction: '',
+  preferredExercise: [
+    {
+      exerciseName: '',
+      skillLevel: '',
+    },
+  ],
+};
 
-  const [userInfo, setUserInfo] = useState<UserInfoEntity>({
-    userId: 0,
-    nickname: '',
-    gu: '',
-    dong: '',
-    gender: '미선택',
-    introduction: '',
-    userExercise: [{ exerciseName: '', skillLevel: '상관 없음' }],
-    participatingPost: [
-      {
-        hostName: '',
-        postId: 0,
-        exerciseName: '',
-        title: '',
-        meetAt: '',
-        placeName: '',
-        status: '',
-      },
-    ],
-    hostingPost: [
-      {
-        hostName: '',
-        postId: 0,
-        exerciseName: '',
-        title: '',
-        meetAt: '',
-        placeName: '',
-        status: '',
-      },
-    ],
+const ProfileEdit = () => {
+  const history = useHistory();
+  const loginUserId = Number(window.localStorage.getItem('loginUser'));
+  const [userInfo, setUserInfo] =
+    useState<UserInfoEntity>(initialUserInfoState);
+  const [profileUpdate, setProfileUpdate] = useState<UpdateProfileDTO>(
+    initialUpdateProfileState,
+  );
+  const [selectedExercise, setSelectedExercise] = useState({
+    exerciseName: '종목',
+    skillLevel: '실력',
   });
-  const [profile, setProfile] = useState<UpdateProfileEntity>({
-    nickname: 'dummy',
-    gu: 'dummy',
-    dong: 'dummy',
-    introduction: 'dummy',
-    userExercise: [
-      {
-        exerciseName: '축구',
-        skillLevel: 'dummy',
-      },
-    ],
+  const [guDong, setGuDong] = useState({
+    loading: true,
+    text: '동네 정보 조회 중',
   });
 
   const fetchUserInfo = async () => {
-    const fetchedUserInfo: UserInfoEntity = (
-      await readUserInfo({ id: profileUserId })
-    ).entity;
+    const fetchedUserInfo = (await readUserInfo({ id: loginUserId })).entity;
     setUserInfo(fetchedUserInfo);
-    setProfile({
+    setProfileUpdate({
       nickname: fetchedUserInfo.nickname,
       gu: fetchedUserInfo.gu,
       dong: fetchedUserInfo.dong,
       introduction: fetchedUserInfo.introduction,
-      userExercise: fetchedUserInfo.userExercise,
+      preferredExercise: fetchedUserInfo.preferredExercise,
+    });
+    setGuDong({
+      loading: false,
+      text: `${fetchedUserInfo.gu} ${fetchedUserInfo.dong}`,
     });
   };
 
   useEffect(() => {
     fetchUserInfo();
   }, []);
-
-  const [selectedExercise, setSelectedExercise] = useState({
-    exerciseName: '종목',
-    skillLevel: '실력',
-  });
-  // const [selectedSkill, setSelectedSkill] = useState('');
 
   const verifyLocation = () => {
     const response = confirm(
@@ -106,25 +111,17 @@ const ProfileEdit = ({ history }: ProfileProps) => {
       if (!('geolocation' in navigator)) {
         alert('위치 정보를 사용할 수 없습니다. 다른 브라우저를 이용해주세요.');
       } else {
-        const locationHolder = document.getElementById('location-holder');
-        if (locationHolder) {
-          locationHolder.setAttribute(
-            'value',
-            '위치 정보를 불러오는 중입니다...',
-          );
-        }
+        setGuDong({ loading: true, text: '동네 정보 조회 중' });
         navigator.geolocation.getCurrentPosition((position) => {
           getGuDong(position.coords.longitude, position.coords.latitude).then(
             (value) => {
               const { gu, dong } = value;
-              setProfile({
-                ...profile,
-                gu: gu,
-                dong: dong,
+              setProfileUpdate({
+                ...profileUpdate,
+                gu,
+                dong,
               });
-              if (locationHolder) {
-                locationHolder.setAttribute('value', gu.concat(' ', dong));
-              }
+              setGuDong({ loading: false, text: `${gu} ${dong}` });
             },
           );
         });
@@ -137,11 +134,10 @@ const ProfileEdit = ({ history }: ProfileProps) => {
       selectedExercise.exerciseName !== '종목' &&
       selectedExercise.skillLevel !== '실력'
     ) {
-      const newArray = profile.userExercise;
-      newArray?.push(selectedExercise);
-      setProfile({
-        ...profile,
-        userExercise: newArray,
+      const updatedPreferredExercise = userInfo.preferredExercise;
+      setProfileUpdate({
+        ...profileUpdate,
+        preferredExercise: [...updatedPreferredExercise, selectedExercise],
       });
       setSelectedExercise({ exerciseName: '종목', skillLevel: '실력' });
     } else {
@@ -150,8 +146,9 @@ const ProfileEdit = ({ history }: ProfileProps) => {
   };
 
   const onClickSubmit = async () => {
-    await updateProfile({ id: profileUserId, updatePayload: profile });
-    history.push('/profile/my');
+    // TODO: PATCH method이므로 value가 있는 key값만 object로 만들어줘서 API 호출해야 합니다
+    await updateProfile({ id: loginUserId, updatePayload: profileUpdate });
+    history.push(`/profile/${loginUserId}`);
   };
 
   return (
@@ -161,27 +158,16 @@ const ProfileEdit = ({ history }: ProfileProps) => {
         <div className="location-container">
           <div className="location-and-button-container">
             <div className="input-name">위치정보</div>
-            <div
-              className="verify-location-button"
-              onClick={() => verifyLocation()}
-            >
+            <div className="verify-location-button" onClick={verifyLocation}>
               <span>재인증</span>
             </div>
           </div>
-
           <div className="input-form">
             <input
               id="location-holder"
+              className={guDong.loading ? 'loading' : undefined}
               disabled
-              placeholder={userInfo.gu.concat(' ', userInfo?.dong)}
-              onChange={(e) => {
-                console.log(e.target.value);
-                setProfile({
-                  ...profile,
-                  gu: e.target.value.split(' ')[0],
-                  dong: e.target.value.split(' ')[1],
-                });
-              }}
+              placeholder={guDong.text}
             />
           </div>
         </div>
@@ -190,10 +176,10 @@ const ProfileEdit = ({ history }: ProfileProps) => {
           <div className="input-form">
             <input
               placeholder={userInfo.nickname}
-              value={profile.nickname}
+              value={profileUpdate.nickname}
               onChange={(e) =>
-                setProfile({
-                  ...profile,
+                setProfileUpdate({
+                  ...profileUpdate,
                   nickname: e.target.value,
                 })
               }
@@ -205,10 +191,10 @@ const ProfileEdit = ({ history }: ProfileProps) => {
           <div className="input-form">
             <input
               placeholder={userInfo.introduction || ''}
-              value={profile.introduction || ''}
+              value={profileUpdate.introduction || ''}
               onChange={(e) =>
-                setProfile({
-                  ...profile,
+                setProfileUpdate({
+                  ...profileUpdate,
                   introduction: e.target.value,
                 })
               }
@@ -278,33 +264,37 @@ const ProfileEdit = ({ history }: ProfileProps) => {
           className="preferred-exercise-container"
           id="preferred-exercise-container"
         >
-          {profile.userExercise?.map((exerciseAndSkill: any, idx: number) => (
-            <div key={idx} className="pfexercise-box">
-              <div>
-                <img className="green-dot" src={greenDot} alt="green-dot" />
-                <span>
-                  {exerciseAndSkill.exerciseName}ㆍ{exerciseAndSkill.skillLevel}
-                </span>
+          {profileUpdate.preferredExercise?.map(
+            (exerciseAndSkill: any, idx: number) => (
+              <div key={idx} className="pfexercise-box">
+                <div>
+                  <img className="green-dot" src={greenDot} alt="green-dot" />
+                  <span>
+                    {exerciseAndSkill.exerciseName}ㆍ
+                    {exerciseAndSkill.skillLevel}
+                  </span>
+                </div>
+                <div>
+                  <img
+                    className="x-icon"
+                    src={xIcon}
+                    alt="x-icon"
+                    onClick={() =>
+                      setProfileUpdate({
+                        ...profileUpdate,
+                        preferredExercise:
+                          profileUpdate.preferredExercise?.filter(
+                            (exercise) =>
+                              exercise.exerciseName !==
+                              exerciseAndSkill.exerciseName,
+                          ),
+                      })
+                    }
+                  />
+                </div>
               </div>
-              <div>
-                <img
-                  className="x-icon"
-                  src={xIcon}
-                  alt="x-icon"
-                  onClick={() =>
-                    setProfile({
-                      ...profile,
-                      userExercise: profile.userExercise?.filter(
-                        (exercise) =>
-                          exercise.exerciseName !==
-                          exerciseAndSkill.exerciseName,
-                      ),
-                    })
-                  }
-                />
-              </div>
-            </div>
-          ))}
+            ),
+          )}
         </div>
       </div>
       <Button id="submit-button" onClick={onClickSubmit}>

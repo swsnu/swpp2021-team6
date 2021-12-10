@@ -1,78 +1,34 @@
 import * as actionTypes from '../actions/actionTypes';
-import {
-  UserEntity,
-  UserProfileInfo,
-  UserInfoEntity,
-} from '../../backend/entity/user';
-import { UserAction } from '../actions/user';
-import { DefaultAction } from '../actions/index';
 
 export type UserState = {
-  user: UserProfileInfo | undefined | null;
-  userInfo: UserInfoEntity | null;
-  userNotification: any | null;
+  loginUserId: number | null;
+  notification: any | null; // TODO: NotificationEntity 만들어주세요
 };
 
 const InitialState: UserState = {
-  user: undefined,
-  userInfo: {
-    userId: 0,
-    nickname: '',
-    gu: '',
-    dong: '',
-    gender: '미선택',
-    introduction: '',
-    userExercise: [{ exerciseName: '', skillLevel: '상관 없음' }],
-    participatingPost: [
-      {
-        hostName: '',
-        postId: 0,
-        exerciseName: '',
-        title: '',
-        meetAt: '',
-        placeName: '',
-        status: '',
-      },
-    ],
-    hostingPost: [
-      {
-        hostName: '',
-        postId: 0,
-        exerciseName: '',
-        title: '',
-        meetAt: '',
-        placeName: '',
-        status: '',
-      },
-    ],
-  },
-  userNotification: null,
+  loginUserId: null,
+  notification: null,
 };
 
 function userReducer(state: UserState = InitialState, action: any): UserState {
   switch (action.type) {
-    /* LOGIN */
     case actionTypes.AUTO_SIGNIN:
-      return { ...state, user: action.user };
+      return { ...state, loginUserId: action.userId };
 
     case actionTypes.SIGNIN:
-      return { ...state, user: action.user };
+      return { ...state, loginUserId: action.userId };
 
     case actionTypes.SIGNUP:
-      return { ...state, user: action.user };
+      return { ...state, loginUserId: action.userId };
 
-    /* LOGOUT */
     case actionTypes.SIGNOUT:
-      return { ...state, user: null, userInfo: null, userNotification: null };
-
-    case actionTypes.GET_USER_INFO:
-      return { ...state, userInfo: action.userInfo };
+      return { loginUserId: null, notification: null };
 
     case actionTypes.GET_USER_NOTIFICATION:
-      return { ...state, userNotification: action.userNotification };
+      return { ...state, notification: action.notification };
 
     case actionTypes.READ_NOTIFICATION:
-      return { ...state, userNotification: action.userNotification };
+      return { ...state, notification: action.notification };
 
     case actionTypes.CREATE_NOTIFICATION:
       return state;

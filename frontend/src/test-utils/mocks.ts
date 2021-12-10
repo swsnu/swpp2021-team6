@@ -15,9 +15,9 @@ declare global {
 }
 
 export const getMockStore = (initialState: any) => {
-  const mockArticleReducer = getMockArticleReducer(initialState);
+  const mockUserReducer = getMockArticleReducer(initialState);
   const rootReducer = combineReducers({
-    art: mockArticleReducer,
+    user: mockUserReducer,
     router: connectRouter(history),
   });
   const composeEnhancers =

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
 import { History } from 'history';
 import axios from 'axios';
@@ -21,23 +21,18 @@ import { autoSignin } from './store/actions/user';
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
-interface Props {
-  history: History;
-}
-
-const App = ({ history }: Props) => {
+const App = ({ history }: { history: History }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(autoSignin());
   }, []);
 
-  const { user } = useSelector((state: AppState) => state.user);
+  const { loginUserId } = useSelector((state: AppState) => state.user);
 
   return (
     <ConnectedRouter history={history}>
-      {/* 로그인 user 있을 경우에만 (= SignIn, SignUp 페이지 아닐 경우) Navbar 보여주기 */}
-      {user && <Navbar history={history} />}
+      {loginUserId ? <Navbar /> : null}
       <Switch>
         <Route path="/signin" exact component={SignIn} />
         <Route path="/signup" exact component={SignUp} />

@@ -82,6 +82,8 @@
       "!src/index.tsx",
       "!src/serviceWorker.ts",
       "!src/utils/*",
+      "!src/test-utils/*",
+      "!src/backend/api/*",
       "!src/containers/PostCreate/*",
       "!src/containers/PostDetail/*",
       "!src/containers/PostEdit/*",

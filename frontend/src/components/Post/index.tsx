@@ -45,7 +45,7 @@ const Post: React.FC<Props> = ({ post }: Props) => {
         imgArray = thumbnails.riding;
         break;
       default:
-        window.alert('운동 타입이 잘못 설정된 데이터가 있습니다.');
+        window.alert('Post: 운동 타입이 잘못 설정된 데이터가 있습니다.');
     }
     setImgSrc(imgArray[idx]);
   }, []);

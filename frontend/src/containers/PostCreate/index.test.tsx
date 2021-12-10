@@ -1,14 +1,11 @@
 import * as reactRedux from 'react-redux';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import * as postActionCreators from '../../store/actions/post';
 import PostCreate from '.';
-import mockStore, { history } from '../../store/store';
+import mockStore from '../../store/store';
 import mockUser from '../../mocks/user.json';
-import * as kakaoMapFunctions from '../../utils/getKakaoMap';
 
 const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
-const useDispatchMock = jest.spyOn(reactRedux, 'useDispatch');
 jest.mock('../../utils/getKakaoMap', () =>
   jest.fn((props) => <div {...props} className="map" />),
 );
@@ -23,11 +20,7 @@ describe('PostCreate', () => {
         <PostCreate />
       </Provider>
     );
-    useSelectorMock.mockReturnValue(mockUser);
-    useDispatchMock.mockReturnValue(jest.fn());
-    spyCreatePost = jest
-      .spyOn(postActionCreators, 'createPost')
-      .mockImplementation();
+
     window.matchMedia =
       window.matchMedia ||
       function () {
@@ -40,7 +33,7 @@ describe('PostCreate', () => {
   });
 
   it('should render without error', () => {
-    const component = shallow(postCreate);
+    const component = mount(postCreate);
     // expect(component.find('form').length).toBe(1);
   });
 });

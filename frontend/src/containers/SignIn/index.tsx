@@ -18,7 +18,7 @@ const SignIn = () => {
   const [password, setPassword] = useState<string>('');
 
   const dispatch = useDispatch();
-  const { user } = useSelector((state: AppState) => state.user);
+  const { loginUserId } = useSelector((state: AppState) => state.user);
   const history = useHistory();
 
   const onClickLogin = () => {
@@ -41,7 +41,7 @@ const SignIn = () => {
   const onClickGoogleSignIn = () => {};
 
   useEffect(() => {
-    if (user) history.push('/main');
+    if (loginUserId) history.push('/main');
   });
 
   return (

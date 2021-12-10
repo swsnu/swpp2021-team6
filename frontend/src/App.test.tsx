@@ -14,7 +14,7 @@ describe('App without signin user', () => {
     const mockStore = createStore(
       combineReducers({
         router: connectRouter(history),
-        user: (state = { user: null }, action) => state,
+        user: (state = { loginUserId: null }, action) => state,
       }),
       applyMiddleware(thunk, routerMiddleware(history)),
     );
@@ -40,14 +40,8 @@ describe('App without signin user', () => {
   });
 });
 
-describe('App with signin user', () => {
+describe('App with login user', () => {
   let app: any;
-  const mockUserProfile = {
-    userId: 1,
-    nickname: 'juyoung',
-    latitude: 37.12345,
-    longitude: 127.12345,
-  };
 
   const mockUserNotification = [{ isRead: true }];
 
@@ -58,8 +52,8 @@ describe('App with signin user', () => {
         router: connectRouter(history),
         user: (
           state = {
-            user: mockUserProfile,
-            userNotification: mockUserNotification,
+            loginUserId: 1,
+            notification: mockUserNotification,
           },
           action,
         ) => state,

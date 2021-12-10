@@ -5,18 +5,15 @@ import { History } from 'history';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Menu, Dropdown } from 'antd';
-import humps from 'humps';
 import { AppState } from '../../store/store';
 import notiIconWithDot from '../../assets/image/icon/noti-with-dot.svg';
 import notiIcon from '../../assets/image/icon/noti-without-dot.svg';
 import notiDot from '../../assets/image/icon/noti-dot.svg';
 import {
-  getUserInfo,
   getUserNotification,
   readNotification,
 } from '../../store/actions/user';
 import './index.scss';
-import { UserInfoEntity } from '../../backend/entity/user';
 
 interface NotificationProps {
   history: History;
@@ -25,24 +22,16 @@ interface NotificationProps {
 const Notification = ({ history }: NotificationProps) => {
   // const [postTitle, setPostTitle] = useState<string>('');
   const dispatch = useDispatch();
-  const userState = useSelector((state: AppState) => state.user);
+  const { notification } = useSelector((state: AppState) => state.user);
   // const userInfo = humps.camelizeKeys(mockUserInfo) as UserInfoEntity;
   // const mockNotifications = humps.camelizeKeys(notifications);
-  const loginProfile = window.localStorage.getItem('profileInfo');
-  let parsedLoginProfile: any;
-  if (loginProfile !== null) {
-    parsedLoginProfile = JSON.parse(loginProfile);
-  }
+  const loginUserId = window.localStorage.getItem('loginUser');
 
   useEffect(() => {
-    if (parsedLoginProfile) {
-      dispatch(getUserNotification(parsedLoginProfile.userId));
-      if (loginProfile !== null) {
-        parsedLoginProfile = JSON.parse(loginProfile);
-      }
+    if (loginUserId) {
+      dispatch(getUserNotification(loginUserId));
     }
-    console.log(userState.userNotification === null);
-  }, [loginProfile]);
+  }, [loginUserId]);
 
   const getMessage = (postTitle: string, notiType: string) => {
     let displayedTitle = postTitle;
@@ -78,13 +67,12 @@ const Notification = ({ history }: NotificationProps) => {
 
   const myNotis = () => (
     <Menu>
-      {userState.userNotification === null ||
-      userState.userNotification.length === 0 ? (
+      {notification === null || notification.length === 0 ? (
         <div style={{ margin: '0 5 0 5' }}>
           <span style={{ margin: '0 20 0 20' }}>표시할 알림이 없습니다</span>
         </div>
       ) : (
-        userState.userNotification.map((notification: any) => (
+        notification.map((notification: any) => (
           // <Menu.Item
           //   key={notification.notiId}
           //   className={notification.isRead === true ? 'read' : 'unread'}
@@ -126,13 +114,11 @@ const Notification = ({ history }: NotificationProps) => {
         aria-hidden="true"
         onClick={(e) => e.preventDefault()}
       > */}
-      {userState.userNotification !== null ? (
+      {notification ? (
         <img
           className="noti-icon"
           src={
-            userState.userNotification.filter(
-              (noti: any) => noti.isRead === false,
-            ).length > 0
+            notification.filter((noti: any) => noti.isRead === false).length > 0
               ? notiIconWithDot
               : notiIcon
           }
