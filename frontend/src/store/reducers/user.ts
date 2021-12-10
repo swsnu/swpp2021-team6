@@ -2,7 +2,7 @@ import * as actionTypes from '../actions/actionTypes';
 
 export type UserState = {
   loginUserId: number | null;
-  notification: any | null; // TODO: NotificationEntity 만들어주세요
+  notification: any | null;
 };
 
 const InitialState: UserState = {

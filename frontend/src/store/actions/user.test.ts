@@ -1,98 +1,138 @@
+/* eslint-disable no-proto */
 import axios from 'axios';
 import * as actionCreators from './user';
 import { getMockStore } from '../../test-utils/mocks';
 import { UserState } from '../reducers/user';
-import { SignUpDTO } from '../../backend/entity/user';
+import {
+  NotiType,
+  NotificationEntity,
+} from '../../backend/entity/notification';
 
-const stubUser: SignUpDTO = {
-  username: 'test user',
-  password: 'test password',
-};
+window.alert = jest.fn().mockImplementation();
+console.log = jest.fn().mockImplementation();
+jest.spyOn(window.localStorage.__proto__, 'getItem');
+jest.spyOn(window.localStorage.__proto__, 'clear');
+window.localStorage.__proto__.getItem = jest.fn().mockReturnValue(1);
 
-const stubUserInfo = {
-  usreId: 1,
-  nickname: 'test user',
-  gu: '관악구',
-  dong: '신림동',
-  gender: '여성',
+const stubUserProfileDTO = {
+  latitude: 123,
+  longitude: 456,
+  gu: '',
+  dong: '',
+  gender: '',
+  nickname: '',
   introduction: '',
-  userExercise: [{ exerciseName: '축구', skillLevel: '상' }],
-  participatingPost: [],
-  hostingPost: [],
+  preferredExercise: [],
 };
 
-const stubInitialState: UserState = {
-  loginUserId: null,
-  notification: null,
-};
-
-const mockStore = getMockStore(stubInitialState);
+const stubNotification: NotificationEntity[] = [
+  {
+    notiId: 1,
+    notiType: NotiType.comment,
+    postId: 1,
+    postTitle: '',
+    isRead: false,
+    createdAt: '7초 전',
+  },
+];
 
 describe('User Actions', () => {
-  beforeEach(() => {
-    window.alert = jest.fn().mockImplementation();
-  });
+  const stubInitialState: UserState = {
+    loginUserId: null,
+    notification: null,
+  };
+  const mockStore = getMockStore(stubInitialState);
+
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it("'signin' should sign in user", () => {
-    const spy = jest.spyOn(axios, 'post').mockResolvedValue({
-      status: 201,
-      data: stubUser,
-    });
-
-    mockStore.dispatch<any>(actionCreators.signin(stubUser)).then(() => {
-      expect(spy).toBeCalledTimes(1);
-    });
+  it("should 'autoSignin' last logged in user", () => {
+    mockStore.dispatch<any>(actionCreators.autoSignin());
   });
 
-  it("'signin' should not sign in user with wrong username", () => {
-    const spy = jest.spyOn(axios, 'post').mockRejectedValue({
+  it("should 'signin' user properly", () => {
+    const spyPost = jest.spyOn(axios, 'post').mockResolvedValue({
+      status: 200,
+      data: { user_id: 1 },
+    });
+    mockStore.dispatch<any>(
+      actionCreators.signin({ username: 'username', password: 'password' }),
+    );
+    expect(spyPost).toBeCalledTimes(1);
+  });
+
+  it("should handle 404 error when 'signin' user", () => {
+    const spyPost = jest.spyOn(axios, 'post').mockRejectedValue({
       response: {
         status: 404,
       },
     });
-
-    mockStore.dispatch<any>(actionCreators.signin(stubUser));
-    expect(spy).toBeCalledTimes(1);
+    mockStore.dispatch<any>(
+      actionCreators.signin({ username: 'username', password: 'password' }),
+    );
+    expect(spyPost).toBeCalledTimes(1);
   });
 
-  it("'signin' should not sign in user with wrong password", () => {
-    const spy = jest.spyOn(axios, 'post').mockRejectedValue({
+  it("should handle 401 error when 'signin' user", () => {
+    const spyPost = jest.spyOn(axios, 'post').mockRejectedValue({
       response: {
         status: 401,
       },
     });
-
-    mockStore.dispatch<any>(actionCreators.signin(stubUser));
-    expect(spy).toBeCalledTimes(1);
+    mockStore.dispatch<any>(
+      actionCreators.signin({ username: 'username', password: 'password' }),
+    );
+    expect(spyPost).toBeCalledTimes(1);
   });
 
-  it("'signout' should sign out user", () => {
-    const spy = jest.spyOn(axios, 'get').mockImplementation();
-    mockStore.dispatch<any>(actionCreators.signout()).then(() => {
-      expect(spy).toBeCalledTimes(1);
+  it("should 'onboarding' user", () => {
+    const spyPost = jest.spyOn(axios, 'post');
+    mockStore.dispatch<any>(actionCreators.onboarding(stubUserProfileDTO, 1));
+    expect(spyPost).toBeCalledTimes(1);
+  });
+
+  it("should handle error when 'onboarding' user", () => {
+    const spyPost = jest.spyOn(axios, 'post').mockRejectedValue({
+      response: {
+        status: 400,
+      },
     });
+    mockStore.dispatch<any>(actionCreators.onboarding(stubUserProfileDTO, 1));
+    expect(spyPost).toBeCalledTimes(1);
   });
 
-  // it("'getUserInfo' should get user info", () => {
-  //   const spy = jest.spyOn(axios, 'get').mockResolvedValue({
-  //     status: 200,
-  //     data: stubUserInfo,
-  //   });
-  //   mockStore.dispatch<any>(actionCreators.getUserInfo(1)).then(() => {
-  //     expect(spy).toBeCalledTimes(1);
-  //   });
-  // });
+  it("should 'signout' user", () => {
+    const spyGet = jest.spyOn(axios, 'get');
+    mockStore.dispatch<any>(actionCreators.signout());
+    expect(spyGet).toBeCalledTimes(1);
+  });
 
-  // it("'getUserInfo' should not get user info", () => {
-  //   const spy = jest.spyOn(axios, 'get').mockRejectedValue({
-  //     response: {
-  //       status: 404,
-  //     },
-  //   });
-  //   mockStore.dispatch<any>(actionCreators.getUserInfo(1));
-  //   expect(spy).toBeCalledTimes(1);
-  // });
+  it("should 'getNotification'", () => {
+    const spyGet = jest.spyOn(axios, 'get').mockResolvedValue({
+      status: 200,
+      data: stubNotification,
+    });
+    mockStore.dispatch<any>(actionCreators.getNotification(1));
+    expect(spyGet).toBeCalledTimes(1);
+  });
+
+  it("should handle 404 error when 'getNotification'", () => {
+    const spyGet = jest.spyOn(axios, 'get').mockRejectedValue({
+      response: {
+        status: 404,
+      },
+    });
+    mockStore.dispatch<any>(actionCreators.getNotification(1));
+    expect(spyGet).toBeCalledTimes(1);
+  });
+
+  it("should 'readNotification'", () => {
+    const spyGet = jest.spyOn(axios, 'get').mockResolvedValueOnce({
+      status: 200,
+      data: stubNotification,
+    });
+    mockStore.dispatch<any>(actionCreators.readNotification(1));
+    expect(spyGet).toBeCalledTimes(1);
+  });
 });
