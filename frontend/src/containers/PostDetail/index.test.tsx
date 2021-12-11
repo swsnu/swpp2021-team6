@@ -102,10 +102,10 @@ describe('PostCreate', () => {
     // expect(component.find('#post-detail-page').length).toBe(1);
   });
 
-  it('should render without error', () => {
-    jest.spyOn(axios, 'get').mockResolvedValueOnce({ entity: stubUserInfo });
-    jest.spyOn(axios, 'get').mockResolvedValueOnce({ items: stubComments });
-    const component = mount(postDetail);
-    // expect(component.find('#post-detail-page').length).toBe(1);
-  });
+  // it('should render without error', () => {
+  //   jest.spyOn(axios, 'get').mockResolvedValueOnce({ entity: stubUserInfo });
+  //   jest.spyOn(axios, 'get').mockResolvedValueOnce({ items: stubComments });
+  //   const component = mount(postDetail);
+  //   // expect(component.find('#post-detail-page').length).toBe(1);
+  // });
 });

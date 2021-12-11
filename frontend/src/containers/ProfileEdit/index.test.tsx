@@ -33,8 +33,8 @@ jest.mock('react-router-dom', () => ({
   }),
 }));
 
-jest.mock('React', () => ({
-  ...jest.requireActual('React'),
+jest.mock('react', () => ({
+  ...jest.requireActual('react'),
   useEffect: jest.fn(),
 }));
 

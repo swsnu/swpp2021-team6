@@ -3,14 +3,11 @@ import React, { useEffect } from 'react';
 import { mount } from 'enzyme';
 import * as reactRedux from 'react-redux';
 import { Provider } from 'react-redux';
-// import { createMemoryHistory } from 'history';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import * as actionCreators from '../../backend/api/api';
 import { mockNavigatorGeolocation } from '../../test-utils/mockNavigatorGeolocation';
 import userInfo from '../../mocks/userInfo.json';
 import notification from '../../mocks/notification.json';
-import { UserInfoEntity } from '../../backend/entity/user';
 import Profile from '.';
 import { history } from '../../store/store';
 
@@ -37,8 +34,8 @@ jest.mock('react-router', () => ({
 //   }),
 // }));
 
-jest.mock('React', () => ({
-  ...jest.requireActual('React'),
+jest.mock('react', () => ({
+  ...jest.requireActual('react'),
   useEffect: jest.fn(),
 }));
 
