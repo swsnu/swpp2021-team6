@@ -26,7 +26,7 @@ const Profile = ({ history }: ProfileProps) => {
   const { id }: { id: string | undefined } = useParams();
 
   const loginUserId = localStorage.getItem('loginUser');
-  const isLoginUser = id && id === loginUserId;
+  const isLoginUser = id && id === 'my';
   const profileUserId = isLoginUser ? loginUserId : id;
 
   const [userInfo, setUserInfo] = useState<UserInfoEntity>({
@@ -167,11 +167,12 @@ const Profile = ({ history }: ProfileProps) => {
   };
 
   return (
-    <div className="body" style={{ width: '70%', margin: 'auto' }}>
+    <div className="profile" style={{ width: '70%', margin: 'auto' }}>
       {isLoginUser ? (
         <div className="button-div">
           <div className="button-container">
             <span
+              id="signout"
               className="signout-button"
               onClick={() => history.push('/signout')}
             >
@@ -182,6 +183,7 @@ const Profile = ({ history }: ProfileProps) => {
             </div>
             <span
               className="edit-profile-button"
+              id="edit-profile"
               onClick={() => history.push('/profile/edit')}
             >
               프로필 수정
