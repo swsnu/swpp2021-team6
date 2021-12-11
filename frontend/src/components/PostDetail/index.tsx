@@ -3,13 +3,14 @@
 /* eslint-disable no-restricted-globals */
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Button } from 'antd';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { getKakaoMapWithMarker } from '../../utils/getKakaoMap';
 import Label from '../Label';
 import {
   PostEntity,
   StatusType,
   ParticipantType,
+  ApplyStatus,
 } from '../../backend/entity/post';
 import { changeDateFormat } from '../../utils/dateToString';
 import './index.scss';
@@ -56,20 +57,19 @@ const Detail: React.FC<Props> = ({
       `'${participant.userName}'님의 참가 신청을 수락하시겠습니까?`,
     );
     if (response) {
-      await acceptApply(postId, participant.userId).then((status) => {
-        if (status === 204) {
-          alert('참가 신청을 수락했습니다.');
-          const others = participants.filter(
-            (v) => v.userId !== participant.userId,
-          );
-          setParticipants([...others, { ...participant, status: 'ACCEPTED' }]);
-          setPost({
-            ...post,
-            memberCount: post.memberCount + 1,
-            participants: [...others, { ...participant, status: 'ACCEPTED' }],
-          });
-        }
-      });
+      const status = await acceptApply(postId, participant.userId);
+      if (status === 204) {
+        alert('참가 신청을 수락했습니다.');
+        const others = participants.filter(
+          (v) => v.userId !== participant.userId,
+        );
+        setParticipants([...others, { ...participant, status: 'ACCEPTED' }]);
+        setPost({
+          ...post,
+          memberCount: post.memberCount + 1,
+          participants: [...others, { ...participant, status: 'ACCEPTED' }],
+        });
+      }
     }
   };
 
@@ -78,15 +78,14 @@ const Detail: React.FC<Props> = ({
       `'${participant.userName}'님의 참가 신청을 거절하시겠습니까?`,
     );
     if (response) {
-      await declineApply(postId, participant.userId).then((status) => {
-        if (status === 204) {
-          alert('참가 신청을 거절했습니다.');
-          const others = participants.filter(
-            (v) => v.userId !== participant.userId,
-          );
-          setParticipants([...others]);
-        }
-      });
+      const status = await declineApply(postId, participant.userId);
+      if (status === 204) {
+        alert('참가 신청을 거절했습니다.');
+        const others = participants.filter(
+          (v) => v.userId !== participant.userId,
+        );
+        setParticipants([...others]);
+      }
     }
   };
 
@@ -110,8 +109,15 @@ const Detail: React.FC<Props> = ({
   const meetAtText = changeDateFormat(post.meetAt);
   const button = isHost ? (
     <>
-      <Button onClick={() => history.push(`/post/${postId}/edit`)}>수정</Button>
-      <Button onClick={onDelete}>삭제</Button>
+      <Button
+        id="post-edit-button"
+        onClick={() => history.push(`/post/${postId}/edit`)}
+      >
+        수정
+      </Button>
+      <Button id="post-delete-button" onClick={onDelete}>
+        삭제
+      </Button>
     </>
   ) : (
     <></>
@@ -123,11 +129,12 @@ const Detail: React.FC<Props> = ({
   };
 
   const button2 = isHost ? (
-    <button onClick={onClickToggleOpen}>
+    <button id="participant-toggle-button" onClick={onClickToggleOpen}>
       <span>참여자 명단 확인</span>
     </button>
   ) : (
     <button
+      id="participate-button"
       className={isParticipant ? 'disabled' : undefined}
       onClick={onParticipate}
       disabled={isParticipant}
@@ -215,9 +222,9 @@ const Detail: React.FC<Props> = ({
         </div>
         <div id="body-2">
           <div id="profile">
-            <Link to={`/profile/${post.hostId}`}>
+            <button onClick={() => history.push(`/profile/${post.hostId}`)}>
               <img src={userIcon} alt="userIcon" />
-            </Link>
+            </button>
           </div>
           <div id="user-openkakao">
             <div id="user">

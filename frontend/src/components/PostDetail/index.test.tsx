@@ -1,6 +1,8 @@
 import { mount } from 'enzyme';
+import axios from 'axios';
 import Detail from '.';
 import { PostEntity } from '../../backend/entity/post';
+import * as kakaoMap from '../../utils/getKakaoMap';
 
 const stubPost: PostEntity = {
   postId: 1,
@@ -29,6 +31,18 @@ const stubPost: PostEntity = {
   keywords: ['뒤풀이', 'MBTI E', '이번 주말'],
 };
 
+const stubIsHostWithoutParticipantsProps = {
+  post: stubPost,
+  isHost: true,
+  isParticipant: false,
+  applyStatus: null,
+  onDelete: jest.fn(),
+  onParticipate: jest.fn(),
+  participants: [],
+  setParticipants: jest.fn(),
+  setPost: jest.fn(),
+};
+
 const stubIsHostProps = {
   post: stubPost,
   isHost: true,
@@ -36,7 +50,11 @@ const stubIsHostProps = {
   applyStatus: null,
   onDelete: jest.fn(),
   onParticipate: jest.fn(),
-  participants: [{ userId: 2, userName: '구미', status: '승인 대기 중' }],
+  participants: [
+    { userId: 2, userName: '구미', status: 'PENDING' },
+    { userId: 3, userName: '구미구미', status: 'ACCEPTED' },
+    { userId: 3, userName: '구미구미', status: '' },
+  ],
   setParticipants: jest.fn(),
   setPost: jest.fn(),
 };
@@ -53,16 +71,70 @@ const stubIsNotHostProps = {
   setPost: jest.fn(),
 };
 
+window.alert = jest.fn();
 const mockPush = jest.fn();
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useHistory: () => ({ push: mockPush }),
   useParams: () => ({ id: '1' }),
 }));
+jest.spyOn(kakaoMap, 'getKakaoMapWithMarker').mockImplementation();
 
 describe('Detail', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    jest.restoreAllMocks();
+  });
+
   it('should render without error', () => {
     const component = mount(<Detail {...stubIsHostProps} />);
     expect(component.find('#post-detail-component').length).toBe(1);
+  });
+
+  it('should open toggle and accept participant', () => {
+    window.confirm = jest.fn().mockReturnValue(true);
+    jest.spyOn(axios, 'post').mockResolvedValue({ status: 204 });
+    const component = mount(<Detail {...stubIsHostProps} />);
+    component.find('#participant-toggle-button').simulate('click');
+    component.find('#pending-button').simulate('click');
+  });
+
+  it('should open toggle and delcline participant', () => {
+    window.confirm = jest.fn().mockReturnValue(true);
+    jest.spyOn(axios, 'post').mockResolvedValue({ status: 204 });
+    const component = mount(<Detail {...stubIsHostProps} />);
+    component.find('#participant-toggle-button').simulate('click');
+    component.find('#participant-delete-button').at(0).simulate('click');
+  });
+
+  it('should alert when there is no participant', () => {
+    const component = mount(<Detail {...stubIsHostWithoutParticipantsProps} />);
+    component.find('#participant-toggle-button').simulate('click');
+    expect(window.alert).toBeCalledTimes(1);
+  });
+
+  it('should edit post', () => {
+    const component = mount(<Detail {...stubIsHostProps} />);
+    component.find('#post-edit-button').at(0).simulate('click');
+  });
+
+  it('should delete post', () => {
+    const component = mount(<Detail {...stubIsHostProps} />);
+    component.find('#post-delete-button').at(0).simulate('click');
+  });
+
+  it("should redirect to participnat's profile", () => {
+    const component = mount(<Detail {...stubIsHostProps} />);
+    component.find('#participant-nickname').at(0).simulate('click');
+    expect(mockPush).toBeCalledTimes(1);
+  });
+
+  it("should redirect to host's profile", () => {
+    const component = mount(<Detail {...stubIsNotHostProps} />);
+    component.find('#profile').find('button').simulate('click');
+    expect(mockPush).toBeCalledTimes(1);
   });
 });
