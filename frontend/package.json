@@ -83,12 +83,7 @@
       "!src/serviceWorker.ts",
       "!src/utils/*",
       "!src/test-utils/*",
-      "!src/backend/api/*",
-      "!src/containers/PostCreate/*",
-      "!src/containers/PostDetail/*",
-      "!src/containers/PostEdit/*",
-      "!src/containers/Profile/*",
-      "!src/containers/ProfileEdit/*"
+      "!src/backend/**"
     ]
   }
 }
