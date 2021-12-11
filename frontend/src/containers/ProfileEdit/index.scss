@@ -178,7 +178,6 @@
       margin-left: 10px;
       width: 150px;
       height: 40px;
-      background: #ffffff;
       border: 1px solid #b6b6b6;
       box-sizing: border-box;
       border-radius: 40px;
@@ -187,7 +186,7 @@
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
-      background: url('../../assets/image/icon/select-chevron.svg')
+      background: #ffffff url('../../assets/image/icon/select-chevron.svg')
         calc(100% - 10px) center no-repeat;
     }
   }
