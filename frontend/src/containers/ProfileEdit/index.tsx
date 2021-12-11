@@ -152,7 +152,7 @@ const ProfileEdit = () => {
   };
 
   return (
-    <div className="body">
+    <div className="profile-edit">
       <div className="profile-container">
         <img src={profileIcon} alt="profile-icon" />
         <div className="location-container">
@@ -175,6 +175,7 @@ const ProfileEdit = () => {
           <div className="input-name">닉네임 변경</div>
           <div className="input-form">
             <input
+              className="nickname-input"
               placeholder={userInfo.nickname}
               value={profileUpdate.nickname}
               onChange={(e) =>
@@ -190,6 +191,7 @@ const ProfileEdit = () => {
           <div className="input-name">소개글 변경</div>
           <div className="input-form">
             <input
+              className="introduction-input"
               placeholder={userInfo.introduction || ''}
               value={profileUpdate.introduction || ''}
               onChange={(e) =>
@@ -297,7 +299,11 @@ const ProfileEdit = () => {
           )}
         </div>
       </div>
-      <Button id="submit-button" onClick={onClickSubmit}>
+      <Button
+        className="save-button"
+        id="submit-button"
+        onClick={onClickSubmit}
+      >
         변경사항 저장
       </Button>
     </div>
