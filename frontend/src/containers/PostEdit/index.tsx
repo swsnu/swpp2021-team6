@@ -11,11 +11,38 @@ import participateIcon from '../../assets/image/icon/participate.svg';
 import { changeDateFormat } from '../../utils/dateToString';
 import './index.scss';
 
-const PostCreate: React.FC = () => {
+const mockPost = {
+  postId: 1,
+  hostId: 1,
+  hostName: 'gdori',
+  exerciseName: '축구',
+  expectedLevel: '상',
+  title: '용산구에서 같이 축구하실 분~',
+  description: '가볍게 축구하실 분 구해요',
+  meetAt: '2021-11-11 19:00',
+  minCapacity: 5,
+  maxCapacity: 10,
+  memberCount: 3,
+  place: {
+    name: '용산공업고등학교',
+    latitude: 37.524298,
+    longitude: 126.967529,
+    gu: '용산구',
+    dong: '용산동',
+    address: '서울특별시 용산구 한강로3가',
+    telephone: '02-2648-1264',
+  },
+  participants: [],
+  kakaotalkLink: 'https://open.kakao.com/o/stl6nIeb',
+  status: '모집 중',
+  keywords: ['뒤풀이', 'MBTI E', '이번 주말'],
+};
+
+const PostEdit: React.FC = () => {
   const history = useHistory();
   const postId: number = Number(useParams<{ id: string }>().id);
 
-  const [post, setPost] = useState<PostEntity>();
+  const [post, setPost] = useState<PostEntity>(mockPost);
   const [postUpdate, setPostUpdate] = useState<UpdatePostDTO>();
 
   const { loginUserId } = useSelector((state: AppState) => state.user);
@@ -169,4 +196,4 @@ const PostCreate: React.FC = () => {
   );
 };
 
-export default PostCreate;
+export default PostEdit;
