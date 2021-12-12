@@ -2,30 +2,20 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import * as reactRedux from 'react-redux';
+import axios from 'axios';
 import mockStore from '../../store/store';
 import SignUp from '.';
 
-const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
-
-jest.spyOn(window.localStorage.__proto__, 'getItem');
-window.localStorage.__proto__.getItem = jest
-  .fn()
-  .mockReturnValue({ username: 'test', password: 'test' });
-
 window.alert = jest.fn().mockImplementation();
-
-const mockUser = {
-  username: 'test',
-  password: 'test',
-};
-
+const mockPush = jest.fn();
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
-  useHistory: () => ({ push: jest.fn() }),
+  useHistory: () => ({ push: mockPush }),
 }));
 
 describe('SignUp', () => {
   let signUp: any;
+
   beforeEach(() => {
     signUp = (
       <Provider store={mockStore}>
@@ -33,9 +23,9 @@ describe('SignUp', () => {
       </Provider>
     );
 
-    useSelectorMock.mockImplementation((callback) =>
-      callback({ user: { user: mockUser } }),
-    );
+    jest
+      .spyOn(reactRedux, 'useSelector')
+      .mockReturnValue({ loginUserId: null });
   });
   afterEach(() => {
     jest.clearAllMocks();
@@ -75,7 +65,8 @@ describe('SignUp', () => {
     expect(window.alert).toBeCalledTimes(4);
   });
 
-  it('should dispatch signUp action with inputs filled', () => {
+  it('should dispatch signUp action & redirect to onboarding page', () => {
+    jest.spyOn(axios, 'post').mockResolvedValue({ entity: { userId: 1 } });
     const component = mount(signUp);
     component
       .find('#username')
@@ -89,20 +80,20 @@ describe('SignUp', () => {
     component.find('#local-signup-button').at(0).simulate('click');
   });
 
+  it('should handle key press on inputs', () => {
+    const component = mount(signUp);
+    component.find('#username').simulate('keypress', { key: 'Enter' });
+    component.find('#password').simulate('keypress', { key: 'Enter' });
+    component.find('#password-verify').simulate('keypress', { key: 'Enter' });
+  });
+
   it('should move to SignIn page when clicking SignIn button', () => {
     const component = mount(signUp);
     component.find('.signin-button').simulate('click');
   });
 });
 
-describe('SignUp with signIn user', () => {
-  const mockUserProfile = {
-    userId: 1,
-    nickname: 'juyoung',
-    latitude: 37.12345,
-    longitude: 127.12345,
-  };
-
+describe('SignUp with login user', () => {
   let signUp: any;
   beforeEach(() => {
     signUp = (
@@ -110,13 +101,8 @@ describe('SignUp with signIn user', () => {
         <SignUp />
       </Provider>
     );
-    useSelectorMock.mockImplementation((callback) =>
-      callback({ user: { user: mockUser } }),
-    );
-    jest.spyOn(window.localStorage.__proto__, 'getItem');
-    window.localStorage.__proto__.getItem = jest
-      .fn()
-      .mockReturnValue(mockUserProfile);
+
+    jest.spyOn(reactRedux, 'useSelector').mockReturnValue({ loginUserId: 1 });
   });
   afterEach(() => {
     jest.clearAllMocks();
@@ -124,9 +110,7 @@ describe('SignUp with signIn user', () => {
   afterAll(() => {
     jest.restoreAllMocks();
   });
-
-  it('should redirect to Main page', () => {
+  it('should redirect to main page', () => {
     const component = mount(signUp);
-    expect(component.find('.signup-container').length).toBe(1);
   });
 });

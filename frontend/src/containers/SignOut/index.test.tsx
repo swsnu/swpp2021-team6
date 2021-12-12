@@ -1,4 +1,3 @@
-import React from 'react';
 import { mount } from 'enzyme';
 import * as userActionCreators from '../../store/actions/user';
 import SignOut from './index';
@@ -9,17 +8,22 @@ jest.mock('react-redux', () => ({
   connect: () => jest.fn(),
 }));
 
+const mockPush = jest.fn();
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useHistory: () => ({ push: mockPush }),
+}));
+
 describe('SignOut', () => {
   let signout: any;
   let spyLogoutAction: any;
   let spyHistoryPush: any;
 
   beforeEach(() => {
-    signout = <SignOut history={history} />;
+    signout = <SignOut />;
     spyLogoutAction = jest
       .spyOn(userActionCreators, 'signout')
       .mockImplementation(() => jest.fn());
-    spyHistoryPush = jest.spyOn(history, 'push').mockImplementation(jest.fn());
   });
   afterEach(() => {
     jest.clearAllMocks();
@@ -36,6 +40,6 @@ describe('SignOut', () => {
   it('Signout should dispatch logout correctly', () => {
     mount(signout);
     expect(spyLogoutAction).toBeCalledTimes(1);
-    expect(spyHistoryPush).toBeCalledWith('/signin');
+    expect(mockPush).toBeCalledTimes(1);
   });
 });
