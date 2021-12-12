@@ -119,8 +119,6 @@ const Onboarding = ({ history }: { history: History }) => {
     <span className="gu-dong">{guDong.text}</span>
   );
 
-  console.log(form);
-
   return (
     <div className="onboarding">
       <img
