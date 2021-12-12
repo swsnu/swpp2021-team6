@@ -2,13 +2,9 @@ import React, { useEffect } from 'react';
 import { mount } from 'enzyme';
 import * as reactRedux from 'react-redux';
 import { Provider } from 'react-redux';
-// import { createMemoryHistory } from 'history';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import * as actionCreators from '../../backend/api/api';
-import { mockNavigatorGeolocation } from '../../test-utils/mockNavigatorGeolocation';
 import userInfo from '../../mocks/userInfo.json';
-import { UserInfoEntity } from '../../backend/entity/user';
 import Profile from '.';
 import { history } from '../../store/store';
 
@@ -20,20 +16,13 @@ const setSelectedExerciseMock = jest.fn();
 const setGuDongMock = jest.fn();
 const mockPush = jest.fn();
 
-const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
+// const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
 
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useHistory: () => ({ push: mockPush }),
-  useParams: () => ({ id: 'my' }),
+  useParams: () => ({ id: '1' }),
 }));
-
-// jest.mock('react-router-dom', () => ({
-//   ...jest.requireActual('react-router-dom'),
-//   useHistory: () => ({
-//     push: mockPush,
-//   }),
-// }));
 
 jest.mock('react', () => ({
   ...jest.requireActual('react'),
@@ -66,8 +55,13 @@ describe('Profile', () => {
       </Provider>
     );
 
+    // useSelectorMock.mockImplementation((callback) =>
+    //   callback({ user: { user: userInfo } }),
+    // );
+
+    const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
     useSelectorMock.mockImplementation((callback) =>
-      callback({ user: { user: userInfo } }),
+      callback({ user: { loginUserId: 1 } }),
     );
     spyHistoryPush = jest.spyOn(history, 'push').mockImplementation(jest.fn());
   });
