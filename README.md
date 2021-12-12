@@ -4,17 +4,15 @@
 
 ## How to run
 
-### Backend
+### Install and run Docker
 
 ```shell
-$ cd backend
-$ docker-compose up
+$ brew install --cask docker
+$ open /Applications/Docker.app
 ```
 
-### Frontend
+### Run applications
 
 ```shell
-$ cd frontend
-$ yarn
-$ yarn start
+$ docker-compose up
 ```
