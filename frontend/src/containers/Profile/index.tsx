@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react';
 import { History } from 'history';
 import { useParams } from 'react-router';
+import { useSelector } from 'react-redux';
 import dividerIcon from '../../assets/image/icon/button-divider.svg';
 import pfExerciseIcon from '../../assets/image/icon/pfexercise.svg';
 import greenDot from '../../assets/image/icon/green-circle.svg';
@@ -17,17 +18,20 @@ import * as thumbnails from '../../utils/thumbnails';
 import { UserInfoEntity } from '../../backend/entity/user';
 import { readUserInfo } from '../../backend/api/api';
 import { ApplyStatus } from '../../backend/entity/post';
+import profile_icon from '../../assets/image/icon/profile-icon.svg';
+import { AppState } from '../../store/store';
 
 interface ProfileProps {
   history: History;
 }
 
 const Profile = ({ history }: ProfileProps) => {
-  const { id }: { id: string | undefined } = useParams();
+  const { id }: { id: string } = useParams();
 
-  const loginUserId = localStorage.getItem('loginUser');
-  const isLoginUser = id && id === 'my';
-  const profileUserId = isLoginUser ? loginUserId : id;
+  // const loginUserId = localStorage.getItem('loginUser');
+  // const isLoginUser = id && id === 'my';
+  const { loginUserId } = useSelector((state: AppState) => state.user);
+  const profileUserId = loginUserId === +id ? loginUserId : id;
 
   const [userInfo, setUserInfo] = useState<UserInfoEntity>({
     userId: 0,
@@ -168,7 +172,7 @@ const Profile = ({ history }: ProfileProps) => {
 
   return (
     <div className="profile" style={{ width: '70%', margin: 'auto' }}>
-      {isLoginUser ? (
+      {loginUserId ? (
         <div className="button-div">
           <div className="button-container">
             <span
@@ -198,10 +202,7 @@ const Profile = ({ history }: ProfileProps) => {
       )}
 
       <div className="profile-div">
-        <img
-          src="https://images.unsplash.com/photo-1586299485759-f62264d6b63f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
-          alt="profile-icon"
-        />
+        <img src={profile_icon} alt="profile-icon" />
         <div className="profile-content-container">
           <div className="location-gender-container">
             <div className="location-container">
@@ -238,7 +239,7 @@ const Profile = ({ history }: ProfileProps) => {
       </div>
       <br />
       <br />
-      {isLoginUser && (
+      {loginUserId && (
         <div className="mypost-section">
           <div className="mypost-header">참가 신청한 모임</div>
           <div className="my-post-div">
