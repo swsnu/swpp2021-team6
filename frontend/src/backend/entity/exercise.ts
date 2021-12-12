@@ -49,33 +49,33 @@ export type skillLevelNameType = {
   any: string;
 };
 
-export const exercises = {
-  soccer: {
-    name: '축구',
-    value: 'soccer',
-  },
-  basketball: {
-    name: '농구',
-    value: 'basketball',
-  },
-  badminton: {
-    name: '배드민턴',
-    value: 'badminton',
-  },
-  tennis: {
-    name: '테니스',
-    value: 'tennis',
-  },
-  tabletennis: {
-    name: '탁구',
-    value: 'tabletennis',
-  },
-  running: {
-    name: '러닝',
-    value: 'running',
-  },
-  riding: {
-    name: '라이딩',
-    value: 'riding',
-  },
-};
+// export const exercises = {
+//   soccer: {
+//     name: '축구',
+//     value: 'soccer',
+//   },
+//   basketball: {
+//     name: '농구',
+//     value: 'basketball',
+//   },
+//   badminton: {
+//     name: '배드민턴',
+//     value: 'badminton',
+//   },
+//   tennis: {
+//     name: '테니스',
+//     value: 'tennis',
+//   },
+//   tabletennis: {
+//     name: '탁구',
+//     value: 'tabletennis',
+//   },
+//   running: {
+//     name: '러닝',
+//     value: 'running',
+//   },
+//   riding: {
+//     name: '라이딩',
+//     value: 'riding',
+//   },
+// };
