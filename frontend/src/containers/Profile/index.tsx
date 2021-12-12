@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react';
 import { History } from 'history';
 import { useParams } from 'react-router';
+import { useSelector } from 'react-redux';
 import dividerIcon from '../../assets/image/icon/button-divider.svg';
 import pfExerciseIcon from '../../assets/image/icon/pfexercise.svg';
 import greenDot from '../../assets/image/icon/green-circle.svg';
@@ -14,20 +15,20 @@ import locationIcon from '../../assets/image/icon/location-icon.svg';
 import changeMyPostDateFormat from '../../utils/myPostDateFormat';
 import './index.scss';
 import * as thumbnails from '../../utils/thumbnails';
-import { UserInfoEntity } from '../../backend/entity/user';
+import { UserInfoEntity, UserPostEntity } from '../../backend/entity/user';
 import { readUserInfo } from '../../backend/api/api';
 import { ApplyStatus } from '../../backend/entity/post';
+import { AppState } from '../../store/store';
 
 interface ProfileProps {
   history: History;
 }
 
 const Profile = ({ history }: ProfileProps) => {
-  const { id }: { id: string | undefined } = useParams();
+  const { loginUserId } = useSelector((state: AppState) => state.user);
+  const profileId = Number(useParams<{ id: string }>().id);
 
-  const loginUserId = localStorage.getItem('loginUser');
-  const isLoginUser = id && id === 'my';
-  const profileUserId = isLoginUser ? loginUserId : id;
+  const isLoginUser = loginUserId === profileId;
 
   const [userInfo, setUserInfo] = useState<UserInfoEntity>({
     userId: 0,
@@ -64,10 +65,14 @@ const Profile = ({ history }: ProfileProps) => {
   });
 
   const fetchUserInfo = async () => {
-    const fetchedUserInfo: UserInfoEntity = (
-      await readUserInfo({ id: Number(profileUserId) })
-    ).entity;
-    setUserInfo(fetchedUserInfo);
+    try {
+      const fetchedUserInfo: UserInfoEntity = (
+        await readUserInfo({ id: profileId })
+      ).entity;
+      setUserInfo(fetchedUserInfo);
+    } catch {
+      alert('프로필을 불러오는 중 문제가 발생했습니다.');
+    }
   };
 
   useEffect(() => {
@@ -98,7 +103,7 @@ const Profile = ({ history }: ProfileProps) => {
     }
   };
 
-  const MyAppointment = ({ appointment }: any) => {
+  const MyAppointment = ({ appointment }: { appointment: UserPostEntity }) => {
     const getThumbnail = () => {
       const idx = appointment.postId % 4;
       let imgArray = thumbnails.soccer;
@@ -126,8 +131,6 @@ const Profile = ({ history }: ProfileProps) => {
           imgArray = thumbnails.riding;
           break;
         default:
-          console.log('Profile: 운동 타입이 잘못 설정된 데이터가 있습니다.');
-          break;
       }
       return imgArray[idx];
     };
@@ -207,7 +210,7 @@ const Profile = ({ history }: ProfileProps) => {
             <div className="location-container">
               <img src={badge} alt="badge-icon" />
               <span>인증한 동네 :</span>
-              <span>{userInfo?.gu.concat(' ', userInfo.dong)}</span>
+              <span>{`${userInfo?.gu} ${userInfo?.dong}`}</span>
             </div>
             <div className="gender-container">
               <span style={{ color: '#646464' }}>성별</span>

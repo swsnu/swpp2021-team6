@@ -1,16 +1,29 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
 import * as reactRedux from 'react-redux';
 import { Provider } from 'react-redux';
-// import { createMemoryHistory } from 'history';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import * as actionCreators from '../../backend/api/api';
-import { mockNavigatorGeolocation } from '../../test-utils/mockNavigatorGeolocation';
-import userInfo from '../../mocks/userInfo.json';
-import { UserInfoEntity } from '../../backend/entity/user';
+import axios from 'axios';
+import { act } from 'react-dom/test-utils';
+import mockUserInfo from '../../mocks/userInfo.json';
 import Profile from '.';
 import { history } from '../../store/store';
+import { UserInfoEntity } from '../../backend/entity/user';
+
+const stubUserInfo: UserInfoEntity = {
+  userId: 1,
+  nickname: 'nickname',
+  latitude: 123,
+  longitude: 456,
+  gu: 'gu',
+  dong: 'dong',
+  gender: '여성',
+  introduction: '',
+  preferredExercise: [{ exerciseName: '축구', skillLevel: '상' }],
+  participatingPost: [],
+  hostingPost: [],
+};
 
 window.alert = jest.fn().mockImplementation();
 const useStateMock = jest.spyOn(React, 'useState');
@@ -25,15 +38,8 @@ const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useHistory: () => ({ push: mockPush }),
-  useParams: () => ({ id: 'my' }),
+  useParams: () => ({ id: '1' }),
 }));
-
-// jest.mock('react-router-dom', () => ({
-//   ...jest.requireActual('react-router-dom'),
-//   useHistory: () => ({
-//     push: mockPush,
-//   }),
-// }));
 
 jest.mock('react', () => ({
   ...jest.requireActual('react'),
@@ -54,11 +60,9 @@ const mockStore = createStore(
 );
 
 describe('Profile', () => {
-  const mockUserInfo = userInfo;
-
   let profile: any;
   let spyHistoryPush: any;
-  // let getGuDong: any;
+
   beforeEach(() => {
     profile = (
       <Provider store={mockStore}>
@@ -66,10 +70,8 @@ describe('Profile', () => {
       </Provider>
     );
 
-    useSelectorMock.mockImplementation((callback) =>
-      callback({ user: { user: userInfo } }),
-    );
-    spyHistoryPush = jest.spyOn(history, 'push').mockImplementation(jest.fn());
+    useSelectorMock.mockReturnValue({ loginUserId: 1 });
+    spyHistoryPush = jest.spyOn(history, 'push');
   });
 
   afterEach(() => {
@@ -120,5 +122,15 @@ describe('Profile', () => {
     wrapper.at(6).simulate('click');
     expect(spyHistoryPush).toBeCalledTimes(7);
     wrapper.at(7).simulate('click');
+  });
+
+  it('should call fetchUserInfo', async () => {
+    const axiosMock = jest.spyOn(axios, 'get').mockResolvedValueOnce({
+      entity: mockUserInfo,
+    });
+    useStateMock.mockReturnValueOnce([mockUserInfo, setUserInfoMock]);
+    await act(async () => {
+      const component = mount(profile);
+    });
   });
 });
