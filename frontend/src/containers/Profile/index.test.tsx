@@ -33,7 +33,7 @@ const setSelectedExerciseMock = jest.fn();
 const setGuDongMock = jest.fn();
 const mockPush = jest.fn();
 
-// const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
+const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
 
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
