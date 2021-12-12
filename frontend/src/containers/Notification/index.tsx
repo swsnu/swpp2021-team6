@@ -1,33 +1,27 @@
 /* eslint-disable indent */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { History } from 'history';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Menu, Dropdown } from 'antd';
+import { useHistory } from 'react-router';
 import { AppState } from '../../store/store';
 import notiIconWithDot from '../../assets/image/icon/noti-with-dot.svg';
 import notiIcon from '../../assets/image/icon/noti-without-dot.svg';
 import notiDot from '../../assets/image/icon/noti-dot.svg';
 import { getNotification, readNotification } from '../../store/actions/user';
+import { NotificationEntity } from '../../backend/entity/notification';
 import './index.scss';
 
-interface NotificationProps {
-  history: History;
-}
-
-const Notification = ({ history }: NotificationProps) => {
-  // const [postTitle, setPostTitle] = useState<string>('');
-  const dispatch = useDispatch();
+const Notification = () => {
   const { notification } = useSelector((state: AppState) => state.user);
-  // const userInfo = humps.camelizeKeys(mockUserInfo) as UserInfoEntity;
-  // const mockNotifications = humps.camelizeKeys(notifications);
-  const loginUserId = window.localStorage.getItem('loginUser');
+  const { loginUserId } = useSelector((state: AppState) => state.user);
+
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   useEffect(() => {
-    if (loginUserId) {
-      dispatch(getNotification(loginUserId));
-    }
+    if (loginUserId) dispatch(getNotification(loginUserId));
   }, [loginUserId]);
 
   const getMessage = (postTitle: string, notiType: string) => {
@@ -65,40 +59,39 @@ const Notification = ({ history }: NotificationProps) => {
   const myNotis = () => (
     <Menu>
       {notification === null || notification.length === 0 ? (
-        <div style={{ margin: '0 5 0 5' }}>
-          <span style={{ margin: '0 20 0 20' }}>표시할 알림이 없습니다</span>
+        <div style={{ margin: '0 5px 0 5px' }}>
+          <span style={{ margin: '0 20px 0 20px' }}>
+            표시할 알림이 없습니다
+          </span>
         </div>
       ) : (
-        notification.map((notification: any) => (
-          // <Menu.Item
-          //   key={notification.notiId}
-          //   className={notification.isRead === true ? 'read' : 'unread'}
-          // >
-          <div
-            className="noti-item-container"
-            onClick={() =>
-              onClickNotification(notification.notiId, notification.postId)
-            }
-          >
-            <div className="noti-left">
-              <div className="noti-text">
-                <span className="noti-text" aria-hidden="true">
-                  {getMessage(notification.postTitle, notification.notiType)}
-                </span>
+        notification.map((notification: NotificationEntity) => (
+          <Menu.Item key={notification.notiId}>
+            <div
+              className="noti-item-container"
+              onClick={() =>
+                onClickNotification(notification.notiId, notification.postId)
+              }
+            >
+              <div className="noti-left">
+                <div className="noti-text">
+                  <span className="noti-text" aria-hidden="true">
+                    {getMessage(notification.postTitle, notification.notiType)}
+                  </span>
+                </div>
+                <div>
+                  <span className="noti-time">{notification.createdAt}</span>
+                </div>
               </div>
-              <div>
-                <span className="noti-time">{notification.createdAt}</span>
+              <div className="noti-right">
+                <img
+                  className={notification.isRead ? 'read' : 'noti-dot'}
+                  src={notiDot}
+                  alt="noti-dot"
+                />
               </div>
             </div>
-            <div className="noti-right">
-              <img
-                className={notification.isRead ? 'read' : 'noti-dot'}
-                src={notiDot}
-                alt="noti-dot"
-              />
-            </div>
-          </div>
-          /* </Menu.Item> */
+          </Menu.Item>
         ))
       )}
     </Menu>
@@ -106,11 +99,6 @@ const Notification = ({ history }: NotificationProps) => {
 
   return (
     <Dropdown overlay={myNotis} trigger={['click']} placement="bottomRight">
-      {/* <span
-        className="notification"
-        aria-hidden="true"
-        onClick={(e) => e.preventDefault()}
-      > */}
       {notification ? (
         <img
           className="noti-icon"
@@ -125,7 +113,6 @@ const Notification = ({ history }: NotificationProps) => {
       ) : (
         <img className="noti-icon" src={notiIcon} alt="notification-icon" />
       )}
-      {/* </span> */}
     </Dropdown>
   );
 };
