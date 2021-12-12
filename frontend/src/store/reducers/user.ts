@@ -1,8 +1,9 @@
+import { NotificationEntity } from '../../backend/entity/notification';
 import * as actionTypes from '../actions/actionTypes';
 
 export type UserState = {
   loginUserId: number | null;
-  notification: any | null;
+  notification: NotificationEntity[] | null;
 };
 
 const InitialState: UserState = {

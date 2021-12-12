@@ -24,7 +24,6 @@ const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useHistory: () => ({ push: mockPush }),
-  // useParams: () => ({ id: 'my' }),
 }));
 
 // jest.mock('react-router-dom', () => ({
@@ -61,7 +60,7 @@ describe('Notification', () => {
   beforeEach(() => {
     noti = (
       <Provider store={mockStore}>
-        <Profile history={history} />
+        <Profile />
       </Provider>
     );
 

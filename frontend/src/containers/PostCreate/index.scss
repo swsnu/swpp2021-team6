@@ -146,12 +146,16 @@
               margin-right: 20px;
             }
 
-            input {
+            select {
               width: 75%;
               height: 40px;
               border: 1px solid #d9d9d9;
               border-radius: 7px;
               padding-left: 20px;
+              appearance: none;
+              background: #ffffff
+                url('../../assets/image/icon/select-chevron.svg')
+                calc(100% - 10px) center no-repeat;
             }
           }
         }

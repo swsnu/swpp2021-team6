@@ -1,12 +1,14 @@
 import { useHistory } from 'react-router';
+import { useSelector } from 'react-redux';
 import logo from '../../assets/image/icon/green-logo.svg';
 import profileIcon from '../../assets/image/icon/profile-icon.svg';
 import Notification from '../Notification';
+import { AppState } from '../../store/store';
 import './index.scss';
 
 const Navbar = () => {
   const history = useHistory();
-  const loginUserId = Number(localStorage.getItem('loginUser'));
+  const { loginUserId } = useSelector((state: AppState) => state.user);
 
   return (
     <div className="nav-bar">
@@ -14,7 +16,7 @@ const Navbar = () => {
         <img src={logo} alt="woondongjang logo" />
       </button>
       <div className="nav-button-container">
-        <Notification history={history} />
+        <Notification />
         <span
           className="mypage"
           aria-hidden="true"

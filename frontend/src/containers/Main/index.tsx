@@ -18,12 +18,18 @@ const Main = () => {
   const [filterArray, setFilterArray] = useState<FilterInputDTO[]>([]);
   const { loginUserId } = useSelector((state: AppState) => state.user);
 
+  const fetchPosts = async () => {
+    try {
+      const { items } = await queryPosts();
+      setPosts(items);
+    } catch {
+      alert('포스트를 불러오는 중 문제가 발생했습니다.');
+    }
+  };
+
   useEffect(() => {
     if (!loginUserId) history.push('/signin');
-
-    queryPosts()
-      .then((res) => setPosts(res.items))
-      .catch((reason) => console.log(reason));
+    fetchPosts();
   }, []);
 
   const getQueryString = (arr: FilterInputDTO[]) => {
