@@ -29,14 +29,23 @@ const SignUp = () => {
   });
 
   const onClickSignUp = async () => {
-    if (!signUpForm.username) alert('이름을 입력해주세요');
-    else if (!signUpForm.password) alert('비밀번호를 입력해주세요');
+    if (!signUpForm.username) alert('아이디를 입력해주세요.');
+    else if (!signUpForm.password) alert('비밀번호를 입력해주세요.');
     else if (signUpForm.password !== checkPassword) {
       alert('비밀번호가 일치하지 않습니다.');
     } else {
-      const newUser = (await createUser({ createPayload: signUpForm })).entity;
-      history.push(`/onboarding/${newUser.userId}`);
+      try {
+        const newUser = (await createUser({ createPayload: signUpForm }))
+          .entity;
+        history.push(`/onboarding/${newUser.userId}`);
+      } catch (e) {
+        alert('중복된 아이디입니다. 다른 아이디를 입력해주세요.');
+      }
     }
+  };
+
+  const onPressEnter = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') onClickSignUp();
   };
 
   const onClickKakaoSignUp = () => {};
@@ -45,13 +54,14 @@ const SignUp = () => {
   return (
     <div className="signup-container">
       <Layout name="회원가입" imageUrl={defaultImage}>
-        <label htmlFor="username">이름</label>
+        <label htmlFor="username">아이디</label>
         <input
           id="username"
-          placeholder="이름"
+          placeholder="아이디"
           onChange={(e) =>
             setSignUpForm({ ...signUpForm, username: e.target.value })
           }
+          onKeyPress={(e) => onPressEnter(e)}
         />
         <label htmlFor="password">비밀번호</label>
         <input
@@ -61,6 +71,7 @@ const SignUp = () => {
           onChange={(e) =>
             setSignUpForm({ ...signUpForm, password: e.target.value })
           }
+          onKeyPress={(e) => onPressEnter(e)}
         />
         <label htmlFor="password-verify">비밀번호 확인</label>
         <input
@@ -68,6 +79,7 @@ const SignUp = () => {
           placeholder="비밀번호"
           type="password"
           onChange={(e) => setCheckPassword(e.target.value)}
+          onKeyPress={(e) => onPressEnter(e)}
         />
         <Button id="local-signup-button" onClick={onClickSignUp}>
           계정 만들기

@@ -1,19 +1,18 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { History } from 'history';
-import { signout } from '../../store/actions/index';
+import { useHistory } from 'react-router-dom';
+import { signout } from '../../store/actions';
 
-interface SignOutProps {
-  history: History;
-}
-
-const SignOut: React.FC<SignOutProps> = ({ history }) => {
+const SignOut = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
+
   useEffect(() => {
     history.push('/signin');
     dispatch(signout());
   }, [dispatch, history]);
-  return <></>;
+
+  return null;
 };
 
 export default SignOut;
