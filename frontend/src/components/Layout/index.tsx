@@ -15,12 +15,18 @@ interface Props {
 }
 
 const Layout = ({ name, imageUrl = defaultImage, children }: Props) => {
+  const [index, setIndex] = useState<number>(0);
+
+  useEffect(() => {
+    const date = new Date();
+    setIndex(date.getTime() % 2);
+  }, []);
+
   const backgroundStyle = {
     background: `linear-gradient(0deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${imageUrl})`,
     backgroundSize: 'cover',
   };
 
-  const date = new Date();
   return (
     <div className="layout">
       <div className="left" style={backgroundStyle}>
@@ -37,8 +43,8 @@ const Layout = ({ name, imageUrl = defaultImage, children }: Props) => {
             src={quoteStart}
             alt="quote start icon"
           />
-          <p className="content">{quotes[date.getTime() % 2].content}</p>
-          <p className="speaker">{quotes[date.getTime() % 2].speaker}</p>
+          <p className="content">{quotes[index].content}</p>
+          <p className="speaker">{quotes[index].speaker}</p>
           <img className="quote-end" src={quoteEnd} alt="quote end icon" />
         </div>
       </div>

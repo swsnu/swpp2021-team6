@@ -5,7 +5,6 @@ import * as thumbnails from '../../utils/thumbnails';
 import './index.scss';
 import { changeDateFormat2 } from '../../utils/dateToString';
 import Label from '../Label';
-import * as labelColors from '../../style/labelColors';
 import capacityIcon from '../../assets/image/main/capacity.svg';
 
 interface Props {
@@ -15,11 +14,9 @@ interface Props {
 const Post: React.FC<Props> = ({ post }: Props) => {
   const history = useHistory();
   const [imgSrc, setImgSrc] = useState<string>(thumbnails.soccer[0]);
-  const [labelColor, setLabelColor] = useState<string>(labelColors.blue);
 
   useEffect(() => {
-    const date = new Date();
-    const idx = date.getTime() % 4;
+    const idx = post.postId % 4;
     let imgArray = thumbnails.soccer;
 
     switch (post.exerciseName) {
@@ -48,7 +45,8 @@ const Post: React.FC<Props> = ({ post }: Props) => {
         window.alert('Post: 운동 타입이 잘못 설정된 데이터가 있습니다.');
     }
     setImgSrc(imgArray[idx]);
-  }, []);
+  }, [post, imgSrc]);
+
   const dateTime = changeDateFormat2(post.meetAt);
 
   const onClickPost = (postId: number) => {

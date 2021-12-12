@@ -10,7 +10,6 @@ import {
   PostEntity,
   StatusType,
   ParticipantType,
-  ApplyStatus,
 } from '../../backend/entity/post';
 import { changeDateFormat } from '../../utils/dateToString';
 import './index.scss';
@@ -156,7 +155,6 @@ const Detail: React.FC<Props> = ({
           <div id="left">
             <h1>{post.title}</h1>
             <p>{post.description}</p>
-            {/* post status에 맞게 color 수정 */}
             <div>
               <Label font="white" color="rgba(36, 113, 0, 0.49)">
                 {post.status}

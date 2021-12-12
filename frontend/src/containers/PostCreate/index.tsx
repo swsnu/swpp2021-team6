@@ -174,8 +174,6 @@ const PostCreate: React.FC = () => {
     }
   };
 
-  console.log(post);
-
   const capacityOptions = () => {
     const CAPACITY = 10;
     const options = [];
