@@ -1,13 +1,11 @@
 export interface CommentEntity {
-  comment_id: number;
-  author_id: number;
-  post_id: number;
+  commentId: number;
+  authorId: number;
+  postId: number;
   content: string;
-  created_at: string;
+  createdAt: string;
 }
 
-export interface CreateCommentEntity {
-  post_id: number;
-  author_id: number;
+export interface CommentDTO {
   content: string;
 }

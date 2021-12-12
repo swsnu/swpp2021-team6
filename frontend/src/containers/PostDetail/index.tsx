@@ -21,10 +21,7 @@ import {
   readUserInfo,
 } from '../../backend/api/api';
 import CommentsListItem from '../../components/Comment';
-import {
-  CommentEntity,
-  CreateCommentEntity,
-} from '../../backend/entity/comment';
+import { CommentEntity, CommentDTO } from '../../backend/entity/comment';
 import background from '../../assets/image/post-detail/background.svg';
 import pencil from '../../assets/image/post-detail/comment.svg';
 
@@ -44,13 +41,11 @@ const PostDetailContainer: React.FC = () => {
 
   const onCommentConfirm = async (comment: string | null) => {
     if (loginUserId && comment) {
-      const payload = {
-        authorId: loginUserId,
+      const payload: CommentDTO = {
         content: comment,
-        postId,
       };
       await createComment({
-        createPayload: humps.decamelizeKeys(payload) as CreateCommentEntity,
+        createPayload: payload,
         postId,
       });
       setCommentsUpdated(true);
@@ -71,9 +66,9 @@ const PostDetailContainer: React.FC = () => {
   const fetchComments = async () => {
     const comments: CommentEntity[] = (
       await queryComments({ postId })
-    ).items.filter((c) => c.post_id === postId);
+    ).items.filter((c) => c.postId === postId);
     const commentsList: CommentItem[] = (
-      await Promise.all(comments.map((c) => readUserInfo({ id: c.author_id })))
+      await Promise.all(comments.map((c) => readUserInfo({ id: c.authorId })))
     ).map((u, i) => ({
       ...comments[i],
       authorName: u.entity.nickname,
@@ -82,20 +77,19 @@ const PostDetailContainer: React.FC = () => {
   };
 
   const onClickParticipate = async () => {
-    await createApply(postId).then((status) => {
-      if (status === 204) {
-        alert('참가 신청이 완료되었습니다.');
-        setIsParticipant(true);
-        setApplyStatus(ApplyStatus.PENDING);
-      } else {
-        alert('참가 신청 중 문제가 발생했습니다.');
-      }
-    });
+    try {
+      await createApply(postId);
+      alert('참가 신청이 완료되었습니다.');
+      setIsParticipant(true);
+      setApplyStatus(ApplyStatus.PENDING);
+    } catch {
+      alert('참가 신청 중 문제가 발생했습니다.');
+    }
   };
 
   // Redirect to sign-in page if not signed in
   useEffect(() => {
-    if (loginUserId === null) history.push('/signin');
+    if (!loginUserId) history.push('/signin');
   }, [loginUserId]);
 
   useEffect(() => {
@@ -180,12 +174,10 @@ const PostDetailContainer: React.FC = () => {
             </div>
             {commentItems.map((c, i) => (
               <CommentsListItem
-                commentId={c.comment_id}
+                commentId={c.commentId}
                 content={c.content}
-                authorId={c.author_id}
+                authorId={c.authorId}
                 authorName={c.authorName}
-                postId={c.post_id}
-                createdAt={c.created_at}
                 setCommentsUpdated={setCommentsUpdated}
                 key={i}
               />
