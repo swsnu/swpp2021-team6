@@ -1,7 +1,6 @@
-import { History } from 'history';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import getGuDong from '../../utils/getGuDong';
 import { AppState } from '../../store/store';
 import { UserProfileDTO } from '../../backend/entity/user';
@@ -25,7 +24,8 @@ const initialFormState: UserProfileDTO = {
   preferredExercise: [],
 };
 
-const Onboarding = ({ history }: { history: History }) => {
+const Onboarding = () => {
+  const history = useHistory();
   const [form, setForm] = useState(initialFormState);
   const userId: number = Number(useParams<{ id: string }>().id);
   const [selectedExercise, setSelectedExercise] = useState({

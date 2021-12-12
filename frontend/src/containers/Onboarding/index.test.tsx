@@ -28,6 +28,7 @@ jest.mock('react-router', () => ({
 const history = createMemoryHistory({
   initialEntries: ['/hello'],
 });
+
 const mockStore = createStore(
   combineReducers({
     router: connectRouter(history),
@@ -49,11 +50,10 @@ describe('Onboarding', () => {
   };
 
   let onboarding: any;
-  let getGuDong: any;
   beforeEach(() => {
     onboarding = (
       <Provider store={mockStore}>
-        <Onboarding history={history} />
+        <Onboarding />
       </Provider>
     );
 
