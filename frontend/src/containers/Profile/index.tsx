@@ -171,7 +171,7 @@ const Profile = ({ history }: ProfileProps) => {
 
   return (
     <div className="profile" style={{ width: '70%', margin: 'auto' }}>
-      {isLoginUser ? (
+      {loginUserId ? (
         <div className="button-div">
           <div className="button-container">
             <span
@@ -201,10 +201,7 @@ const Profile = ({ history }: ProfileProps) => {
       )}
 
       <div className="profile-div">
-        <img
-          src="https://images.unsplash.com/photo-1586299485759-f62264d6b63f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
-          alt="profile-icon"
-        />
+        <img src={profile_icon} alt="profile-icon" />
         <div className="profile-content-container">
           <div className="location-gender-container">
             <div className="location-container">
@@ -241,7 +238,7 @@ const Profile = ({ history }: ProfileProps) => {
       </div>
       <br />
       <br />
-      {isLoginUser && (
+      {loginUserId && (
         <div className="mypost-section">
           <div className="mypost-header">참가 신청한 모임</div>
           <div className="my-post-div">
