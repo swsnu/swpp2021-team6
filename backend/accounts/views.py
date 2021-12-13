@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_POST, require_GET, require_http_methods
+from django.views.decorators.csrf import ensure_csrf_cookie
 from posts.models import Exercise, User_Exercise, Post, Participation
 from .models import Notification, Profile, ProxyUser
 from .decorators import signin_required
@@ -220,3 +221,10 @@ def read_notification(request, noti_id):
         )
     ]
     return JsonResponse(noti_list, status=200, safe=False)
+
+
+# 응답 헤더 Set-Cookie: csrftoken=...
+@require_GET
+@ensure_csrf_cookie
+def set_csrftoken(request):
+    return HttpResponse(status=204)
