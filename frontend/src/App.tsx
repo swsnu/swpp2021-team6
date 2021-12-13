@@ -22,6 +22,8 @@ axios.defaults.baseURL = 'http://127.0.0.1:8000';
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
+axios.get('/users/csrftoken');
+
 const App = ({ history }: { history: History }) => {
   const dispatch = useDispatch();
 
