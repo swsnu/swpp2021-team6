@@ -1,14 +1,21 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import axios from 'axios';
 import { mount } from 'enzyme';
 import * as reactRedux from 'react-redux';
 import { Provider } from 'react-redux';
-import { createMemoryHistory } from 'history';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { mockNavigatorGeolocation } from '../../test-utils/mockNavigatorGeolocation';
 import userInfo from '../../mocks/userInfo.json';
 import { UserInfoEntity } from '../../backend/entity/user';
 import ProfileEdit from '.';
+import { history } from '../../store/store';
+import * as getGuDong from '../../utils/getGuDong';
+import * as APIs from '../../backend/api/api';
+
+// jest
+//   .spyOn(getGuDong, 'getGuDong')
+//   .mockReturnValue({ gu: '구구구', dong: '동동동' });
 
 window.alert = jest.fn().mockImplementation();
 const useStateMock = jest.spyOn(React, 'useState');
@@ -20,11 +27,10 @@ const mockPush = jest.fn();
 
 const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
 
-// jest.mock('react-router', () => ({
-//   ...jest.requireActual('react-router'),
-//   useHistory: () => ({ push: mockPush }),
-//   useParams: () => ({ id: '1' }),
-// }));
+// let useEffect: any;
+// const mockUseEffect = () => {
+//   useEffect.mockImplementationOnce((f: any) => f());
+// };
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -32,15 +38,6 @@ jest.mock('react-router-dom', () => ({
     push: mockPush,
   }),
 }));
-
-jest.mock('react', () => ({
-  ...jest.requireActual('react'),
-  useEffect: jest.fn(),
-}));
-
-const history = createMemoryHistory({
-  initialEntries: ['/'],
-});
 
 const spyAlert = jest.spyOn(window, 'alert').mockImplementation();
 const spyHistoryPush = jest
@@ -104,8 +101,16 @@ describe('Profile edit', () => {
   };
 
   let profileEdit: any;
-  let getGuDong: any;
+  let spyFetchUserInfo: any;
   beforeEach(() => {
+    /* mocking useEffect */
+    // axios.get = jest.fn().mockResolvedValue({
+    //   data: mockUserInfo,
+    // });
+    // useEffect = jest.spyOn(React, 'useEffect');
+    // mockUseEffect(); // 2 times
+    // mockUseEffect(); //
+
     profileEdit = (
       <Provider store={mockStore}>
         <ProfileEdit />
@@ -137,7 +142,10 @@ describe('Profile edit', () => {
         setGuDongMock,
       ]);
     const component = mount(profileEdit);
-    expect(component.find('.profile-edit').length).toBe(1);
+    const wrapper = component.find('.profile-edit');
+    expect(wrapper.length).toBe(1);
+    // spyFetchUserInfo = jest.spyOn(wrapper, 'fetchUserInfo');
+    // expect(spyFetchUserInfo).toBeCalledTimes(1);
   });
 
   it('should load user info on mount', () => {
@@ -153,6 +161,7 @@ describe('Profile edit', () => {
         setGuDongMock,
       ]);
     const component = mount(profileEdit);
+
     expect(setUserInfoMock).toBeCalledTimes(0);
   });
 
@@ -185,7 +194,7 @@ describe('Profile edit', () => {
       .mockReturnValueOnce([mockUserInfo, setUserInfoMock])
       .mockReturnValueOnce([mockUpdateProfileState, setUpdateProfileStateMock])
       .mockReturnValueOnce([
-        { exerciseName: '종목', skillLevel: '실력' },
+        { exerciseName: '축구', skillLevel: '상' },
         setSelectedExerciseMock,
       ])
       .mockReturnValueOnce([
@@ -199,8 +208,9 @@ describe('Profile edit', () => {
       .simulate('change', { target: { value: '축구' } });
     component.find('#level').simulate('change', { target: { value: '상' } });
     component.find('.add-button').simulate('click');
-    expect(setSelectedExerciseMock).toBeCalledTimes(2);
-    expect(setUpdateProfileStateMock).toBeCalledTimes(0);
+    expect(setSelectedExerciseMock).toBeCalledTimes(3);
+    expect(window.alert).toBeCalledTimes(0);
+    expect(setUpdateProfileStateMock).toBeCalledTimes(1);
   });
 
   it('should not add preferred exercise with incorrect selection', () => {
@@ -261,7 +271,7 @@ describe('Profile edit', () => {
     expect(setUpdateProfileStateMock).toBeCalledTimes(1);
   });
 
-  it('should move to profile page on clicking submit button', () => {
+  it('should move to profile page on clicking submit button', async () => {
     useStateMock
       .mockReturnValueOnce([mockUserInfo, setUserInfoMock])
       .mockReturnValueOnce([mockUpdateProfileState, setUpdateProfileStateMock])
@@ -273,12 +283,14 @@ describe('Profile edit', () => {
         { loading: true, text: '동네 정보 조회 중' },
         setGuDongMock,
       ]);
+    const spyUpdateProfile = jest.spyOn(APIs, 'updateProfile');
     const component = mount(profileEdit);
     component.find('#submit-button').at(0).simulate('click');
-    expect(mockPush).toBeCalledTimes(0);
+    expect(spyUpdateProfile).toBeCalledTimes(1);
+    await expect(spyHistoryPush).toBeCalledTimes(1);
   });
 
-  it('should verify location', () => {
+  it('should not verify location without geolocation', () => {
     useStateMock
       .mockReturnValueOnce([mockUserInfo, setUserInfoMock])
       .mockReturnValueOnce([mockUpdateProfileState, setUpdateProfileStateMock])
@@ -291,12 +303,60 @@ describe('Profile edit', () => {
         setGuDongMock,
       ]);
     const component = mount(profileEdit);
+
+    const confirmSpy = jest.spyOn(window, 'confirm');
+    confirmSpy.mockImplementation(jest.fn(() => true));
     component.find('.verify-location-button').at(0).simulate('click');
-    window.confirm = jest.fn().mockImplementation(() => true);
-    const spyconfirm = jest.spyOn(window, 'confirm').mockImplementation();
-    expect(spyconfirm).toBeCalledTimes(0);
+    expect(confirmSpy).toBeCalledTimes(1);
+    expect(spyAlert).toBeCalledTimes(1);
     expect(setGuDongMock).toBeCalledTimes(0);
     expect(setUpdateProfileStateMock).toBeCalledTimes(0);
-    // const spyFn = jest.spyOn(ProfileEdit, 'verifyLocation');
+  });
+
+  it('should verify location with geolocation', async () => {
+    useStateMock
+      .mockReturnValueOnce([mockUserInfo, setUserInfoMock])
+      .mockReturnValueOnce([mockUpdateProfileState, setUpdateProfileStateMock])
+      .mockReturnValueOnce([
+        { exerciseName: '종목', skillLevel: '실력' },
+        setSelectedExerciseMock,
+      ])
+      .mockReturnValueOnce([
+        { loading: true, text: '동네 정보 조회 중' },
+        setGuDongMock,
+      ]);
+    const { getCurrentPositionMock } = mockNavigatorGeolocation();
+    getCurrentPositionMock.mockImplementation();
+    const component = mount(profileEdit);
+
+    const spyGet = jest.spyOn(axios, 'get');
+    const confirmSpy = jest.spyOn(window, 'confirm');
+    confirmSpy.mockImplementation(jest.fn(() => true));
+
+    const spyGetLocation = jest.spyOn(
+      navigator.geolocation,
+      'getCurrentPosition',
+    );
+
+    // axios.get = jest.fn().mockResolvedValue({
+    //   data: {
+    //     documents: [
+    //       {},
+    //       { region_2depth_name: '구구구', region_3depth_name: '동동동' },
+    //     ],
+    //   },
+    // });
+
+    jest.mock(
+      '../../utils/getGuDong',
+      () => () => Promise.resolve({ gu: '구구구', dong: '동동동' }),
+    );
+
+    await component.find('.verify-location-button').at(0).simulate('click');
+    expect(confirmSpy).toBeCalledTimes(1);
+    expect(spyGetLocation).toBeCalledTimes(1);
+    expect(setGuDongMock).toBeCalledTimes(1);
+
+    // expect(setUpdateProfileStateMock).toBeCalledTimes(1);
   });
 });
