@@ -13,7 +13,7 @@ services:
       - "8000:8000"
     environment:
       - ENV=${ENV}
-      - HOSTNAME=${HOSTNAME}
+      - HOST=${HOST}
       - WEB_ORIGIN=${WEB_ORIGIN}
     restart: always
   web:
@@ -29,6 +29,6 @@ services:
       - "3000:3000"
     environment:
       - REACT_APP_ENV=${ENV}
-      - REACT_APP_HOSTNAME=${HOSTNAME}
+      - REACT_APP_HOST=${HOST}
       - REACT_APP_API_ORIGIN=${API_ORIGIN}
     restart: always

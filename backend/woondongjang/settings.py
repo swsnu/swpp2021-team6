@@ -189,7 +189,7 @@ if ENV == "local":
 elif ENV == "prod":
     DEBUG = False
 
-    ALLOWED_HOSTS = [os.environ.get("HOSTNAME")]
+    ALLOWED_HOSTS = [os.environ.get("HOST")]
 
     INSTALLED_APPS += []
 
