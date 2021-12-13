@@ -5,16 +5,12 @@ services:
     container_name: api
     build:
       context: ./backend
-      dockerfile: ${DOCKERFILE}
+      dockerfile: Dockerfile
     command: bash -c "python manage.py makemigrations accounts posts && python manage.py migrate && python manage.py loaddata exercise-data && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./backend:/app
     ports:
       - "8000:8000"
-    environment:
-      - ENV=${ENV}
-      - HOSTNAME=${HOSTNAME}
-      - WEB_ORIGIN=${WEB_ORIGIN}
     restart: always
   web:
     container_name: web

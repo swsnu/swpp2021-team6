@@ -1,6 +1,5 @@
 import { Provider } from 'react-redux';
-import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import axios from 'axios';
 import * as reactRedux from 'react-redux';
 import PostDetailContainer from '.';
@@ -8,9 +7,21 @@ import mockStore from '../../store/store';
 import * as API from '../../backend/api/api';
 import { UserInfoEntity } from '../../backend/entity/user';
 import { CommentEntity } from '../../backend/entity/comment';
-import { ParticipantType, PostEntity } from '../../backend/entity/post';
+import { PostEntity } from '../../backend/entity/post';
 
-jest.useFakeTimers();
+const stubUserInfo: UserInfoEntity = {
+  userId: 1,
+  nickname: 'gdori',
+  latitude: 123,
+  longitude: 456,
+  gu: '관악구',
+  dong: '신림동',
+  gender: '여성',
+  introduction: '',
+  preferredExercise: [{ exerciseName: '축구', skillLevel: '상' }],
+  participatingPost: [],
+  hostingPost: [],
+};
 
 const stubPost: PostEntity = {
   postId: 1,
@@ -41,20 +52,11 @@ const stubPost: PostEntity = {
 
 const stubComments: CommentEntity[] = [
   {
-    commentId: 1,
-    authorName: 'gdori',
-    authorId: 1,
-    postId: 1,
+    comment_id: 1,
+    author_id: 1,
+    post_id: 1,
     content: 'comment',
-    createdAt: '7초 전',
-  },
-];
-
-const stubParticipants: ParticipantType[] = [
-  {
-    userId: 1,
-    userName: 'gdori',
-    status: '승인 대기 중',
+    created_at: '7초 전',
   },
 ];
 
@@ -65,31 +67,13 @@ jest.mock('react-router', () => ({
   useParams: () => ({ id: '1' }),
 }));
 
-const useStateMock = jest.spyOn(React, 'useState');
-const setPostMock = jest.fn();
-const setParticipantsMock = jest.fn();
-const setCommentItemsMock = jest.fn();
-const setNewCommentMock = jest.fn();
-const setCommentsUpdatedMock = jest.fn();
-const setIsParticipantMock = jest.fn();
-const setApplyStatusMock = jest.fn();
-
 describe('PostCreate', () => {
   let postDetail: any;
   let readUserInfoMock: any;
   let readPostMock: any;
-  let readCommentMock: any;
   const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
 
   beforeEach(() => {
-    useStateMock
-      .mockReturnValueOnce([stubPost, setPostMock])
-      .mockReturnValueOnce([stubParticipants, setParticipantsMock])
-      .mockReturnValueOnce([stubComments, setCommentItemsMock])
-      .mockReturnValueOnce(['hi', setNewCommentMock])
-      .mockReturnValueOnce([false, setCommentsUpdatedMock])
-      .mockReturnValueOnce([false, setIsParticipantMock])
-      .mockReturnValueOnce([null, setApplyStatusMock]);
     postDetail = (
       <Provider store={mockStore}>
         <PostDetailContainer />
@@ -106,25 +90,17 @@ describe('PostCreate', () => {
     // readPostMock = jest.spyOn(API, 'readPost').mockResolvedValue({
     //   entity: stubPost,
     // });
-    // readCommentMock = jest
+    // readPostMock = jest
     //   .spyOn(API, 'queryComments')
     //   .mockResolvedValue({ items: stubComments });
   });
 
   it('should render without error', () => {
-    // jest.spyOn(axios, 'get').mockResolvedValueOnce({ entity: stubUserInfo });
-    // jest.spyOn(axios, 'get').mockResolvedValueOnce({ items: stubComments });
-    const component = mount(postDetail);
-    // component.find('#post-detail-page');
+    jest.spyOn(axios, 'get').mockResolvedValueOnce({ entity: stubUserInfo });
+    jest.spyOn(axios, 'get').mockResolvedValueOnce({ items: stubComments });
+    // const component = mount(postDetail);
+    // expect(component.find('#post-detail-page').length).toBe(1);
   });
-
-  // it('should change commentinput', () => {
-  //   const component = mount(postDetail);
-  //   component
-  //     .find('#new-comment-content-input')
-  //     .simulate('change', { target: { value: 'test comment' } });
-  //   expect(setNewCommentMock).toBeCalledTimes(1);
-  // });
 
   // it('should render without error', () => {
   //   jest.spyOn(axios, 'get').mockResolvedValueOnce({ entity: stubUserInfo });
