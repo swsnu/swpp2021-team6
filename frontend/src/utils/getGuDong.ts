@@ -14,6 +14,9 @@ const getGuDong = async (x: number, y: number) => {
         x,
         y,
       },
+      // App.tsx의 글로벌 설정 오버라이드
+      // true이면 CORS 정책 위반
+      withCredentials: false,
     });
     const { region_2depth_name, region_3depth_name } =
       response.data.documents[1];

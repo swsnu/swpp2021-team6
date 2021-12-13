@@ -19,7 +19,11 @@ import { AppState } from './store/store';
 import { autoSignin } from './store/actions/user';
 
 axios.defaults.baseURL = 'http://127.0.0.1:8000';
+// Cross-site에 요청 헤더 Cookie 보내는 것 허용
+axios.defaults.withCredentials = true;
+// 요청 헤더 Cookie: csrftoken=...
 axios.defaults.xsrfCookieName = 'csrftoken';
+// 요청 헤더 X-CSRFToken: ...
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 axios.get('/users/csrftoken');
