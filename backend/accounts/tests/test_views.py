@@ -8,12 +8,7 @@ from posts.models import Exercise, Participation, Post
 
 
 class AccountsTestCase(TestCase):
-    new_user3 = json.dumps(
-        {
-            "username": "username3",
-            "password": "password3"
-        }
-    )
+    new_user3 = json.dumps({"username": "username3", "password": "password3"})
     new_user3_profile = json.dumps(
         {
             "user_id": 3,
@@ -30,10 +25,7 @@ class AccountsTestCase(TestCase):
             ],
         }
     )
-    new_user4 = json.dumps({
-        "username": "username4",
-        "password": "password4"
-    })
+    new_user4 = json.dumps({"username": "username4", "password": "password4"})
 
     new_user4_profile = json.dumps(
         {
@@ -51,9 +43,11 @@ class AccountsTestCase(TestCase):
             ],
         }
     )
-    new_user5 = json.dumps({
-        "username": "username5",
-    })
+    new_user5 = json.dumps(
+        {
+            "username": "username5",
+        }
+    )
     new_user5_profile = json.dumps(
         {
             "username": "username5",
@@ -63,7 +57,8 @@ class AccountsTestCase(TestCase):
     def setUp(self):
         test_exercise = Exercise.objects.create(name="축구")
         test_user1 = User.objects.create_user(
-            username="username1", password="password1")
+            username="username1", password="password1"
+        )
         test_user1 = ProxyUser.objects.create_user_with(
             user_id=test_user1.id,
             nickname="닉네임1",
@@ -108,7 +103,8 @@ class AccountsTestCase(TestCase):
         )
         Participation.objects.create(user=test_user1, post=test_post1)
         Notification.objects.create(
-            user=test_user1, post=test_post1, noti_type="comment")
+            user=test_user1, post=test_post1, noti_type="comment"
+        )
 
     def test_signup(self):
         client = Client()
@@ -196,16 +192,19 @@ class AccountsTestCase(TestCase):
         # 201 test
         User.objects.create_user(username="username3", password="password3")
         response = client.post(
-            "/users/3", self.new_user3_profile, content_type="application/json")
+            "/users/3", self.new_user3_profile, content_type="application/json"
+        )
         self.assertEqual(response.status_code, 201)
 
         User.objects.create_user(username="username4", password="password4")
         response = client.post(
-            "/users/4", self.new_user4_profile, content_type="application/json")
+            "/users/4", self.new_user4_profile, content_type="application/json"
+        )
         self.assertEqual(response.status_code, 400)
 
         response = client.post(
-            "/users/4", self.new_user5_profile, content_type="application/json")
+            "/users/4", self.new_user5_profile, content_type="application/json"
+        )
         self.assertEqual(response.status_code, 400)
 
         # after signin
@@ -221,7 +220,8 @@ class AccountsTestCase(TestCase):
 
         # 200 test (patch)
         response = client.patch(
-            "/users/1", self.new_user4_profile, content_type="application/json")
+            "/users/1", self.new_user4_profile, content_type="application/json"
+        )
         self.assertEqual(response.status_code, 200)
 
     def test_notification(self):
@@ -237,3 +237,30 @@ class AccountsTestCase(TestCase):
 
         response = client.get("/users/notification/1")
         self.assertEqual(response.status_code, 200)
+
+    def test_set_csrftoken(self):
+        # By default, csrf checks are disabled in test client
+        # To test csrf protection we enforce csrf checks here
+        client = Client(enforce_csrf_checks=True)
+        response = client.post(
+            "/users/signup", self.new_user3, content_type="application/json"
+        )
+        self.assertEqual(
+            response.status_code, 403
+        )  # Request without csrf token returns 403 response
+
+        response = client.get("/users/csrftoken")
+        self.assertEqual(response.status_code, 204)
+        self.assertTrue("csrftoken" in response.cookies)
+
+        csrftoken = response.cookies["csrftoken"].value  # Get csrf token from cookie
+        response = client.post(
+            "/users/signup",
+            self.new_user3,
+            content_type="application/json",
+            HTTP_X_CSRFTOKEN=csrftoken,
+        )
+        self.assertEqual(response.status_code, 201)  # Pass csrf protection
+
+        response = client.delete("/users/csrftoken", HTTP_X_CSRFTOKEN=csrftoken)
+        self.assertEqual(response.status_code, 405)
