@@ -246,6 +246,7 @@ def get_comments(request, post_id=0):
     # Retrieve all comments of a specified post
     comment_list = [
         {
+            "author_name": comment.author.nickname,
             "comment_id": comment.id,
             "author_id": comment.author.id,
             "post_id": comment.post.id,

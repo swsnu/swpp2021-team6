@@ -20,24 +20,21 @@ import {
   deletePost,
   queryComments,
   readPost,
-  readUserInfo,
 } from '../../backend/api/api';
 import CommentsListItem from '../../components/Comment';
 import { CommentEntity, CommentDTO } from '../../backend/entity/comment';
 import background from '../../assets/image/post-detail/background.svg';
 import pencil from '../../assets/image/post-detail/comment.svg';
 
-type CommentItem = CommentEntity & { authorName: string };
-
 const PostDetailContainer: React.FC = () => {
   const history = useHistory();
   const postId: number = Number(useParams<{ id: string }>().id);
   const [postItem, setPost] = useState<PostEntity>();
   const [participants, setParticipants] = useState<ParticipantType[]>([]);
-  const [commentItems, setCommentItems] = React.useState<CommentItem[]>([]);
-  const [newComment, setNewComment] = React.useState<string>('');
-  const [commentsUpdated, setCommentsUpdated] = React.useState<boolean>(false);
-  const [keywordsUpdated, setKeywordsUpdated] = React.useState<boolean>(false);
+  const [commentItems, setCommentItems] = useState<CommentEntity[]>([]);
+  const [newComment, setNewComment] = useState<string>('');
+  const [commentsUpdated, setCommentsUpdated] = useState<boolean>(false);
+  const [keywordsUpdated, setKeywordsUpdated] = useState<boolean>(false);
   const [isParticipant, setIsParticipant] = useState<boolean>(false);
   const [applyStatus, setApplyStatus] = useState<StatusType | null>(null);
 
@@ -71,13 +68,7 @@ const PostDetailContainer: React.FC = () => {
     const comments: CommentEntity[] = (
       await queryComments({ postId })
     ).items.filter((c) => c.postId === postId);
-    const commentsList: CommentItem[] = (
-      await Promise.all(comments.map((c) => readUserInfo({ id: c.authorId })))
-    ).map((u, i) => ({
-      ...comments[i],
-      authorName: u.entity.nickname,
-    }));
-    setCommentItems(commentsList);
+    setCommentItems(comments);
   };
 
   const onClickParticipate = async () => {
