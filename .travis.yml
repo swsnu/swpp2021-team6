@@ -22,7 +22,7 @@ jobs:
         - yarn global add coveralls
         - gem install coveralls-lcov
       script:
-        - yarn test --coverage --watchAll=false
+        - yarn test
         - coveralls-lcov -v -n coverage/lcov.info > coverage.json
         - cd ../backend
         - pylint woondongjang/**/*.py accounts/**/*.py posts/**/*.py
