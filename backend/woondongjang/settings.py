@@ -50,7 +50,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    # "django.middleware.csrf.CsrfViewMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -154,7 +154,10 @@ LOGGING = {
     },
 }
 
+# 응답 헤더 Acces-Control-Allow-Origin
 CORS_ALLOW_ALL_ORIGINS = True
+# Cross-site로부터 요청 헤더 Cookie 받는 것 허용
+# 응답 헤더 Acces-Control-Allow-Credentials
 CORS_ALLOW_CREDENTIALS = True
 
 secrets_file = os.path.join(BASE_DIR, "secrets.json")
