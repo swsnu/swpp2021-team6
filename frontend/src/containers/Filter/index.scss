@@ -1,4 +1,4 @@
-@import '../../style/green.scss';
+$mainGreen: #247100;
 
 .filter {
   position: fixed;
@@ -174,7 +174,7 @@
       }
 
       #label-number {
-        // font-family: Rubik
+        font-family: Rubik;
         display: inline-block;
         font-weight: 700;
         font-size: 20px;
@@ -182,7 +182,7 @@
       }
 
       #label-metric {
-        // font-family: Rubik
+        font-family: Rubik;
         font-weight: 400;
         font-size: 20px;
         line-height: 1.2;
