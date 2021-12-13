@@ -63,7 +63,7 @@ export const onboarding =
       dispatch(onboarding_(userId));
       dispatch(push('/main'));
     } catch (e: any) {
-      console.log('error', e);
+      alert('중복된 닉네임입니다. 다른 닉네임을 입력해주세요.');
     }
   };
 

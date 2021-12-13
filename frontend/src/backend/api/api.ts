@@ -7,7 +7,7 @@ import {
   UpdateProfileDTO,
   UserIdEntity,
 } from '../entity/user';
-import { CommentEntity, CreateCommentEntity } from '../entity/comment';
+import { CommentEntity, CommentDTO } from '../entity/comment';
 import { CreatePostEntity, PostEntity, UpdatePostDTO } from '../entity/post';
 import {
   CreateProps,
@@ -77,13 +77,13 @@ export const queryComments = async ({
   postId: number;
 }): Promise<queryReturnType<CommentEntity>> => {
   const res = await axios.get(`/posts/get/${postId}/comments`);
-  return { items: res.data };
+  return { items: humps.camelizeKeys(res.data) as CommentEntity[] };
 };
 
 export const createComment = async ({
   createPayload,
   postId,
-}: CreateProps<CreateCommentEntity> & { postId: number }): Promise<{
+}: CreateProps<CommentDTO> & { postId: number }): Promise<{
   entityId: string;
 }> => {
   const res: any = await axios.post(`/posts/${postId}/comments`, createPayload);
@@ -91,5 +91,5 @@ export const createComment = async ({
 };
 
 export const readComment = produceReadAPI<CommentEntity>('/posts/get/comments');
-export const updateComment = produceUpdateAPI<CommentEntity>('/posts/comments');
+export const updateComment = produceUpdateAPI<CommentDTO>('/posts/comments');
 export const deleteComment = produceDeleteAPI('/posts/comments');

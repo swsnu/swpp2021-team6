@@ -1,8 +1,8 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { connectRouter } from 'connected-react-router';
-import { history, middlewares, AppState } from '../store/store';
+import { history, middlewares } from '../store/store';
 
-const getMockArticleReducer = jest.fn(
+const getMockUserReducer = jest.fn(
   (initialState) =>
     (state = initialState, action: any) =>
       state,
@@ -15,7 +15,7 @@ declare global {
 }
 
 export const getMockStore = (initialState: any) => {
-  const mockUserReducer = getMockArticleReducer(initialState);
+  const mockUserReducer = getMockUserReducer(initialState);
   const rootReducer = combineReducers({
     user: mockUserReducer,
     router: connectRouter(history),

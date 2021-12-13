@@ -52,8 +52,13 @@ const PostCreate: React.FC = () => {
   });
 
   const fetchUserInfo = async () => {
-    const fetcheduserInfo = (await readUserInfo({ id: loginUserId })).entity;
-    setUserInfo(fetcheduserInfo);
+    try {
+      const fetcheduserInfo = (await readUserInfo({ id: loginUserId })).entity;
+      setUserInfo(fetcheduserInfo);
+    } catch {
+      alert('유저 정보를 불러오는 중 문제가 발생했습니다.');
+      history.push('/main');
+    }
   };
 
   useEffect(() => {
@@ -77,7 +82,7 @@ const PostCreate: React.FC = () => {
     }
   }, [date, time]);
 
-  const onChangeMinCapacity = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeMinCapacity = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const changedMinCapacity = Number(e.target.value);
     if (changedMinCapacity > post.maxCapacity) {
       alert('최대 모집 인원을 초과할 수 없습니다');
@@ -86,7 +91,7 @@ const PostCreate: React.FC = () => {
     }
   };
 
-  const onChangeMaxCapacity = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeMaxCapacity = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const changedMaxCapacity = Number(e.target.value);
     if (changedMaxCapacity < post.minCapacity) {
       alert('최소 모집 인원 미만일 수 없습니다');
@@ -147,12 +152,19 @@ const PostCreate: React.FC = () => {
     ) {
       alert('운동 장소를 설정해주세요.');
     } else {
-      const guDong = getGuDong(post.place.longitude, post.place.latitude);
-      post.place.gu = (await guDong).gu;
-      post.place.dong = (await guDong).dong;
-
-      const newPost = (await createPost({ createPayload: post })).entity;
-      history.push(`/post/${newPost.postId}`);
+      const { gu, dong } = await getGuDong(
+        post.place.longitude,
+        post.place.latitude,
+      );
+      setPost({ ...post, place: { ...post.place, gu, dong } });
+      try {
+        const newPost = (await createPost({ createPayload: post })).entity;
+        history.push(`/post/${newPost.postId}`);
+      } catch (e: any) {
+        if (e?.response?.status === 500) {
+          alert('게시글 작성 중 문제가 발생했습니다.');
+        }
+      }
     }
   };
 
@@ -160,6 +172,19 @@ const PostCreate: React.FC = () => {
     if (e.key === 'Enter') {
       onClickSearch();
     }
+  };
+
+  const capacityOptions = () => {
+    const CAPACITY = 10;
+    const options = [];
+    for (let i = 1; i <= CAPACITY; i++) {
+      options.push(
+        <option key={i} value={i}>
+          {i}명
+        </option>,
+      );
+    }
+    return options;
   };
 
   return (
@@ -233,25 +258,23 @@ const PostCreate: React.FC = () => {
               <div className="capacity-content">
                 <div>
                   <label htmlFor="min-capacity">최소</label>
-                  <input
+                  <select
                     id="min-capacity"
-                    type="number"
-                    min="1"
-                    max="10"
                     value={post.minCapacity}
                     onChange={(e) => onChangeMinCapacity(e)}
-                  />
+                  >
+                    {capacityOptions()}
+                  </select>
                 </div>
                 <div>
                   <label htmlFor="max-capacity">최대</label>
-                  <input
+                  <select
                     id="max-capacity"
-                    type="number"
-                    min="1"
-                    max="10"
                     value={post.maxCapacity}
                     onChange={(e) => onChangeMaxCapacity(e)}
-                  />
+                  >
+                    {capacityOptions()}
+                  </select>
                 </div>
               </div>
             </div>

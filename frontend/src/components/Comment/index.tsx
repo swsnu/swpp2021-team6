@@ -9,8 +9,6 @@ interface Props {
   content: string;
   authorId: number;
   authorName: string;
-  postId: number;
-  createdAt: string;
   setCommentsUpdated: (updated: boolean) => any;
 }
 
@@ -19,8 +17,6 @@ const CommentsListItem: React.FunctionComponent<Props> = ({
   content,
   authorId,
   authorName,
-  postId,
-  createdAt,
   setCommentsUpdated,
 }) => {
   const { loginUserId } = useSelector((state: AppState) => state.user);
@@ -32,16 +28,12 @@ const CommentsListItem: React.FunctionComponent<Props> = ({
   };
 
   const onEdit = async () => {
-    const edittedComment = prompt('Edit your comment.', content);
+    const edittedComment = prompt('댓글 내용을 수정합니다.', content);
     if (edittedComment) {
       await updateComment({
         id: commentId,
         updatePayload: {
-          comment_id: commentId,
           content: edittedComment,
-          author_id: authorId,
-          post_id: postId,
-          created_at: createdAt,
         },
       });
       setCommentsUpdated(true);
@@ -50,8 +42,10 @@ const CommentsListItem: React.FunctionComponent<Props> = ({
 
   return (
     <div id="comments-list-item">
-      <div id="author-name">{authorName}</div>
-      <div id="content">{content}</div>
+      <div id="comment-item-header">
+        <span id="author-name">{authorName}</span>
+        <span id="content">{content}</span>
+      </div>
       {isAuthor && (
         <div id="for-author-button">
           <button id="edit-comment-button" onClick={onEdit}>

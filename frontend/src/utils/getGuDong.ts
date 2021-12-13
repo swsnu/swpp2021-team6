@@ -20,7 +20,7 @@ const getGuDong = async (x: number, y: number) => {
     result.gu = region_2depth_name;
     result.dong = region_3depth_name;
   } catch {
-    console.log('행정구역정보를 불러오는 중 문제가 발생했습니다.');
+    alert('행정구역정보를 불러오는 중 문제가 발생했습니다.');
   }
   return result;
 };

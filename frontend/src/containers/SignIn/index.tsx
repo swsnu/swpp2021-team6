@@ -47,10 +47,10 @@ const SignIn = () => {
   return (
     <div id="signin" className="signin-container">
       <Layout name="로그인" imageUrl={defaultImage}>
-        <label htmlFor="username">이름</label>
+        <label htmlFor="username">아이디</label>
         <input
           id="username"
-          placeholder="이름"
+          placeholder="아이디"
           onChange={(e) => setUsername(e.target.value)}
           onKeyPress={onKeyPress}
         />

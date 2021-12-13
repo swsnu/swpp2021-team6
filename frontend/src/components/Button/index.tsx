@@ -8,15 +8,23 @@ interface Props {
   children: React.ReactNode;
 }
 
-const Button = ({ id, className, imageUrl, onClick, children }: Props) => (
-  <button
-    id={id}
-    className={`${className} ${imageUrl && 'image'} custom-button`}
-    onClick={onClick}
-  >
-    <img src={imageUrl} alt={imageUrl} />
-    <span>{children}</span>
-  </button>
-);
-
+const Button = ({ id, className, imageUrl, onClick, children }: Props) => {
+  if (imageUrl) {
+    return (
+      <button
+        id={id}
+        className={`${className} custom-button with-image`}
+        onClick={onClick}
+      >
+        <img src={imageUrl} alt={imageUrl} />
+        <span>{children}</span>
+      </button>
+    );
+  }
+  return (
+    <button id={id} className={`${className} custom-button`} onClick={onClick}>
+      <span>{children}</span>
+    </button>
+  );
+};
 export default Button;

@@ -12,7 +12,6 @@ from .sorts import PostSort
 from accounts.decorators import signin_required
 
 
-
 @require_GET
 @signin_required
 def get_posts(request):
@@ -54,6 +53,7 @@ def get_posts(request):
     ]
 
     return JsonResponse(post_list, safe=False, status=200)
+
 
 @require_POST
 @signin_required
@@ -186,7 +186,6 @@ def get_post_detail(request, post_id=0):
     return JsonResponse(response_dict, status=200)
 
 
-
 @require_http_methods(["PATCH", "DELETE"])
 @signin_required
 def post_detail(request, post_id=0):
@@ -244,6 +243,7 @@ def get_comments(request, post_id=0):
     ]
     return JsonResponse(comment_list, safe=False, status=200)
 
+
 @require_POST
 @signin_required
 def comments(request, post_id=0):
@@ -257,14 +257,8 @@ def comments(request, post_id=0):
         return HttpResponse(status=400)
 
     author = request.user
-    new_comment = Comment.objects.create(post=post, content=content, author=author)
-
-    response_dict = {
-        "comment_id": new_comment.id,
-        "author_id": new_comment.author.id,
-        "post_id": new_comment.post.id,
-        "content": new_comment.content,
-    }
+    new_comment = Comment.objects.create(
+        post=post, content=content, author=author)
 
     # Create comment notification host and participants
     recipient_list = [
@@ -280,7 +274,7 @@ def comments(request, post_id=0):
         )
         new_notification.save()
 
-    return JsonResponse(response_dict, status=201)
+    return HttpResponse(status=201)
 
 
 @require_GET
@@ -297,6 +291,7 @@ def get_comment_detail(request, comment_id=0):
 
     return JsonResponse(response_dict, status=200)
 
+
 @require_http_methods(["PATCH", "DELETE"])
 @signin_required
 def comment_detail(request, comment_id=0):
@@ -310,20 +305,15 @@ def comment_detail(request, comment_id=0):
         try:
             req_data = json.loads(request.body.decode())
             content = req_data["content"]
+
         except (KeyError, JSONDecodeError):
             return HttpResponse(status=400)
 
         comment.content = content
         comment.save()
 
-        response_dict = {
-            "comment_id": comment.id,
-            "author_id": comment.author.id,
-            "post_id": comment.post.id,
-            "content": comment.content,
-        }
+        return HttpResponse(status=200)
 
-        return JsonResponse(response_dict, status=200)
     # Delete a specified comment
     elif request.method == "DELETE":
         # 권한 확인
@@ -397,6 +387,7 @@ def decline(request, post_id, participant_id):
     )
 
     # Notification 생성
-    Notification.objects.create(user=participant, post=post, noti_type="request denied")
+    Notification.objects.create(
+        user=participant, post=post, noti_type="request denied")
 
     return HttpResponse(status=204)

@@ -18,13 +18,19 @@ const Main = () => {
   const [filterArray, setFilterArray] = useState<FilterInputDTO[]>([]);
   const { loginUserId } = useSelector((state: AppState) => state.user);
 
+  const fetchPosts = async () => {
+    try {
+      const { items } = await queryPosts();
+      setPosts(items);
+    } catch {
+      alert('포스트를 불러오는 중 문제가 발생했습니다.');
+    }
+  };
+
   useEffect(() => {
     if (!loginUserId) history.push('/signin');
-
-    queryPosts()
-      .then((res) => setPosts(res.items))
-      .catch((reason) => console.log(reason));
-  }, []);
+    else fetchPosts();
+  }, [loginUserId]);
 
   const getQueryString = (arr: FilterInputDTO[]) => {
     let search = '';
@@ -35,12 +41,14 @@ const Main = () => {
     return search;
   };
 
-  const onClickApplyFilter = () => {
+  const onClickApplyFilter = async () => {
     const queryString = getQueryString(filterArray);
-
-    queryFilterPosts(queryString)
-      .then((res) => setPosts(res.items))
-      .catch((reason) => console.log(reason));
+    try {
+      const { items } = await queryFilterPosts(queryString);
+      setPosts(items);
+    } catch (e) {
+      alert('필터를 적용하는 중 문제가 발생했습니다.');
+    }
   };
 
   const onClickAddButton = () => {
@@ -73,6 +81,9 @@ const Main = () => {
         />
       </div>
       <div className="post-container">
+        {posts?.length === 0 && (
+          <span className="empty-posts">해당하는 포스트가 없습니다.</span>
+        )}
         {posts?.map((post: PostEntity) => (
           <Post key={post.postId} post={post} />
         ))}
