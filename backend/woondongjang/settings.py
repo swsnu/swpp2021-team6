@@ -25,11 +25,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-fb(-$z(4$$y7gk^de6nrj0to(g3k8r+&(nrp#me+^4+kd*rbi^"
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -131,34 +126,11 @@ STATIC_URL = "/static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "filters": {
-        "require_debug_true": {
-            "()": "django.utils.log.RequireDebugTrue",
-        }
-    },
-    "handlers": {
-        "console": {
-            "level": "DEBUG",
-            "filters": ["require_debug_true"],
-            "class": "logging.StreamHandler",
-        },
-    },
-    "loggers": {
-        "django.db.backends": {
-            "handlers": ["console"],
-            "level": "DEBUG",
-        },
-    },
-}
 
-# 응답 헤더 Acces-Control-Allow-Origin
-CORS_ALLOW_ALL_ORIGINS = True
 # Cross-site로부터 요청 헤더 Cookie 받는 것 허용
 # 응답 헤더 Acces-Control-Allow-Credentials
 CORS_ALLOW_CREDENTIALS = True
+
 
 secrets_file = os.path.join(BASE_DIR, "secrets.json")
 try:
@@ -179,3 +151,47 @@ def get_secret(key):
 
 IBM_AUTHENTICATOR = get_secret("ibm_authenticator")
 IBM_SERVICE_URL = get_secret("ibm_service_url")
+
+
+ENV = os.environ.get("ENV", "local")
+if ENV == "local":
+    DEBUG = True
+
+    ALLOWED_HOSTS = ["*"]
+
+    INSTALLED_APPS += []
+
+    LOGGING = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "filters": {
+            "require_debug_true": {
+                "()": "django.utils.log.RequireDebugTrue",
+            }
+        },
+        "handlers": {
+            "console": {
+                "level": "DEBUG",
+                "filters": ["require_debug_true"],
+                "class": "logging.StreamHandler",
+            },
+        },
+        "loggers": {
+            "django.db.backends": {
+                "handlers": ["console"],
+                "level": "DEBUG",
+            },
+        },
+    }
+
+    # 응답 헤더 Acces-Control-Allow-Origin
+    CORS_ALLOW_ALL_ORIGINS = True
+elif ENV == "prod":
+    DEBUG = False
+
+    ALLOWED_HOSTS = [os.environ.get("HOSTNAME")]
+
+    INSTALLED_APPS += []
+
+    # 응답 헤더 Acces-Control-Allow-Origin
+    CORS_ALLOWED_ORIGINS = [os.environ.get("WEB_ORIGIN")]

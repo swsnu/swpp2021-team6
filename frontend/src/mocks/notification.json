@@ -1,40 +1,45 @@
 [
   {
-    "notiId": 1,
-    "postTitle": "noti.post.title",
-    "createdAt": "noti.created_string",
+    "noti_id": 1,
+    "post_title": "noti.post.title",
+    "created_at": "noti.created_string",
+    "userId": 1,
     "postId": 1,
     "notiType": "request participation",
     "isRead": false
   },
   {
-    "notiId": 2,
-    "postTitle": "noti.post.title",
-    "createdAt": "noti.created_string",
+    "noti_id": 2,
+    "post_title": "noti.post.title",
+    "created_at": "noti.created_string",
+    "userId": 1,
     "postId": 2,
     "notiType": "request approved",
     "isRead": false
   },
   {
-    "notiId": 3,
-    "postTitle": "noti.post.title",
-    "createdAt": "noti.created_string",
+    "noti_id": 3,
+    "post_title": "noti.post.title",
+    "created_at": "noti.created_string",
+    "userId": 1,
     "postId": 3,
     "notiType": "request denied",
     "isRead": true
   },
   {
-    "notiId": 4,
-    "postTitle": "noti.post.title",
-    "createdAt": "noti.created_string",
+    "noti_id": 4,
+    "post_title": "noti.post.title",
+    "created_at": "noti.created_string",
+    "userId": 1,
     "postId": 4,
     "notiType": "comment",
     "isRead": true
   },
   {
-    "notiId": 5,
-    "postTitle": "noti.post.title",
-    "createdAt": "noti.created_string",
+    "noti_id": 5,
+    "post_title": "noti.post.title",
+    "created_at": "noti.created_string",
+    "userId": 1,
     "postId": 5,
     "notiType": "comment",
     "isRead": true
