@@ -14,8 +14,9 @@ import { NotificationEntity } from '../../backend/entity/notification';
 import './index.scss';
 
 const Notification = () => {
-  const { notification } = useSelector((state: AppState) => state.user);
-  const { loginUserId } = useSelector((state: AppState) => state.user);
+  const { loginUserId, notification } = useSelector(
+    (state: AppState) => state.user,
+  );
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -46,7 +47,6 @@ const Notification = () => {
         message = `"${displayedTitle}" 게시글에 댓글이 달렸습니다.`;
         break;
       default:
-        message = '';
     }
     return message;
   };
@@ -58,7 +58,7 @@ const Notification = () => {
 
   const myNotis = () => (
     <Menu>
-      {notification === null || notification.length === 0 ? (
+      {!notification ? (
         <div style={{ margin: '0 5px 0 5px' }}>
           <span style={{ margin: '0 20px 0 20px' }}>
             표시할 알림이 없습니다
@@ -98,7 +98,12 @@ const Notification = () => {
   );
 
   return (
-    <Dropdown overlay={myNotis} trigger={['click']} placement="bottomRight">
+    <Dropdown
+      className="dropdown"
+      overlay={myNotis}
+      trigger={['click']}
+      placement="bottomRight"
+    >
       {notification ? (
         <img
           className="noti-icon"
