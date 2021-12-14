@@ -70,7 +70,7 @@ const Post: React.FC<Props> = ({ post }: Props) => {
       </div>
       <div className="post-footer">
         <div className="keyword-container">
-          {post.keywords.map((keyword, idx) => (
+          {post.keywords?.map((keyword, idx) => (
             <Label key={idx} font="#247100" color="rgba(36, 113, 0, 0)">
               {keyword}
             </Label>

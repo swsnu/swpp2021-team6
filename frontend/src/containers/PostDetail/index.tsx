@@ -1,3 +1,4 @@
+/* eslint-disable no-confusing-arrow */
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -15,6 +16,7 @@ import './index.scss';
 import {
   createApply,
   createComment,
+  createKeywords,
   deletePost,
   queryComments,
   readPost,
@@ -35,6 +37,7 @@ const PostDetailContainer: React.FC = () => {
   const [commentItems, setCommentItems] = React.useState<CommentItem[]>([]);
   const [newComment, setNewComment] = React.useState<string>('');
   const [commentsUpdated, setCommentsUpdated] = React.useState<boolean>(false);
+  const [keywordsUpdated, setKeywordsUpdated] = React.useState<boolean>(false);
   const [isParticipant, setIsParticipant] = useState<boolean>(false);
   const [applyStatus, setApplyStatus] = useState<StatusType | null>(null);
   const { loginUserId } = useSelector((state: AppState) => state.user);
@@ -86,6 +89,22 @@ const PostDetailContainer: React.FC = () => {
       alert('참가 신청 중 문제가 발생했습니다.');
     }
   };
+
+  useEffect(() => {
+    if (postItem?.keywords[1] === null) {
+      createKeywords(postId).then((res) =>
+        setPost((prev) => (prev ? { ...prev, ...res } : undefined)),
+      );
+      setKeywordsUpdated(true);
+    }
+  }, [postItem?.keywords]);
+
+  useEffect(() => {
+    if (keywordsUpdated) {
+      fetchPostItem();
+      setKeywordsUpdated(false);
+    }
+  }, [keywordsUpdated]);
 
   // Redirect to sign-in page if not signed in
   useEffect(() => {

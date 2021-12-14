@@ -4,8 +4,6 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 from datetime import datetime
 
-from .ml.ibm_cloud import extract_keywords
-
 
 class Exercise(models.Model):
     class Name(models.TextChoices):
@@ -114,15 +112,13 @@ class PostManager(models.Manager):
             max_capacity=max_capacity,
             kakaotalk_link=kakaotalk_link,
         )
-
-        keywords = extract_keywords(description)
-
+        
         # Post_Keyword 생성
         Post_Keyword.objects.create(
             post=new_post,
-            keyword1=keywords[0],
-            keyword2=keywords[1],
-            keyword3=keywords[2],
+            keyword1="자동 태그 생성 중입니다...",
+            keyword2=None,
+            keyword3=None,
         )
 
         return new_post
@@ -165,9 +161,9 @@ class Post(models.Model):
 
 class Post_Keyword(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    keyword1 = models.TextField(default="")
-    keyword2 = models.TextField(default="")
-    keyword3 = models.TextField(default="")
+    keyword1 = models.TextField(default="", null=True)
+    keyword2 = models.TextField(default="", null=True)
+    keyword3 = models.TextField(default="", null=True)
 
 
 class Participation(models.Model):
