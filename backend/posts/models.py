@@ -150,7 +150,6 @@ class Post(models.Model):
     place_telephone = models.CharField(max_length=20)
     min_capacity = models.IntegerField()
     max_capacity = models.IntegerField()
-    member_count = models.IntegerField(default=0)
     kakaotalk_link = models.CharField(max_length=256)
     status = models.CharField(
         max_length=10, choices=Status.choices, default=Status.RECRUITING
