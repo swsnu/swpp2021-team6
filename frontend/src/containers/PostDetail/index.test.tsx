@@ -52,11 +52,11 @@ const stubPost: PostEntity = {
 
 const stubComments: CommentEntity[] = [
   {
-    comment_id: 1,
-    author_id: 1,
-    post_id: 1,
+    commentId: 1,
+    authorId: 1,
+    postId: 1,
     content: 'comment',
-    created_at: '7초 전',
+    createdAt: '7초 전',
   },
 ];
 
