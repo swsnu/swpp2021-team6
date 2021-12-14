@@ -7,6 +7,7 @@ import * as API from '../../backend/api/api';
 import PostEdit from '.';
 import mockStore from '../../store/store';
 
+const mockGoBack = jest.fn();
 const mockPush = jest.fn();
 const useStateMock = jest.spyOn(React, 'useState');
 const setPostMock = jest.fn();
@@ -41,7 +42,7 @@ const mockPost = {
 
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
-  useHistory: () => ({ push: mockPush }),
+  useHistory: () => ({ goBack: mockGoBack, push: mockPush }),
   useParams: () => ({ id: '1' }),
 }));
 
