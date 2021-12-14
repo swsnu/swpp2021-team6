@@ -66,7 +66,7 @@ def keywords(request, post_id=0):
     keywords = extract_keywords(post.description)
         # Post_Keyword 생성
     post_keyword = Post_Keyword.objects.get(post_id=post_id)
-    post_keyword.keyword1 = keywords[0] if len(keywords)>0 else None
+    post_keyword.keyword1 = keywords[0] if len(keywords)>0 else "description이 너무 짧아 자동 태그를 생성하지 못했습니다ㅠㅠ"
     post_keyword.keyword2 = keywords[1] if len(keywords)>1 else None
     post_keyword.keyword3 = keywords[2] if len(keywords)>2 else None
     post_keyword.save()

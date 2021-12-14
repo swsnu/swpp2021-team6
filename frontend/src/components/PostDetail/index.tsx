@@ -164,11 +164,14 @@ const Detail: React.FC<Props> = ({
               </Label>
             </div>
             <div id="keyword-container">
-              {post.keywords?.map((keyword, idx) => (
-                <span key={idx} className="keyword">
-                  #{keyword}
-                </span>
-              ))}
+              {post.keywords?.map(
+                (keyword, idx) =>
+                  keyword && (
+                    <span key={idx} className="keyword">
+                      #{keyword}
+                    </span>
+                  ),
+              )}
             </div>
           </div>
 

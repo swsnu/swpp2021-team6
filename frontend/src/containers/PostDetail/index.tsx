@@ -91,7 +91,7 @@ const PostDetailContainer: React.FC = () => {
   };
 
   useEffect(() => {
-    if (postItem?.keywords[1] === null) {
+    if (postItem?.keywords[0] === '자동 태그 생성 중입니다...') {
       createKeywords(postId).then((res) =>
         setPost((prev) => (prev ? { ...prev, ...res } : undefined)),
       );

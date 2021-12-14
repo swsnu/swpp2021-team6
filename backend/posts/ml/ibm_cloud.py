@@ -16,15 +16,18 @@ def extract_keywords(text):
 
     natural_language_understanding.set_service_url(SERVICE_URL)
 
-    response = natural_language_understanding.analyze(
-        text=text,
-        features=Features(
-            keywords=KeywordsOptions(sentiment=True, emotion=True, limit=3)
-        ),
-    ).get_result()
+    try:
+        response = natural_language_understanding.analyze(
+            text=text,
+            features=Features(
+                keywords=KeywordsOptions(sentiment=True, emotion=True, limit=3)
+            ),
+        ).get_result()  
+        results = json.dumps(response, indent=2, ensure_ascii=False)
+        json_data = json.loads(results)    
+    except:
+        return []
 
-    results = json.dumps(response, indent=2, ensure_ascii=False)
-    json_data = json.loads(results)
     return [each["text"] for each in json_data["keywords"]]
 
 
