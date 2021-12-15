@@ -95,7 +95,7 @@ const PostDetailContainer: React.FC = () => {
   useEffect(() => {
     fetchPostItem();
     fetchComments();
-  }, []);
+  }, [postId]);
 
   useEffect(() => {
     if (commentsUpdated) {
