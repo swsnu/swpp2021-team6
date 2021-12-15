@@ -1,3 +1,4 @@
+import React from 'react';
 import * as reactRedux from 'react-redux';
 import { mount } from 'enzyme';
 import axios from 'axios';
@@ -13,9 +14,9 @@ const stubCommentProps = {
   setCommentsUpdated: jest.fn(),
 };
 
+const useStateMock = jest.spyOn(React, 'useState');
 describe('Comment', () => {
   let comment: any;
-  const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
 
   beforeEach(() => {
     comment = <Comment {...stubCommentProps} />;
@@ -35,19 +36,31 @@ describe('Comment', () => {
   });
 
   it('should render without error', () => {
+    useStateMock
+      .mockReturnValueOnce([false, jest.fn()])
+      .mockReturnValueOnce(['new comment', jest.fn()]);
     const component = mount(comment);
     expect(component.find('#comments-list-item').length).toBe(1);
   });
 
   it('should delete comment', () => {
+    useStateMock
+      .mockReturnValueOnce([false, jest.fn()])
+      .mockReturnValueOnce(['new comment', jest.fn()]);
     const component = mount(comment);
     component.find('#delete-comment-button').simulate('click');
   });
 
   it('should edit comment', () => {
     jest.spyOn(axios, 'patch').mockResolvedValueOnce({});
-    window.prompt = jest.fn().mockReturnValue('edited');
+    useStateMock
+      .mockReturnValueOnce([true, jest.fn()])
+      .mockReturnValueOnce(['new comment', jest.fn()]);
     const component = mount(comment);
     component.find('#edit-comment-button').simulate('click');
+    component
+      .find('#content-edit-input')
+      .simulate('change', { target: { value: 'new comment' } });
+    component.find('#edit-done-button').simulate('click');
   });
 });
