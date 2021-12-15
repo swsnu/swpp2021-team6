@@ -84,12 +84,14 @@ interface Props {
   filterArray: FilterInputDTO[];
   setFilterArray: Dispatch<SetStateAction<FilterInputDTO[]>>;
   onClickApplyFilter: () => void;
+  setSort: Dispatch<SetStateAction<string>>;
 }
 
 const Filter: React.FC<Props> = ({
   filterArray = [],
   setFilterArray,
   onClickApplyFilter,
+  setSort,
 }: Props) => {
   const [selectedFilter, setSelectedFilter] = useState<FilterInputDTO>({
     exerciseName: '종목',
@@ -135,9 +137,9 @@ const Filter: React.FC<Props> = ({
       </div>
       <div className="filter-body">
         <img src={sort} alt="sort icon" />
-        <select id="sort-select">
-          <option>가까운 날짜 순</option>
-          <option>가까운 거리 순</option>
+        <select id="sort-select" onChange={(e) => setSort(e.target.value)}>
+          <option value="sort=meet_at">가까운 날짜 순</option>
+          <option value="sort=dist">가까운 거리 순</option>
         </select>
         <img src={exercise} alt="exercise icon" />
         <select

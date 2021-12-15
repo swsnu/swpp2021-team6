@@ -19,8 +19,6 @@ from .ml.ibm_cloud import extract_keywords
 def get_posts(request):
     # Retrieve all posts
     filtered_posts = PostFilter(request.GET, Post.objects.all()).qs
-    print("query--------------------")
-    print(request.user.profile)
     sorted_filtered_posts = PostSort(request.user.profile, request.GET, filtered_posts).qs
 
     post_list = [
