@@ -39,8 +39,8 @@
       #keyword-container {
         margin-top: 10px;
 
-        .keyword {
-          display: inline-block;
+        .keyword, input {
+          // display: inline-block;
           border-radius: 55px;
           height: 23px;
           padding: 3px 15px;
@@ -49,6 +49,15 @@
           color: rgba(36, 113, 0, 0.49);
           text-align: center;
           font-size: 12px;
+        }
+        input {
+          width: max-content;
+        }
+
+        #edit-keyword-button{
+          background : none;
+          border: 0;
+          color: #878787;
         }
       }
     }

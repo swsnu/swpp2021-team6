@@ -211,7 +211,7 @@ const Detail: React.FC<Props> = ({
 
   const editKeywordButton = isHost ? (
     <button id="edit-keyword-button" onClick={onClickEditMode}>
-      {editMode ? '확인' : '수정'}
+      {editMode ? '수정 확인' : '태그 수정'}
     </button>
   ) : (
     <></>
