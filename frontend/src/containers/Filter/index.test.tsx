@@ -9,12 +9,17 @@ describe('Filter', () => {
   ];
   const setFilterArrayMock = jest.fn();
   const onClickApplyFilterMock = jest.fn();
+  const setsortMock = jest.fn();
+  const setScopeMock = jest.fn();
   beforeEach(() => {
     filter = (
       <Filter
         filterArray={stubFilterArray}
         setFilterArray={setFilterArrayMock}
         onClickApplyFilter={onClickApplyFilterMock}
+        scope={5}
+        setSort={setsortMock}
+        setScope={setScopeMock}
       />
     );
   });
@@ -33,6 +38,9 @@ describe('Filter', () => {
         filterArray={stubFilterArray}
         setFilterArray={setFilterArrayMock}
         onClickApplyFilter={onClickApplyFilterMock}
+        scope={5}
+        setSort={setsortMock}
+        setScope={setScopeMock}
       />,
     );
     const wrapper = component.find('.filter');
@@ -70,5 +78,12 @@ describe('Filter', () => {
       .find('#range-container')
       .find('input')
       .simulate('change', { target: { value: 3 } });
+  });
+
+  it('should set sort', () => {
+    const component = mount(filter);
+    component
+      .find('#sort-select')
+      .simulate('change', { target: { value: 'meet_at' } });
   });
 });

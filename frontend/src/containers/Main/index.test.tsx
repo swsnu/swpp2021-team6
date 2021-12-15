@@ -64,25 +64,12 @@ describe('Main', () => {
         ],
         setFilterArrayMock,
       ])
-      .mockReturnValueOnce(['meet_at', jest.fn()]);
+      .mockReturnValueOnce(['meet_at', jest.fn()])
+      .mockReturnValueOnce([5, jest.fn()]);
     spyQueryPosts = jest
       .spyOn(actionCreators, 'queryPosts')
       .mockResolvedValue({ items: mockPosts });
     console.log = jest.fn().mockImplementation();
-
-    Object.defineProperty(window, 'matchMedia', {
-      writable: true,
-      value: jest.fn().mockImplementation((query) => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: jest.fn(),
-        removeListener: jest.fn(),
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
-      })),
-    });
   });
 
   it('should render without error', () => {
