@@ -11,10 +11,13 @@ export function produceCreateAPI<entityCreateProp, returnEntityType>(
   return async function ({
     createPayload,
   }: CreateProps<entityCreateProp>): Promise<{ entity: returnEntityType }> {
-    const res: any = await axios.post(
-      `${apiPath}`,
-      humps.decamelizeKeys(createPayload as unknown as object),
-    );
+    const res: any = await axios
+      .post(
+        `${apiPath}`,
+        humps.decamelizeKeys(createPayload as unknown as object),
+      )
+      .then((res) => res)
+      .catch((err) => err);
     return {
       entity: humps.camelizeKeys(res.data) as unknown as returnEntityType,
     };
@@ -27,7 +30,10 @@ export interface queryReturnType<returnEntityType> {
 
 export function produceQueryAPI<returnEntityType>(apiPath: string) {
   return async function (): Promise<queryReturnType<returnEntityType>> {
-    const res = await axios.get(`${apiPath}`);
+    const res = await axios
+      .get(`${apiPath}`)
+      .then((res) => res)
+      .catch((err) => err);
     return {
       items: humps.camelizeKeys(res.data) as unknown as returnEntityType[],
     };
@@ -40,7 +46,10 @@ export function produceReadAPI<returnEntityType>(apiPath: string) {
   }: {
     id: number;
   }): Promise<{ entity: returnEntityType }> {
-    const res: any = await axios.get(`${apiPath}/${id}`);
+    const res: any = await axios
+      .get(`${apiPath}/${id}`)
+      .then((res) => res)
+      .catch((err) => err);
     return {
       entity: humps.camelizeKeys(res.data) as unknown as returnEntityType,
     };
@@ -57,12 +66,18 @@ export function produceUpdateAPI<entityUpdateProp>(apiPath: string) {
     id,
     updatePayload,
   }: UpdateProps<entityUpdateProp>): Promise<void> {
-    await axios.patch(`${apiPath}/${id}`, updatePayload);
+    await axios
+      .patch(`${apiPath}/${id}`, updatePayload)
+      .then((res) => res)
+      .catch((err) => err);
   };
 }
 
 export function produceDeleteAPI(apiPath: string) {
   return async function ({ id }: { id: number }): Promise<void> {
-    await axios.delete(`${apiPath}/${id}`);
+    await axios
+      .delete(`${apiPath}/${id}`)
+      .then((res) => res)
+      .catch((err) => err);
   };
 }

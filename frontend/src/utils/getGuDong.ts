@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const getGuDong = async (x: number, y: number) => {
+export const getGuDong = async (x: number, y: number) => {
   const result = { gu: '', dong: '' };
 
   try {

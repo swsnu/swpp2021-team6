@@ -83,6 +83,7 @@ export const queryComments = async ({
 }): Promise<queryReturnType<CommentEntity>> => {
   const res = await axios.get(`/posts/get/${postId}/comments`);
   return { items: humps.camelizeKeys(res.data) as CommentEntity[] };
+  // return humps.camelizeKeys(res.data);
 };
 
 export const createComment = async ({
