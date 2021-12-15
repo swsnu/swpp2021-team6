@@ -63,7 +63,8 @@ describe('Main', () => {
           { exerciseName: 'basketball', skillLevel: 'middle' },
         ],
         setFilterArrayMock,
-      ]);
+      ])
+      .mockReturnValueOnce(['meet_at', jest.fn()]);
     spyQueryPosts = jest
       .spyOn(actionCreators, 'queryPosts')
       .mockResolvedValue({ items: mockPosts });
