@@ -180,6 +180,9 @@ const PostDetailContainer: React.FC = () => {
       fetchComments();
       setCommentsUpdated(false);
     }
+    return () => {
+      setCommentItems([]); // This worked for me
+    };
   }, [commentsUpdated]);
 
   useEffect(() => {
