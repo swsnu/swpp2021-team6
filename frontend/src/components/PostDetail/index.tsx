@@ -10,6 +10,7 @@ import {
   PostEntity,
   StatusType,
   ParticipantType,
+  UpdateKeywordDTO,
 } from '../../backend/entity/post';
 import { changeDateFormat } from '../../utils/dateToString';
 import './index.scss';
@@ -17,7 +18,11 @@ import gps from '../../assets/image/post-detail/gps.svg';
 import userIcon from '../../assets/image/post-detail/user-icon.svg';
 import StatusLabel from '../StatusLabel';
 import deleteIcon from '../../assets/image/icon/exercise-delete-button.svg';
-import { acceptApply, declineApply } from '../../backend/api/api';
+import {
+  acceptApply,
+  declineApply,
+  updateKeywords,
+} from '../../backend/api/api';
 
 interface Props {
   post: PostEntity;
@@ -46,6 +51,11 @@ const Detail: React.FC<Props> = ({
   const postId: number = Number(useParams<{ id: string }>().id);
   const [toggleOpen, setToggleOpen] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<boolean>(false);
+  const [newKeywords, setNewKeywords] = useState<string[]>([]);
+
+  useEffect(() => {
+    setNewKeywords([...post.keywords]);
+  }, [post]);
 
   useEffect(() => {
     const container = document.getElementById('map');
@@ -128,7 +138,21 @@ const Detail: React.FC<Props> = ({
     else setToggleOpen(!toggleOpen);
   };
 
-  const onClickEditMode = () => {
+  const onClickEditMode = async () => {
+    if (editMode) {
+      try {
+        const payload = {
+          keyword1: newKeywords[0] || null,
+          keyword2: newKeywords[1] || null,
+          keyword3: newKeywords[2] || null,
+        };
+        console.log(payload);
+        await updateKeywords({ postId, updatePayload: payload });
+        setPost({ ...post, keywords: newKeywords });
+      } catch {
+        alert('키워드 업데이트 중 문제가 발생했습니다.');
+      }
+    }
     setEditMode(!editMode);
   };
 
@@ -147,10 +171,24 @@ const Detail: React.FC<Props> = ({
     </button>
   );
 
+  const onChangeKeywords = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const tmp = [...newKeywords];
+    console.log(e);
+    tmp[Number(e.target.name)] = e.target.value;
+    setNewKeywords(tmp);
+  };
+
   const keywordContainer = editMode ? (
     <>
-      {post.keywords.map((keyword, idx) => (
-        <input key={idx} className="keyword" value={keyword || '태그 추가'} />
+      {newKeywords.map((keyword, idx) => (
+        <input
+          name={`${idx}`}
+          onChange={(e) => onChangeKeywords(e)}
+          key={idx}
+          className="keyword"
+          value={keyword}
+          placeholder="태그 추가"
+        />
       ))}
     </>
   ) : (
