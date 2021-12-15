@@ -4,6 +4,8 @@ import * as reactRedux from 'react-redux';
 import { Provider } from 'react-redux';
 import { createMemoryHistory } from 'history';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
+import axios from 'axios';
+import { act } from 'react-dom/test-utils';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { mockNavigatorGeolocation } from '../../test-utils/mockNavigatorGeolocation';
 import userInfo from '../../mocks/userInfo.json';
@@ -298,5 +300,25 @@ describe('Profile edit', () => {
     expect(setGuDongMock).toBeCalledTimes(0);
     expect(setUpdateProfileStateMock).toBeCalledTimes(0);
     // const spyFn = jest.spyOn(ProfileEdit, 'verifyLocation');
+  });
+
+  it('should call fetchUserInfo', async () => {
+    const axiosMock = jest.spyOn(axios, 'get').mockResolvedValueOnce({
+      entity: userInfo,
+    });
+    useStateMock
+      .mockReturnValueOnce([mockUserInfo, setUserInfoMock])
+      .mockReturnValueOnce([mockUpdateProfileState, setUpdateProfileStateMock])
+      .mockReturnValueOnce([
+        { exerciseName: '종목', skillLevel: '실력' },
+        setSelectedExerciseMock,
+      ])
+      .mockReturnValueOnce([
+        { loading: true, text: '동네 정보 조회 중' },
+        setGuDongMock,
+      ]);
+    await act(async () => {
+      const component = mount(profileEdit);
+    });
   });
 });

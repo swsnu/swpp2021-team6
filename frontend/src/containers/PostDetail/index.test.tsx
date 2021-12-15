@@ -1,16 +1,12 @@
 import { Provider } from 'react-redux';
 import React from 'react';
-import { mount, shallow } from 'enzyme';
-import axios from 'axios';
-import * as reactRedux from 'react-redux';
+import { mount } from 'enzyme';
 import PostDetailContainer from '.';
-import mockStore from '../../store/store';
 import * as API from '../../backend/api/api';
-import { UserInfoEntity } from '../../backend/entity/user';
 import { CommentEntity } from '../../backend/entity/comment';
 import { ParticipantType, PostEntity } from '../../backend/entity/post';
-
-jest.useFakeTimers();
+import mockStore, { history } from '../../store/store';
+import * as kakaoMap from '../../utils/getKakaoMap';
 
 const stubPost: PostEntity = {
   postId: 1,
@@ -48,6 +44,14 @@ const stubComments: CommentEntity[] = [
     content: 'comment',
     createdAt: '7초 전',
   },
+  {
+    commentId: 1,
+    authorName: 'gdori',
+    authorId: 1,
+    postId: 1,
+    content: 'comment',
+    createdAt: '7초 전',
+  },
 ];
 
 const stubParticipants: ParticipantType[] = [
@@ -65,6 +69,7 @@ jest.mock('react-router', () => ({
   useParams: () => ({ id: '1' }),
 }));
 
+jest.spyOn(kakaoMap, 'getKakaoMapWithMarker').mockImplementation();
 const useStateMock = jest.spyOn(React, 'useState');
 const setPostMock = jest.fn();
 const setParticipantsMock = jest.fn();
@@ -72,16 +77,60 @@ const setCommentItemsMock = jest.fn();
 const setNewCommentMock = jest.fn();
 const setCommentsUpdatedMock = jest.fn();
 const setIsParticipantMock = jest.fn();
+const setKeywordsUpdatedMock = jest.fn();
 const setApplyStatusMock = jest.fn();
+const setToggleOpenMock = jest.fn();
 
-describe('PostCreate', () => {
+// const mockStore = createStore(
+//   combineReducers({
+//     router: connectRouter(history),
+//     user: (
+//       state = { loginUserId: 1, notification: mockNotification },
+//       action,
+//     ) => state,
+//   }),
+//   applyMiddleware(routerMiddleware(history)),
+// );
+
+describe('Post Detail', () => {
   let postDetail: any;
   let readUserInfoMock: any;
   let readPostMock: any;
   let readCommentMock: any;
-  const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
 
   beforeEach(() => {
+    jest.spyOn(API, 'createApply').mockResolvedValueOnce(200);
+    jest.spyOn(API, 'createComment').mockResolvedValueOnce({ entityId: '0' });
+    jest.spyOn(API, 'deletePost').mockResolvedValueOnce();
+    readCommentMock = jest
+      .spyOn(API, 'queryComments')
+      .mockResolvedValueOnce({ items: stubComments });
+    readPostMock = jest
+      .spyOn(API, 'readPost')
+      .mockResolvedValueOnce({ entity: stubPost });
+    jest.spyOn(API, 'acceptApply').mockResolvedValueOnce(200);
+    jest.spyOn(API, 'declineApply').mockResolvedValueOnce(200);
+
+    postDetail = (
+      <Provider store={mockStore}>
+        <PostDetailContainer />
+      </Provider>
+    );
+
+    // readUserInfoMock = jest.spyOn(API, 'readUserInfo').mockResolvedValue({
+    //   entity: stubUserInfo,
+    // });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('should render without error', async () => {
     useStateMock
       .mockReturnValueOnce([stubPost, setPostMock])
       .mockReturnValueOnce([stubParticipants, setParticipantsMock])
@@ -89,46 +138,20 @@ describe('PostCreate', () => {
       .mockReturnValueOnce(['hi', setNewCommentMock])
       .mockReturnValueOnce([false, setCommentsUpdatedMock])
       .mockReturnValueOnce([false, setIsParticipantMock])
-      .mockReturnValueOnce([null, setApplyStatusMock]);
-    postDetail = (
-      <Provider store={mockStore}>
-        <PostDetailContainer />
-      </Provider>
-    );
-
-    useSelectorMock.mockImplementation((callback) =>
-      callback({ user: { loginUserId: 1 } }),
-    );
-
-    // readUserInfoMock = jest.spyOn(API, 'readUserInfo').mockResolvedValue({
-    //   entity: stubUserInfo,
-    // });
-    // readPostMock = jest.spyOn(API, 'readPost').mockResolvedValue({
-    //   entity: stubPost,
-    // });
-    // readCommentMock = jest
-    //   .spyOn(API, 'queryComments')
-    //   .mockResolvedValue({ items: stubComments });
-  });
-
-  it('should render without error', () => {
-    // jest.spyOn(axios, 'get').mockResolvedValueOnce({ entity: stubUserInfo });
-    // jest.spyOn(axios, 'get').mockResolvedValueOnce({ items: stubComments });
+      .mockReturnValueOnce([false, setKeywordsUpdatedMock])
+      .mockReturnValueOnce([null, setApplyStatusMock])
+      .mockReturnValueOnce([false, setToggleOpenMock]);
     const component = mount(postDetail);
-    // component.find('#post-detail-page');
+    expect(component.find('.background').length).toBe(1);
   });
 
   // it('should change commentinput', () => {
   //   const component = mount(postDetail);
-  //   component
-  //     .find('#new-comment-content-input')
-  //     .simulate('change', { target: { value: 'test comment' } });
-  //   expect(setNewCommentMock).toBeCalledTimes(1);
+  //   component.find('#new-comment-content-input');
+  //   // expect(setNewCommentMock).toBeCalledTimes(1);
   // });
 
   // it('should render without error', () => {
-  //   jest.spyOn(axios, 'get').mockResolvedValueOnce({ entity: stubUserInfo });
-  //   jest.spyOn(axios, 'get').mockResolvedValueOnce({ items: stubComments });
   //   const component = mount(postDetail);
   //   // expect(component.find('#post-detail-page').length).toBe(1);
   // });
