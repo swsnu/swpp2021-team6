@@ -45,6 +45,7 @@ const Detail: React.FC<Props> = ({
   const history = useHistory();
   const postId: number = Number(useParams<{ id: string }>().id);
   const [toggleOpen, setToggleOpen] = useState<boolean>(false);
+  const [editMode, setEditMode] = useState<boolean>(false);
 
   useEffect(() => {
     const container = document.getElementById('map');
@@ -127,6 +128,10 @@ const Detail: React.FC<Props> = ({
     else setToggleOpen(!toggleOpen);
   };
 
+  const onClickEditMode = () => {
+    setEditMode(!editMode);
+  };
+
   const button2 = isHost ? (
     <button id="participant-toggle-button" onClick={onClickToggleOpen}>
       <span>참여자 명단 확인</span>
@@ -142,21 +147,30 @@ const Detail: React.FC<Props> = ({
     </button>
   );
 
-  const keywordContainer =
-    post.keywords[0] === null ? (
-      <span className="keyword">
-        description이 너무 짧아서 자동 태그를 생성하지 못했습니다
-      </span>
-    ) : (
-      post.keywords?.map(
-        (keyword, idx) =>
-          keyword && (
-            <span key={idx} className="keyword">
-              #{keyword}
-            </span>
-          ),
-      )
-    );
+  const keywordContainer = editMode ? (
+    <>
+      {post.keywords.map((keyword, idx) => (
+        <input key={idx} className="keyword" value={keyword || '태그 추가'} />
+      ))}
+    </>
+  ) : (
+    <>
+      {post.keywords.map((keyword, idx) => (
+        <span key={idx} className="keyword">
+          #{keyword || '태그 추가'}
+        </span>
+      ))}
+    </>
+  );
+
+  const editKeywordButton = isHost ? (
+    <button id="edit-keyword-button" onClick={onClickEditMode}>
+      {editMode ? '확인' : '수정'}
+    </button>
+  ) : (
+    <></>
+  );
+
   return (
     <>
       <div id="post-detail-component">
@@ -179,7 +193,10 @@ const Detail: React.FC<Props> = ({
                 현재 {post.memberCount}명
               </Label>
             </div>
-            <div id="keyword-container">{keywordContainer}</div>
+            <div id="keyword-container">
+              {keywordContainer}
+              {editKeywordButton}
+            </div>
           </div>
 
           <div id="right">
