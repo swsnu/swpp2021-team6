@@ -40,7 +40,7 @@ def get_posts(request):
             },
             "min_capacity": post.min_capacity,
             "max_capacity": post.max_capacity,
-            "member_count": post.member_count,
+            "member_count": post.participation_set.filter(status='ACCEPTED').count(),
             "kakaotalk_link": post.kakaotalk_link,
             "status": post.status,
             "keywords": [
@@ -124,7 +124,7 @@ def post_posts(request):
         },
         "max_capacity": new_post.max_capacity,
         "min_capacity": new_post.min_capacity,
-        "member_count": new_post.member_count,
+        "member_count": 0,
         "kakaotalk_link": new_post.kakaotalk_link,
         "status": new_post.status,
         "keywords": keyword_list,
@@ -163,7 +163,7 @@ def get_post_detail(request, post_id=0):
         "meet_at": post.meet_at_res,
         "max_capacity": post.max_capacity,
         "min_capacity": post.min_capacity,
-        "member_count": post.member_count,
+        "member_count": post.participation_set.filter(status='ACCEPTED').count(),
         "place": {
             "latitude": post.latitude,
             "longitude": post.longitude,
@@ -351,8 +351,6 @@ def apply(request, post_id):
 def accept(request, post_id, participant_id):
     # Post 조회
     post = get_object_or_404(Post, id=post_id)
-    count = post.member_count
-    print(count)
 
     # User(participant) 조회
     participant = get_object_or_404(User, id=participant_id)
@@ -361,8 +359,6 @@ def accept(request, post_id, participant_id):
     Participation.objects.filter(user=participant, post=post).update(
         status=Participation.Status.ACCEPTED
     )
-
-    Post.objects.filter(id=post_id).update(member_count=count + 1)
 
     # Notification 생성
     Notification.objects.create(

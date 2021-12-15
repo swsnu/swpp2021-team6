@@ -53,6 +53,8 @@ const PostDetailContainer: React.FC = () => {
     }
   };
 
+  console.log(postItem);
+
   const onPostDelete = async () => {
     await deletePost({ id: postId });
     history.push('/main');
@@ -106,19 +108,13 @@ const PostDetailContainer: React.FC = () => {
 
   useEffect(() => {
     if (postItem && loginUserId) {
+      // 참가 신청자 목록을 보여줌
       setParticipants(
         postItem.participants.filter(
           (participant) => participant.status !== 'DECLINED',
         ),
       );
-    }
-  }, [postItem]);
-
-  useEffect(() => {
-    if (loginUserId) {
-      const found = participants.find(
-        (participant) => participant.userId === loginUserId,
-      );
+      const found = postItem.participants.find((c) => c.userId === loginUserId);
       if (found) {
         setIsParticipant(true);
         if (found.status === 'PENDING') setApplyStatus(ApplyStatus.PENDING);
@@ -126,7 +122,7 @@ const PostDetailContainer: React.FC = () => {
         if (found.status === 'DECLINED') setApplyStatus(ApplyStatus.DECLINED);
       }
     }
-  }, [participants]);
+  }, [postItem]);
 
   // Render Component
   if (postItem === undefined) return null;

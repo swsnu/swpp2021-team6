@@ -76,7 +76,9 @@ const PostEdit: React.FC = () => {
       const cancelConfirm = confirm(
         '수정 사항이 있습니다. 정말 취소하시겠습니까?',
       );
-      if (cancelConfirm) history.push(`/post/${postId}`);
+      if (cancelConfirm) history.goBack();
+    } else {
+      history.goBack();
     }
   };
 
