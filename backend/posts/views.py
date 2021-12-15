@@ -62,15 +62,15 @@ def get_posts(request):
 @signin_required
 def keywords(request, post_id=0):
     post = Post.objects.get(id=post_id)
-    keywords = extract_keywords(post.description)
+    extracted_keywords = extract_keywords(post.description)
         # Post_Keyword 생성
     post_keyword = Post_Keyword.objects.get(post_id=post_id)
-    post_keyword.keyword1 = keywords[0] if len(keywords)>0 else None
-    post_keyword.keyword2 = keywords[1] if len(keywords)>1 else None
-    post_keyword.keyword3 = keywords[2] if len(keywords)>2 else None
+    post_keyword.keyword1 = extracted_keywords[0] if len(extracted_keywords)>0 else None
+    post_keyword.keyword2 = extracted_keywords[1] if len(extracted_keywords)>1 else None
+    post_keyword.keyword3 = extracted_keywords[2] if len(extracted_keywords)>2 else None
     post_keyword.save()
     
-    return JsonResponse(keywords, safe=False, status=200)
+    return JsonResponse(extracted_keywords, safe=False, status=200)
 
 @require_POST
 @signin_required
@@ -274,7 +274,7 @@ def comments(request, post_id=0):
         return HttpResponse(status=400)
 
     author = request.user
-    new_comment = Comment.objects.create(
+    Comment.objects.create(
         post=post, content=content, author=author)
 
     # Create comment notification host and participants

@@ -25,7 +25,7 @@ def extract_keywords(text):
         ).get_result()  
         results = json.dumps(response, indent=2, ensure_ascii=False)
         json_data = json.loads(results)    
-    except:
+    except: # pylint: disable=bare-except
         return []
 
     return [each["text"] for each in json_data["keywords"]]
