@@ -16,7 +16,8 @@ const Main = () => {
   const history = useHistory();
   const [posts, setPosts] = useState<PostEntity[]>();
   const [filterArray, setFilterArray] = useState<FilterInputDTO[]>([]);
-  const [sort, setSort] = useState('sort=meet_at');
+  const [sort, setSort] = useState<string>('meet_at');
+  const [scope, setScope] = useState<number>(5);
 
   const { loginUserId } = useSelector((state: AppState) => state.user);
 
@@ -36,10 +37,14 @@ const Main = () => {
 
   const getQueryString = (arr: FilterInputDTO[]) => {
     let search = '';
-    arr.forEach((val, idx) => {
-      if (idx !== 0) search += '&';
-      search += `exercise=${val.exerciseName}&level=${val.skillLevel}&${sort}`;
+    arr.forEach((val) => {
+      search += `&exercise=${val.exerciseName}&level=${val.skillLevel}`;
     });
+
+    search += `&sort=${sort}&scope=${scope}`;
+
+    search = search.substring(1);
+
     return search;
   };
 
@@ -81,6 +86,8 @@ const Main = () => {
           setFilterArray={setFilterArray}
           onClickApplyFilter={onClickApplyFilter}
           setSort={setSort}
+          scope={scope}
+          setScope={setScope}
         />
       </div>
       <div className="post-container">

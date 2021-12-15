@@ -83,13 +83,17 @@ const skillLevelNameObj: skillLevelNameType = {
 interface Props {
   filterArray: FilterInputDTO[];
   setFilterArray: Dispatch<SetStateAction<FilterInputDTO[]>>;
-  onClickApplyFilter: () => void;
   setSort: Dispatch<SetStateAction<string>>;
+  scope: number;
+  setScope: Dispatch<SetStateAction<number>>;
+  onClickApplyFilter: () => void;
 }
 
 const Filter: React.FC<Props> = ({
   filterArray = [],
   setFilterArray,
+  scope,
+  setScope,
   onClickApplyFilter,
   setSort,
 }: Props) => {
@@ -97,7 +101,6 @@ const Filter: React.FC<Props> = ({
     exerciseName: '종목',
     skillLevel: '기대 실력',
   });
-  const [distance, setDistance] = useState('1');
 
   useEffect(() => {
     if (
@@ -138,8 +141,8 @@ const Filter: React.FC<Props> = ({
       <div className="filter-body">
         <img src={sort} alt="sort icon" />
         <select id="sort-select" onChange={(e) => setSort(e.target.value)}>
-          <option value="sort=meet_at">가까운 날짜 순</option>
-          <option value="sort=dist">가까운 거리 순</option>
+          <option value="meet_at">가까운 날짜 순</option>
+          <option value="dist">가까운 거리 순</option>
         </select>
         <img src={exercise} alt="exercise icon" />
         <select
@@ -203,7 +206,7 @@ const Filter: React.FC<Props> = ({
           <span id="label-text">거리 조정</span>
           <div>
             <span id="label-number" className="green">
-              {distance}
+              {scope}
             </span>
             <span id="label-metric" className="green">
               km
@@ -221,8 +224,8 @@ const Filter: React.FC<Props> = ({
             min="1"
             max="5"
             step="2"
-            value={distance}
-            onChange={(e) => setDistance(e.target.value)}
+            defaultValue={5}
+            onChange={(e) => setScope(Number(e.target.value))}
           />
         </div>
       </div>

@@ -1,10 +1,10 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import * as reactRedux from 'react-redux';
-import userInfo from '../../mocks/userInfo.json';
-import * as actionCreators from '../../backend/api/api';
+import axios from 'axios';
 import { PostEntity } from '../../backend/entity/post';
 import Main from '.';
+import * as API from '../../backend/api/api';
 
 const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
 const mockPush = jest.fn();
@@ -49,11 +49,12 @@ const mockPosts: PostEntity[] = [
 describe('Main', () => {
   let main: any;
   let spyQueryPosts: any;
+  let spyQueryFilterPosts: any;
 
   beforeEach(() => {
     main = <Main />;
     useSelectorMock.mockImplementation((callback) =>
-      callback({ user: { user: userInfo } }),
+      callback({ user: { loginUserId: 1 } }),
     );
     useStateMock
       .mockReturnValueOnce([mockPosts, setPostsMock])
@@ -64,29 +65,34 @@ describe('Main', () => {
         ],
         setFilterArrayMock,
       ])
-      .mockReturnValueOnce(['meet_at', jest.fn()]);
-    spyQueryPosts = jest
-      .spyOn(actionCreators, 'queryPosts')
-      .mockResolvedValue({ items: mockPosts });
+      .mockReturnValueOnce(['meet_at', jest.fn()])
+      .mockReturnValueOnce([5, jest.fn()])
+      .mockReturnValueOnce([
+        {
+          exerciseName: '종목',
+          skillLevel: '기대 실력',
+        },
+        jest.fn(),
+      ])
+      .mockReturnValueOnce(['', jest.fn()]);
     console.log = jest.fn().mockImplementation();
-
-    Object.defineProperty(window, 'matchMedia', {
-      writable: true,
-      value: jest.fn().mockImplementation((query) => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: jest.fn(),
-        removeListener: jest.fn(),
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
-      })),
-    });
+    window.alert = jest.fn();
   });
 
-  it('should render without error', () => {
-    const component = shallow(main);
+  it('should render without error', (done) => {
+    spyQueryPosts = jest
+      .spyOn(API, 'queryPosts')
+      .mockResolvedValueOnce({ items: mockPosts });
+    // spyQueryFilterPosts = jest
+    //   .spyOn(API, 'queryFilterPosts')
+    //   .mockResolvedValueOnce({ items: mockPosts });
+    const component = mount(main);
     expect(component.find('.main').length).toBe(1);
+    done();
+  });
+
+  it('should alert when error ocurred while fetching posts', () => {
+    spyQueryPosts = jest.spyOn(API, 'queryPosts').mockRejectedValueOnce({});
+    const component = mount(main);
   });
 });
