@@ -114,13 +114,6 @@ def post_posts(request):
         max_capacity,
         kakaotalk_link,
     )
-    
-    # post_keyword = get_object_or_404(Post_Keyword, post=new_post)
-    # keyword_list = [
-    #     post_keyword.keyword1,
-    #     post_keyword.keyword2,
-    #     post_keyword.keyword3,
-    # ]
 
     response_dict = {
         "post_id": new_post.id,
