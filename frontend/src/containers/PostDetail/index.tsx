@@ -53,8 +53,6 @@ const PostDetailContainer: React.FC = () => {
     }
   };
 
-  console.log(postItem);
-
   const onPostDelete = async () => {
     await deletePost({ id: postId });
     history.push('/main');
