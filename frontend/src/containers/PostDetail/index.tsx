@@ -53,8 +53,6 @@ const PostDetailContainer: React.FC = () => {
     }
   };
 
-  console.log(postItem);
-
   const onPostDelete = async () => {
     await deletePost({ id: postId });
     history.push('/main');
@@ -97,7 +95,7 @@ const PostDetailContainer: React.FC = () => {
   useEffect(() => {
     fetchPostItem();
     fetchComments();
-  }, []);
+  }, [postId]);
 
   useEffect(() => {
     if (commentsUpdated) {
