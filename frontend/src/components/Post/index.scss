@@ -1,8 +1,8 @@
 .post {
-  margin: 0 10px 20px 10px;
+  margin: 0 5px 20px 5px;
   padding: 0;
-  width: 220px;
-  height: 430px;
+  width: 215px;
+  height: 360px;
   border: none;
   text-align: left;
   background-color: transparent;
@@ -17,8 +17,7 @@
   .date {
     position: relative;
     bottom: 222px;
-    margin-left: auto;
-    margin-right: 10px;
+    margin-left: 100px;
     width: -moz-fit-content;
     width: fit-content;
     padding: 0 8px;
@@ -29,8 +28,8 @@
   }
 
   .thumbnail {
-    width: 220px;
-    height: 220px;
+    width: 215px;
+    height: 215px;
     object-fit: cover;
     margin-bottom: 14px;
     border-radius: 10px;
@@ -38,10 +37,11 @@
 
   .post-capacity {
     position: relative;
-    bottom: 120px;
+    bottom: 114px;
     display: flex;
+    width: 100%;
     justify-content: flex-end;
-    padding: 50px 12px 5px 0;
+    padding: 50px 12px 0 0;
     border-radius: 0 0 10px 10px;
     font-size: 20px;
     font-weight: 500;
@@ -59,7 +59,7 @@
 
   .post-body {
     position: relative;
-    bottom: 105px;
+    bottom: 100px;
     display: flex;
     flex-direction: column;
     padding-left: 5px;
@@ -67,7 +67,7 @@
     .title {
       max-height: 2.3em;
       font-weight: 700;
-      font-size: 18px;
+      font-size: 16px;
       margin-right: 10px;
       margin-bottom: 3px;
       overflow: hidden;
@@ -86,7 +86,7 @@
 
   .post-footer {
     position: relative;
-    bottom: 95px;
+    bottom: 90px;
     justify-content: space-between;
     padding-left: 3px;
 
@@ -97,8 +97,9 @@
 
       span {
         margin-right: 5px !important;
-        font-size: 12px;
+        font-size: 10px !important;
         border: 1px solid rgba(36, 113, 0, 0.49);
+        height: fit-content;
       }
     }
 
