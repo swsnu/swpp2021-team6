@@ -111,30 +111,6 @@ const PostDetailContainer: React.FC = () => {
   const fetchComments = async () => {
     const comments: CommentEntity[] = (await queryComments({ postId })).items;
     setCommentItems(comments);
-
-    // let comments: CommentEntity[] = [
-    //   {
-    //     commentId: 1,
-    //     authorName: 'gdori',
-    //     authorId: 1,
-    //     postId: 1,
-    //     content: 'comment',
-    //     createdAt: '7초 전',
-    //   },
-    //   {
-    //     commentId: 1,
-    //     authorName: 'gdori',
-    //     authorId: 1,
-    //     postId: 1,
-    //     content: 'comment',
-    //     createdAt: '7초 전',
-    //   },
-    // ];
-    // comments = (await queryComments({ postId })).items;
-    // const returnComments: CommentEntity[] = comments.items;
-    // console.log(typeof comments);
-
-    // setCommentItems(comments);
   };
 
   const onClickParticipate = async () => {

@@ -59,3 +59,9 @@ export const ApplyStatus = {
 } as const;
 
 export type StatusType = typeof ApplyStatus[keyof typeof ApplyStatus];
+
+export interface UpdateKeywordDTO {
+  keyword1: string | null;
+  keyword2: string | null;
+  keyword3: string | null;
+}

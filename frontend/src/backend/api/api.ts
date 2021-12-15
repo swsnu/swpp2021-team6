@@ -8,7 +8,12 @@ import {
   UserIdEntity,
 } from '../entity/user';
 import { CommentEntity, CommentDTO } from '../entity/comment';
-import { CreatePostEntity, PostEntity, UpdatePostDTO } from '../entity/post';
+import {
+  CreatePostEntity,
+  PostEntity,
+  UpdatePostDTO,
+  UpdateKeywordDTO,
+} from '../entity/post';
 import {
   CreateProps,
   produceCreateAPI,
@@ -30,6 +35,16 @@ export const updatePost = produceUpdateAPI<UpdatePostDTO>('/posts');
 export const createKeywords = async (postId: number): Promise<string[]> => {
   const res: any = await axios.post(`/posts/${postId}/keywords`);
   return res.data;
+};
+
+export const updateKeywords = async ({
+  postId,
+  updatePayload,
+}: {
+  postId: number;
+  updatePayload: UpdateKeywordDTO;
+}): Promise<void> => {
+  await axios.patch(`/posts/${postId}/keywords`, updatePayload);
 };
 
 export const createUser = produceCreateAPI<SignUpDTO, UserIdEntity>(
