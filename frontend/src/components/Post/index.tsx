@@ -13,7 +13,7 @@ interface Props {
 
 const Post: React.FC<Props> = ({ post }: Props) => {
   const history = useHistory();
-  const [imgSrc, setImgSrc] = useState<string>(thumbnails.soccer[0]);
+  const [imgSrc, setImgSrc] = useState<string>();
 
   useEffect(() => {
     const idx = post.postId % 4;
@@ -27,10 +27,10 @@ const Post: React.FC<Props> = ({ post }: Props) => {
         imgArray = thumbnails.basketball;
         break;
       case '배드민턴':
-        imgArray = thumbnails.soccer;
+        imgArray = thumbnails.badminton;
         break;
       case '테니스':
-        imgArray = thumbnails.soccer;
+        imgArray = thumbnails.tennis;
         break;
       case '탁구':
         imgArray = thumbnails.tabletennis;

@@ -1,3 +1,4 @@
+/* eslint-disable no-proto */
 import { Provider } from 'react-redux';
 import React from 'react';
 import { mount } from 'enzyme';
@@ -7,33 +8,6 @@ import { CommentEntity } from '../../backend/entity/comment';
 import { ParticipantType, PostEntity } from '../../backend/entity/post';
 import mockStore, { history } from '../../store/store';
 import * as kakaoMap from '../../utils/getKakaoMap';
-
-const stubPost: PostEntity = {
-  postId: 1,
-  hostId: 1,
-  hostName: 'gdori',
-  exerciseName: '배드민턴',
-  expectedLevel: '상관 없음',
-  title: '용산구에서 같이 축구하실 분~',
-  description: '가볍게 축구하실 분 구해요',
-  meetAt: '2021-11-11 19:00',
-  minCapacity: 5,
-  maxCapacity: 10,
-  memberCount: 3,
-  place: {
-    name: '용산공업고등학교',
-    latitude: 37.524298,
-    longitude: 126.967529,
-    gu: '용산구',
-    dong: '용산동',
-    address: '서울특별시 용산구 한강로3가',
-    telephone: '02-2648-1264',
-  },
-  participants: [],
-  kakaotalkLink: 'https://open.kakao.com/o/stl6nIeb',
-  status: '모집 중',
-  keywords: ['뒤풀이', 'MBTI E', '이번 주말'],
-};
 
 const stubComments: CommentEntity[] = [
   {
@@ -58,9 +32,46 @@ const stubParticipants: ParticipantType[] = [
   {
     userId: 1,
     userName: 'gdori',
-    status: '승인 대기 중',
+    status: 'PENDING',
+  },
+  {
+    userId: 2,
+    userName: 'gdori',
+    status: 'ACCEPTED',
+  },
+  {
+    userId: 3,
+    userName: 'gdori',
+    status: 'DECLINED',
   },
 ];
+
+const stubPost: PostEntity = {
+  postId: 1,
+  hostId: 1,
+  hostName: 'gdori',
+  exerciseName: '배드민턴',
+  expectedLevel: '상관 없음',
+  title: '용산구에서 같이 축구하실 분~',
+  description: '가볍게 축구하실 분 구해요',
+  meetAt: '2021-11-11 19:00',
+  minCapacity: 5,
+  maxCapacity: 10,
+  memberCount: 3,
+  place: {
+    name: '용산공업고등학교',
+    latitude: 37.524298,
+    longitude: 126.967529,
+    gu: '용산구',
+    dong: '용산동',
+    address: '서울특별시 용산구 한강로3가',
+    telephone: '02-2648-1264',
+  },
+  participants: stubParticipants,
+  kakaotalkLink: 'https://open.kakao.com/o/stl6nIeb',
+  status: '모집 중',
+  keywords: ['자동 태그 생성 중입니다'],
+};
 
 const mockPush = jest.fn();
 jest.mock('react-router', () => ({
@@ -76,8 +87,8 @@ const setParticipantsMock = jest.fn();
 const setCommentItemsMock = jest.fn();
 const setNewCommentMock = jest.fn();
 const setCommentsUpdatedMock = jest.fn();
-const setIsParticipantMock = jest.fn();
 const setKeywordsUpdatedMock = jest.fn();
+const setIsParticipantMock = jest.fn();
 const setApplyStatusMock = jest.fn();
 const setToggleOpenMock = jest.fn();
 
@@ -94,13 +105,15 @@ const setToggleOpenMock = jest.fn();
 
 describe('Post Detail', () => {
   let postDetail: any;
-  let readUserInfoMock: any;
   let readPostMock: any;
   let readCommentMock: any;
 
   beforeEach(() => {
+    jest.spyOn(window.localStorage.__proto__, 'getItem').mockReturnValueOnce(1);
+
     jest.spyOn(API, 'createApply').mockResolvedValueOnce(200);
     jest.spyOn(API, 'createComment').mockResolvedValueOnce({ entityId: '0' });
+    jest.spyOn(API, 'createKeywords').mockResolvedValueOnce(['aaa', 'bbb']);
     jest.spyOn(API, 'deletePost').mockResolvedValueOnce();
     readCommentMock = jest
       .spyOn(API, 'queryComments')
@@ -136,23 +149,72 @@ describe('Post Detail', () => {
       .mockReturnValueOnce([stubParticipants, setParticipantsMock])
       .mockReturnValueOnce([stubComments, setCommentItemsMock])
       .mockReturnValueOnce(['hi', setNewCommentMock])
-      .mockReturnValueOnce([false, setCommentsUpdatedMock])
-      .mockReturnValueOnce([false, setIsParticipantMock])
+      .mockReturnValueOnce([true, setCommentsUpdatedMock])
       .mockReturnValueOnce([false, setKeywordsUpdatedMock])
-      .mockReturnValueOnce([null, setApplyStatusMock])
-      .mockReturnValueOnce([false, setToggleOpenMock]);
+      .mockReturnValueOnce([true, setIsParticipantMock])
+      .mockReturnValueOnce([null, setApplyStatusMock]);
+    // .mockReturnValueOnce([true, setToggleOpenMock]);
     const component = mount(postDetail);
     expect(component.find('.background').length).toBe(1);
   });
 
-  // it('should change commentinput', () => {
-  //   const component = mount(postDetail);
-  //   component.find('#new-comment-content-input');
-  //   // expect(setNewCommentMock).toBeCalledTimes(1);
-  // });
+  it('should change comment input', () => {
+    useStateMock
+      .mockReturnValueOnce([stubPost, setPostMock])
+      .mockReturnValueOnce([stubParticipants, setParticipantsMock])
+      .mockReturnValueOnce([stubComments, setCommentItemsMock])
+      .mockReturnValueOnce(['hi', setNewCommentMock])
+      .mockReturnValueOnce([true, setCommentsUpdatedMock])
+      .mockReturnValueOnce([false, setKeywordsUpdatedMock])
+      .mockReturnValueOnce([true, setIsParticipantMock])
+      .mockReturnValueOnce([null, setApplyStatusMock]);
+    // .mockReturnValueOnce([true, setToggleOpenMock]);
 
-  // it('should render without error', () => {
-  //   const component = mount(postDetail);
-  //   // expect(component.find('#post-detail-page').length).toBe(1);
-  // });
+    const component = mount(postDetail);
+    component
+      .find('#new-comment-content-input')
+      .simulate('change', { target: { value: 'test comment' } });
+    // expect(component.find('#new-comment-content-input').length).toBe(1);
+
+    // expect(setNewCommentMock).toBeCalledTimes(1);
+  });
+
+  it('should add comment', () => {
+    useStateMock
+      .mockReturnValueOnce([stubPost, setPostMock])
+      .mockReturnValueOnce([stubParticipants, setParticipantsMock])
+      .mockReturnValueOnce([stubComments, setCommentItemsMock])
+      .mockReturnValueOnce(['not empty', setNewCommentMock])
+      .mockReturnValueOnce([true, setCommentsUpdatedMock])
+      .mockReturnValueOnce([false, setKeywordsUpdatedMock])
+      .mockReturnValueOnce([true, setIsParticipantMock])
+      .mockReturnValueOnce([null, setApplyStatusMock]);
+    // .mockReturnValueOnce([true, setToggleOpenMock]);
+
+    const component = mount(postDetail);
+    const wrapper = component.find('#confirm-create-comment-button');
+    expect(wrapper.length).toBe(1);
+    wrapper
+      .simulate('change', { target: { value: 'test comment' } })
+      .simulate('click');
+    // wrapper.simulate('click');
+  });
+
+  it('should delete post', () => {
+    useStateMock
+      .mockReturnValueOnce([stubPost, setPostMock])
+      .mockReturnValueOnce([stubParticipants, setParticipantsMock])
+      .mockReturnValueOnce([stubComments, setCommentItemsMock])
+      .mockReturnValueOnce(['not empty', setNewCommentMock])
+      .mockReturnValueOnce([true, setCommentsUpdatedMock])
+      .mockReturnValueOnce([false, setKeywordsUpdatedMock])
+      .mockReturnValueOnce([true, setIsParticipantMock])
+      .mockReturnValueOnce([null, setApplyStatusMock]);
+    // .mockReturnValueOnce([true, setToggleOpenMock]);
+
+    const component = mount(postDetail);
+    const wrapper = component.find('PostDetail');
+    // expect(wrapper.length).toBe(1);
+    // wrapper.simulate('click');
+  });
 });

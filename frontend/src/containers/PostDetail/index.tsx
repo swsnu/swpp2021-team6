@@ -90,18 +90,16 @@ const PostDetailContainer: React.FC = () => {
       await createComment({
         createPayload: payload,
         postId,
-      })
-        .then((res) => res)
-        .catch((err) => err);
+      });
+
       setCommentsUpdated(true);
       setNewComment('');
     }
   };
 
   const onPostDelete = async () => {
-    await deletePost({ id: postId })
-      .then((res) => res)
-      .catch((err) => err);
+    await deletePost({ id: postId });
+
     history.push('/main');
   };
 
@@ -111,16 +109,9 @@ const PostDetailContainer: React.FC = () => {
   };
 
   const fetchComments = async () => {
-    try {
-      const comments: CommentEntity[] = (
-        await queryComments({ postId })
-          .then((res) => res)
-          .catch((err) => err)
-      ).items;
-      setCommentItems(comments);
-    } catch (e) {
-      console.log(e);
-    }
+    const comments: CommentEntity[] = (await queryComments({ postId })).items;
+    setCommentItems(comments);
+
     // let comments: CommentEntity[] = [
     //   {
     //     commentId: 1,
@@ -148,9 +139,8 @@ const PostDetailContainer: React.FC = () => {
 
   const onClickParticipate = async () => {
     try {
-      await createApply(postId)
-        .then((res) => res)
-        .catch((err) => err);
+      await createApply(postId);
+
       alert('참가 신청이 완료되었습니다.');
       setIsParticipant(true);
       setApplyStatus(ApplyStatus.PENDING);
@@ -190,9 +180,6 @@ const PostDetailContainer: React.FC = () => {
       fetchComments();
       setCommentsUpdated(false);
     }
-    return () => {
-      setCommentItems([]); // This worked for me
-    };
   }, [commentsUpdated]);
 
   useEffect(() => {

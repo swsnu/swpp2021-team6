@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react';
+/* eslint-disable no-proto */
+import React from 'react';
 import { mount } from 'enzyme';
-import * as reactRedux from 'react-redux';
 import { Provider } from 'react-redux';
-import { createMemoryHistory } from 'history';
-import { connectRouter, routerMiddleware } from 'connected-react-router';
 import axios from 'axios';
 import { act } from 'react-dom/test-utils';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { mockNavigatorGeolocation } from '../../test-utils/mockNavigatorGeolocation';
 import userInfo from '../../mocks/userInfo.json';
 import { UserInfoEntity } from '../../backend/entity/user';
 import ProfileEdit from '.';
+import * as API from '../../backend/api/api';
+import * as getGuDong from '../../utils/getGuDong';
+import mockStore, { history } from '../../store/store';
 
 window.alert = jest.fn().mockImplementation();
 const useStateMock = jest.spyOn(React, 'useState');
@@ -19,8 +19,6 @@ const setUpdateProfileStateMock = jest.fn();
 const setSelectedExerciseMock = jest.fn();
 const setGuDongMock = jest.fn();
 const mockPush = jest.fn();
-
-const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
 
 // jest.mock('react-router', () => ({
 //   ...jest.requireActual('react-router'),
@@ -35,27 +33,8 @@ jest.mock('react-router-dom', () => ({
   }),
 }));
 
-jest.mock('react', () => ({
-  ...jest.requireActual('react'),
-  useEffect: jest.fn(),
-}));
-
-const history = createMemoryHistory({
-  initialEntries: ['/'],
-});
-
 const spyAlert = jest.spyOn(window, 'alert').mockImplementation();
-const spyHistoryPush = jest
-  .spyOn(history, 'push')
-  .mockImplementation(jest.fn());
-
-const mockStore = createStore(
-  combineReducers({
-    router: connectRouter(history),
-    user: (state = { user: null }, action) => state,
-  }),
-  applyMiddleware(routerMiddleware(history)),
-);
+const spyHistoryPush = jest.spyOn(history, 'push');
 
 describe('Profile edit', () => {
   const mockUserInfo: UserInfoEntity = {
@@ -106,16 +85,39 @@ describe('Profile edit', () => {
   };
 
   let profileEdit: any;
-  let getGuDong: any;
+  let confirmSpy: any;
+
   beforeEach(() => {
+    confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
+    jest.spyOn(window.localStorage.__proto__, 'getItem').mockReturnValueOnce(1);
+
     profileEdit = (
       <Provider store={mockStore}>
         <ProfileEdit />
       </Provider>
     );
 
-    useSelectorMock.mockImplementation((callback) =>
-      callback({ user: { user: userInfo } }),
+    jest
+      .spyOn(API, 'readUserInfo')
+      .mockResolvedValueOnce({ entity: mockUserInfo });
+    jest.spyOn(API, 'updateProfile');
+    jest
+      .spyOn(getGuDong, 'getGuDong')
+      .mockResolvedValueOnce({ gu: '구구구', dong: '동동동' });
+
+    const mockGeolocation = {
+      getCurrentPosition: jest.fn(),
+      watchPosition: jest.fn(),
+    };
+
+    const { getCurrentPositionMock } = mockNavigatorGeolocation();
+    getCurrentPositionMock.mockImplementation((success, rejected) =>
+      success({
+        coords: {
+          latitude: 51.1,
+          longitude: 45.3,
+        },
+      }),
     );
   });
 
@@ -187,7 +189,7 @@ describe('Profile edit', () => {
       .mockReturnValueOnce([mockUserInfo, setUserInfoMock])
       .mockReturnValueOnce([mockUpdateProfileState, setUpdateProfileStateMock])
       .mockReturnValueOnce([
-        { exerciseName: '종목', skillLevel: '실력' },
+        { exerciseName: '축구', skillLevel: '상' },
         setSelectedExerciseMock,
       ])
       .mockReturnValueOnce([
@@ -201,8 +203,8 @@ describe('Profile edit', () => {
       .simulate('change', { target: { value: '축구' } });
     component.find('#level').simulate('change', { target: { value: '상' } });
     component.find('.add-button').simulate('click');
-    expect(setSelectedExerciseMock).toBeCalledTimes(2);
-    expect(setUpdateProfileStateMock).toBeCalledTimes(0);
+    expect(setSelectedExerciseMock).toBeCalledTimes(3);
+    expect(setUpdateProfileStateMock).toBeCalledTimes(1);
   });
 
   it('should not add preferred exercise with incorrect selection', () => {
@@ -293,11 +295,10 @@ describe('Profile edit', () => {
         setGuDongMock,
       ]);
     const component = mount(profileEdit);
-    component.find('.verify-location-button').at(0).simulate('click');
-    window.confirm = jest.fn().mockImplementation(() => true);
-    const spyconfirm = jest.spyOn(window, 'confirm').mockImplementation();
-    expect(spyconfirm).toBeCalledTimes(0);
-    expect(setGuDongMock).toBeCalledTimes(0);
+    const wrapper = component.find('.verify-location-button').simulate('click');
+    expect(wrapper.length).toBe(1);
+    expect(confirmSpy).toBeCalledTimes(1);
+    expect(setGuDongMock).toBeCalledTimes(1);
     expect(setUpdateProfileStateMock).toBeCalledTimes(0);
     // const spyFn = jest.spyOn(ProfileEdit, 'verifyLocation');
   });
