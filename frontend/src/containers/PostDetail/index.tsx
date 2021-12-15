@@ -40,7 +40,8 @@ const PostDetailContainer: React.FC = () => {
   const [keywordsUpdated, setKeywordsUpdated] = React.useState<boolean>(false);
   const [isParticipant, setIsParticipant] = useState<boolean>(false);
   const [applyStatus, setApplyStatus] = useState<StatusType | null>(null);
-  const { loginUserId } = useSelector((state: AppState) => state.user);
+
+  const loginUserId = Number(localStorage.getItem('loginUser'));
 
   const onCommentConfirm = async (comment: string | null) => {
     if (loginUserId && comment) {
