@@ -1,7 +1,6 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import * as reactRedux from 'react-redux';
-import axios from 'axios';
 import { PostEntity } from '../../backend/entity/post';
 import Main from '.';
 import * as API from '../../backend/api/api';
@@ -79,20 +78,46 @@ describe('Main', () => {
     window.alert = jest.fn();
   });
 
-  it('should render without error', (done) => {
+  it('should render without error', () => {
     spyQueryPosts = jest
       .spyOn(API, 'queryPosts')
       .mockResolvedValueOnce({ items: mockPosts });
-    // spyQueryFilterPosts = jest
-    //   .spyOn(API, 'queryFilterPosts')
-    //   .mockResolvedValueOnce({ items: mockPosts });
     const component = mount(main);
     expect(component.find('.main').length).toBe(1);
-    done();
   });
 
   it('should alert when error ocurred while fetching posts', () => {
     spyQueryPosts = jest.spyOn(API, 'queryPosts').mockRejectedValueOnce({});
     const component = mount(main);
+  });
+
+  it('should set query string', () => {
+    spyQueryPosts = jest
+      .spyOn(API, 'queryPosts')
+      .mockResolvedValueOnce({ items: mockPosts });
+    spyQueryFilterPosts = jest
+      .spyOn(API, 'queryFilterPosts')
+      .mockResolvedValueOnce({ items: mockPosts });
+    const component = mount(main);
+    component.find('#filter-apply-btn').simulate('click');
+  });
+
+  it('should alert when error occured while fetching filtered posts', () => {
+    spyQueryPosts = jest
+      .spyOn(API, 'queryPosts')
+      .mockResolvedValueOnce({ items: mockPosts });
+    spyQueryFilterPosts = jest
+      .spyOn(API, 'queryFilterPosts')
+      .mockRejectedValueOnce({});
+    const component = mount(main);
+    component.find('#filter-apply-btn').simulate('click');
+  });
+
+  it('should redirect to PostCreate page', () => {
+    spyQueryPosts = jest
+      .spyOn(API, 'queryPosts')
+      .mockResolvedValueOnce({ items: mockPosts });
+    const component = mount(main);
+    component.find('.plus-button').simulate('click');
   });
 });
