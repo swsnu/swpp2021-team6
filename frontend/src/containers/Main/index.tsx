@@ -17,6 +17,7 @@ const Main = () => {
   const [posts, setPosts] = useState<PostEntity[]>();
   const [filterArray, setFilterArray] = useState<FilterInputDTO[]>([]);
   const [sort, setSort] = useState('sort=meet_at');
+  const [scope, setScope] = useState<number>(5);
 
   const { loginUserId } = useSelector((state: AppState) => state.user);
 
@@ -40,6 +41,12 @@ const Main = () => {
       if (idx !== 0) search += '&';
       search += `exercise=${val.exerciseName}&level=${val.skillLevel}&${sort}`;
     });
+
+    const join = search ? '&' : '';
+    search += `${join}sort={sort}&scope=${scope}`;
+
+    console.log(search);
+
     return search;
   };
 
@@ -80,6 +87,8 @@ const Main = () => {
           filterArray={filterArray}
           setFilterArray={setFilterArray}
           onClickApplyFilter={onClickApplyFilter}
+          scope={scope}
+          setScope={setScope}
           setSort={setSort}
         />
       </div>
