@@ -8,7 +8,6 @@ import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import Onboarding from '.';
 import { mockNavigatorGeolocation } from '../../test-utils/mockNavigatorGeolocation';
-import userInfo from '../../mocks/userInfo.json';
 import { UserProfileDTO } from '../../backend/entity/user';
 
 window.alert = jest.fn().mockImplementation();
@@ -37,6 +36,9 @@ const mockStore = createStore(
   applyMiddleware(routerMiddleware(history)),
 );
 
+const useDispatchMock = jest.spyOn(reactRedux, 'useDispatch');
+useDispatchMock.mockImplementation(() => jest.fn());
+
 describe('Onboarding', () => {
   const mockForm: UserProfileDTO = {
     latitude: 37.12345,
@@ -50,6 +52,7 @@ describe('Onboarding', () => {
   };
 
   let onboarding: any;
+  let spyCreateUserProfile: any;
   beforeEach(() => {
     onboarding = (
       <Provider store={mockStore}>
@@ -58,7 +61,7 @@ describe('Onboarding', () => {
     );
 
     useSelectorMock.mockImplementation((callback) =>
-      callback({ user: { user: userInfo } }),
+      callback({ user: { loginUserId: 1 } }),
     );
   });
 
@@ -208,8 +211,8 @@ describe('Onboarding', () => {
         setGuDongMock,
       ]);
     const component = mount(onboarding);
-    component.find('.onboarding-submit-button').simulate('click');
-    expect(window.alert).toBeCalledTimes(0);
+    component.find('form').simulate('submit');
+    expect(window.alert).toBeCalledTimes(1);
   });
 
   it('should alert without gender', () => {
@@ -234,8 +237,8 @@ describe('Onboarding', () => {
         setGuDongMock,
       ]);
     const component = mount(onboarding);
-    component.find('.onboarding-submit-button').simulate('click');
-    expect(window.alert).toBeCalledTimes(0);
+    component.find('form').simulate('submit');
+    expect(window.alert).toBeCalledTimes(1);
   });
 
   it('should alert without nickname', () => {
@@ -260,8 +263,8 @@ describe('Onboarding', () => {
         setGuDongMock,
       ]);
     const component = mount(onboarding);
-    component.find('.onboarding-submit-button').simulate('click');
-    expect(window.alert).toBeCalledTimes(0);
+    component.find('form').simulate('submit');
+    expect(window.alert).toBeCalledTimes(1);
   });
 
   it('should alert without preferred exercise', () => {
@@ -286,8 +289,34 @@ describe('Onboarding', () => {
         setGuDongMock,
       ]);
     const component = mount(onboarding);
-    component.find('.onboarding-submit-button').simulate('click');
-    expect(window.alert).toBeCalledTimes(0);
+    component.find('form').simulate('submit');
+    expect(window.alert).toBeCalledTimes(1);
+  });
+
+  it('should submit validate form', () => {
+    const mockForm = {
+      latitude: 37.12345,
+      longitude: 127.12345,
+      gu: '영등포구',
+      dong: '당산동',
+      gender: '여성',
+      nickname: '구미',
+      introduction: '',
+      preferredExercise: [{ exerciseName: '농구', skillLevle: '중' }],
+    };
+    useStateMock
+      .mockReturnValueOnce([mockForm, setFormMock])
+      .mockReturnValueOnce([
+        { exerciseName: '축구', skillLevel: '상' },
+        setSelectedExerciseMock,
+      ])
+      .mockReturnValueOnce([
+        { loading: true, text: '동네 정보 조회 중' },
+        setGuDongMock,
+      ]);
+    const component = mount(onboarding);
+    component.find('form').simulate('submit');
+    expect(useDispatchMock).toBeCalledTimes(1);
   });
 
   it('should delete selected exercise when clicking delete button', () => {
@@ -304,5 +333,33 @@ describe('Onboarding', () => {
     const component = mount(onboarding);
     component.find('.exercise-in-array button').simulate('click');
     expect(setFormMock).toBeCalledTimes(1);
+  });
+
+  it('should check duplicate exercise', () => {
+    useStateMock
+      .mockReturnValueOnce([mockForm, setFormMock])
+      .mockReturnValueOnce([
+        { exerciseName: '축구', skillLevel: '중' },
+        setSelectedExerciseMock,
+      ])
+      .mockReturnValueOnce([
+        { loading: true, text: '동네 정보 조회 중' },
+        setGuDongMock,
+      ]);
+    const component = mount(onboarding);
+  });
+
+  it('should check duplicate exercise & set selected exercise', () => {
+    useStateMock
+      .mockReturnValueOnce([mockForm, setFormMock])
+      .mockReturnValueOnce([
+        { exerciseName: '농구', skillLevel: '중' },
+        setSelectedExerciseMock,
+      ])
+      .mockReturnValueOnce([
+        { loading: true, text: '동네 정보 조회 중' },
+        setGuDongMock,
+      ]);
+    const component = mount(onboarding);
   });
 });
