@@ -12,11 +12,6 @@ import plusIcon from '../../assets/image/main/plus-icon.svg';
 import mainIcon from '../../assets/image/main/main-icon.svg';
 import bottomIcon from '../../assets/image/main/side-bar-bottom.svg';
 
-export enum SortEnum {
-  meetAt = 'meet_at',
-  dist = 'dist',
-}
-
 const Main = () => {
   const history = useHistory();
   const [posts, setPosts] = useState<PostEntity[]>();
