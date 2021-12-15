@@ -18,7 +18,8 @@ import Navbar from './containers/Navbar';
 import { AppState } from './store/store';
 import { autoSignin } from './store/actions/user';
 
-axios.defaults.baseURL = `${process.env.REACT_APP_API_ORIGIN}`;
+axios.defaults.baseURL =
+  `${process.env.REACT_APP_API_ORIGIN}` || 'http://localhost:8000';
 
 // Cross-site에 요청 헤더 Cookie 보내는 것 허용
 axios.defaults.withCredentials = true;
