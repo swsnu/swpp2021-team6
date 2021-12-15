@@ -240,12 +240,14 @@ const PostCreate: React.FC = () => {
               <span>날짜</span>
               <div className="date-time-input">
                 <DatePicker
+                  className="datepicker"
                   id="date-picker"
                   value={date}
                   onChange={(e) => setDate(e)}
                   allowClear={false}
                 />
                 <TimePicker
+                  className="timepicker"
                   format="h:mm a"
                   minuteStep={10}
                   defaultValue={moment('7:00', 'h:mm a')}
