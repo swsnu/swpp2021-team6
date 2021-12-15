@@ -83,10 +83,10 @@ const skillLevelNameObj: skillLevelNameType = {
 interface Props {
   filterArray: FilterInputDTO[];
   setFilterArray: Dispatch<SetStateAction<FilterInputDTO[]>>;
+  setSort: Dispatch<SetStateAction<string>>;
   scope: number;
   setScope: Dispatch<SetStateAction<number>>;
   onClickApplyFilter: () => void;
-  setSort: Dispatch<SetStateAction<string>>;
 }
 
 const Filter: React.FC<Props> = ({
@@ -141,8 +141,8 @@ const Filter: React.FC<Props> = ({
       <div className="filter-body">
         <img src={sort} alt="sort icon" />
         <select id="sort-select" onChange={(e) => setSort(e.target.value)}>
-          <option value="sort=meet_at">가까운 날짜 순</option>
-          <option value="sort=dist">가까운 거리 순</option>
+          <option value="meet_at">가까운 날짜 순</option>
+          <option value="dist">가까운 거리 순</option>
         </select>
         <img src={exercise} alt="exercise icon" />
         <select
