@@ -155,11 +155,19 @@ const Detail: React.FC<Props> = ({
     </>
   ) : (
     <>
-      {post.keywords.map((keyword, idx) => (
-        <span key={idx} className="keyword">
-          #{keyword || '태그 추가'}
+      {post.keywords[0] === '자동 태그 생성 중입니다...' ? (
+        <span key={0} className="keyword">
+          #자동 태그 생성 중입니다...
         </span>
-      ))}
+      ) : (
+        <>
+          {post.keywords.map((keyword, idx) => (
+            <span key={idx} className="keyword">
+              #{keyword || '태그 추가'}
+            </span>
+          ))}
+        </>
+      )}
     </>
   );
 
