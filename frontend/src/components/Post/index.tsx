@@ -53,6 +53,20 @@ const Post: React.FC<Props> = ({ post }: Props) => {
     history.push(`/post/${postId}`);
   };
 
+  const keywordContainer =
+    post.keywords[0] === null ? (
+      <></>
+    ) : (
+      post.keywords?.map(
+        (keyword, idx) =>
+          keyword && (
+            <Label key={idx} font="#247100" color="rgba(36, 113, 0, 0)">
+              {keyword}
+            </Label>
+          ),
+      )
+    );
+
   return (
     <button className="post" onClick={() => onClickPost(post.postId)}>
       <div id="place">
@@ -69,13 +83,7 @@ const Post: React.FC<Props> = ({ post }: Props) => {
         <div className="host-name">{post.hostName}</div>
       </div>
       <div className="post-footer">
-        <div className="keyword-container">
-          {post.keywords?.map((keyword, idx) => (
-            <Label key={idx} font="#247100" color="rgba(36, 113, 0, 0)">
-              {keyword}
-            </Label>
-          ))}
-        </div>
+        <div className="keyword-container">{keywordContainer}</div>
       </div>
     </button>
   );

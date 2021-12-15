@@ -141,6 +141,22 @@ const Detail: React.FC<Props> = ({
       <span>참여하기</span>
     </button>
   );
+
+  const keywordContainer =
+    post.keywords[0] === null ? (
+      <span className="keyword">
+        description이 너무 짧아서 자동 태그를 생성하지 못했습니다
+      </span>
+    ) : (
+      post.keywords?.map(
+        (keyword, idx) =>
+          keyword && (
+            <span key={idx} className="keyword">
+              #{keyword}
+            </span>
+          ),
+      )
+    );
   return (
     <>
       <div id="post-detail-component">
@@ -163,16 +179,7 @@ const Detail: React.FC<Props> = ({
                 현재 {post.memberCount}명
               </Label>
             </div>
-            <div id="keyword-container">
-              {post.keywords?.map(
-                (keyword, idx) =>
-                  keyword && (
-                    <span key={idx} className="keyword">
-                      #{keyword}
-                    </span>
-                  ),
-              )}
-            </div>
+            <div id="keyword-container">{keywordContainer}</div>
           </div>
 
           <div id="right">
