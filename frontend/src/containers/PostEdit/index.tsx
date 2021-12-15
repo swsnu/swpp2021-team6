@@ -45,7 +45,7 @@ const PostEdit: React.FC = () => {
   const [post, setPost] = useState<PostEntity>(mockPost);
   const [postUpdate, setPostUpdate] = useState<UpdatePostDTO>();
 
-  const { loginUserId } = useSelector((state: AppState) => state.user);
+  const loginUserId = Number(localStorage.getItem('loginUser'));
 
   const fetchPostItem = async () => {
     const fetchedPost: PostEntity = (await readPost({ id: postId })).entity;

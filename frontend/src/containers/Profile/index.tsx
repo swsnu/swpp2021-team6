@@ -25,7 +25,8 @@ interface ProfileProps {
 }
 
 const Profile = ({ history }: ProfileProps) => {
-  const { loginUserId } = useSelector((state: AppState) => state.user);
+  const loginUserId = Number(window.localStorage.getItem('loginUser'));
+
   const profileId = Number(useParams<{ id: string }>().id);
 
   const isLoginUser = loginUserId === profileId;
@@ -79,7 +80,6 @@ const Profile = ({ history }: ProfileProps) => {
     fetchUserInfo();
   }, []);
 
-  // TODO: PostStatusType 만들기
   const returnPostStatus = (status: string) => {
     switch (status) {
       case 'ACCEPTED':

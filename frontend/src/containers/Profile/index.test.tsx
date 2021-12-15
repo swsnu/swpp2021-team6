@@ -1,3 +1,4 @@
+/* eslint-disable no-proto */
 import React from 'react';
 import { mount } from 'enzyme';
 import * as reactRedux from 'react-redux';
@@ -72,6 +73,7 @@ describe('Profile', () => {
 
     useSelectorMock.mockReturnValue({ loginUserId: 1 });
     spyHistoryPush = jest.spyOn(history, 'push');
+    jest.spyOn(window.localStorage.__proto__, 'getItem').mockReturnValueOnce(1);
   });
 
   afterEach(() => {
