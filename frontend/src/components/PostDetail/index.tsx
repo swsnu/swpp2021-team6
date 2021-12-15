@@ -182,12 +182,14 @@ const Detail: React.FC<Props> = ({
     <>
       {newKeywords.map((keyword, idx) => (
         <input
+          type="text"
           name={`${idx}`}
           onChange={(e) => onChangeKeywords(e)}
           key={idx}
           className="keyword"
-          value={keyword}
-          placeholder="태그 추가"
+          value={keyword || undefined}
+          placeholder="#태그 추가"
+          size={keyword ? keyword.length * 1.5 + 1 : 8}
         />
       ))}
     </>
