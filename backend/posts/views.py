@@ -1,3 +1,4 @@
+from datetime import datetime
 from json.decoder import JSONDecodeError
 from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse
@@ -18,7 +19,9 @@ from .ml.ibm_cloud import extract_keywords
 @signin_required
 def get_posts(request):
     # Retrieve all posts
-    filtered_posts = PostFilter(request.GET, Post.objects.all()).qs
+    qs = Post.objects.filter(meet_at__lt = datetime.now())
+    qs.update(status="RECRUITED")
+    filtered_posts = PostFilter(request.GET, Post.objects.filter(status="RECRUITING")).qs
     sorted_filtered_posts = PostSort(request.user.profile, request.GET, filtered_posts).qs
 
     post_list = [
