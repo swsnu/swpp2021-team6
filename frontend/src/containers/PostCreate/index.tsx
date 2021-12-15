@@ -160,6 +160,8 @@ const PostCreate: React.FC = () => {
       try {
         const newPost = (await createPost({ createPayload: post })).entity;
         history.push(`/post/${newPost.postId}`);
+        // api
+        // api
       } catch (e: any) {
         if (e?.response?.status === 500) {
           alert('게시글 작성 중 문제가 발생했습니다.');

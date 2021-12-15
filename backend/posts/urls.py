@@ -4,6 +4,7 @@ from posts import views
 urlpatterns = [
     path("get", views.get_posts, name="get_posts"),
     path("", views.post_posts, name="posts"),
+    path("<int:post_id>/keywords", views.keywords, name="create_keywords"),
     path("<int:post_id>", views.post_detail, name="post_detail"),
     path("get/<int:post_id>", views.get_post_detail, name="post_detail"),
     path("get/<int:post_id>/comments", views.get_comments, name="get_comments"),

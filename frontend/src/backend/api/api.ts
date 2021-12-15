@@ -27,6 +27,11 @@ export const readPost = produceReadAPI<PostEntity>('/posts/get');
 export const deletePost = produceDeleteAPI('/posts');
 export const updatePost = produceUpdateAPI<UpdatePostDTO>('/posts');
 
+export const createKeywords = async (postId: number): Promise<string[]> => {
+  const res: any = await axios.post(`/posts/${postId}/keywords`);
+  return res.data;
+};
+
 export const createUser = produceCreateAPI<SignUpDTO, UserIdEntity>(
   '/users/signup',
 );

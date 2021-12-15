@@ -10,6 +10,8 @@ from .models import Post, Comment, Post_Keyword, Participation
 from .filters import PostFilter
 from .sorts import PostSort
 from accounts.decorators import signin_required
+from .ml.ibm_cloud import extract_keywords
+
 
 
 @require_GET
@@ -55,6 +57,21 @@ def get_posts(request):
     return JsonResponse(post_list, safe=False, status=200)
 
 
+
+@require_POST
+@signin_required
+def keywords(request, post_id=0):
+    post = Post.objects.get(id=post_id)
+    extracted_keywords = extract_keywords(post.description)
+        # Post_Keyword 생성
+    post_keyword = Post_Keyword.objects.get(post_id=post_id)
+    post_keyword.keyword1 = extracted_keywords[0] if len(extracted_keywords)>0 else None
+    post_keyword.keyword2 = extracted_keywords[1] if len(extracted_keywords)>1 else None
+    post_keyword.keyword3 = extracted_keywords[2] if len(extracted_keywords)>2 else None
+    post_keyword.save()
+    
+    return JsonResponse(extracted_keywords, safe=False, status=200)
+
 @require_POST
 @signin_required
 def post_posts(request):
@@ -97,13 +114,13 @@ def post_posts(request):
         max_capacity,
         kakaotalk_link,
     )
-
-    post_keyword = get_object_or_404(Post_Keyword, post=new_post)
-    keyword_list = [
-        post_keyword.keyword1,
-        post_keyword.keyword2,
-        post_keyword.keyword3,
-    ]
+    
+    # post_keyword = get_object_or_404(Post_Keyword, post=new_post)
+    # keyword_list = [
+    #     post_keyword.keyword1,
+    #     post_keyword.keyword2,
+    #     post_keyword.keyword3,
+    # ]
 
     response_dict = {
         "post_id": new_post.id,
@@ -127,7 +144,7 @@ def post_posts(request):
         "member_count": 0,
         "kakaotalk_link": new_post.kakaotalk_link,
         "status": new_post.status,
-        "keywords": keyword_list,
+        "keywords": None,
     }
 
     return JsonResponse(response_dict, status=201)
@@ -257,7 +274,7 @@ def comments(request, post_id=0):
         return HttpResponse(status=400)
 
     author = request.user
-    new_comment = Comment.objects.create(
+    Comment.objects.create(
         post=post, content=content, author=author)
 
     # Create comment notification host and participants
