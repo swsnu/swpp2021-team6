@@ -82,7 +82,7 @@ def get_user_detail(request, user_id):
             "place_name": participation.post.place_name,
             "status": participation.status,
         }
-        for participation in Participation.objects.filter(user=user)
+        for participation in Participation.objects.filter(user=user).order_by('-status', 'post__meet_at')
     ]
 
     hosting_post = [
@@ -95,7 +95,7 @@ def get_user_detail(request, user_id):
             "place_name": post.place_name,
             "status": post.status,
         }
-        for post in Post.objects.filter(host=user)
+        for post in Post.objects.filter(host=user).order_by('-status', 'meet_at')
     ]
 
     response_dict = {

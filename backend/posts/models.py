@@ -151,8 +151,8 @@ class Post(models.Model):
     status = models.CharField(
         max_length=10, choices=Status.choices, default=Status.RECRUITING
     )
-    created_at = models.DateTimeField(auto_now=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     @property
     def meet_at_res(self):
@@ -177,7 +177,7 @@ class Participation(models.Model):
     status = models.CharField(
         max_length=10, choices=Status.choices, default=Status.PENDING
     )
-    created_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class User_Exercise(models.Model):
@@ -190,4 +190,4 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     content = models.TextField()
-    created_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
