@@ -246,11 +246,11 @@ const Detail: React.FC<Props> = ({
             </div>
             <div id="address">
               <p id="title">도로명 주소</p>
-              <p id="content">{post.place.address}</p>
+              <p id="content">{post.place.address || '-'}</p>
             </div>
             <div id="telephone">
               <p id="title">전화번호</p>
-              <p id="content">{post.place.telephone}</p>
+              <p id="content">{post.place.telephone || '-'}</p>
             </div>
           </div>
           <div
