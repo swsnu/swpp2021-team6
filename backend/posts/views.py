@@ -19,8 +19,8 @@ from .ml.ibm_cloud import extract_keywords
 @signin_required
 def get_posts(request):
     # Retrieve all posts
-    qs = Post.objects.filter(meet_at__lt = datetime.now())
-    qs.update(status="RECRUITED")
+    updated_post = Post.objects.filter(meet_at__lt = datetime.now())
+    updated_post.update(status="RECRUITED")
     filtered_posts = PostFilter(request.GET, Post.objects.filter(status="RECRUITING")).qs
     sorted_filtered_posts = PostSort(request.user.profile, request.GET, filtered_posts).qs
 
