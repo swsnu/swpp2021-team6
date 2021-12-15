@@ -16,6 +16,8 @@ const Main = () => {
   const history = useHistory();
   const [posts, setPosts] = useState<PostEntity[]>();
   const [filterArray, setFilterArray] = useState<FilterInputDTO[]>([]);
+  const [sort, setSort] = useState('sort=meet_at');
+
   const { loginUserId } = useSelector((state: AppState) => state.user);
 
   const fetchPosts = async () => {
@@ -36,7 +38,7 @@ const Main = () => {
     let search = '';
     arr.forEach((val, idx) => {
       if (idx !== 0) search += '&';
-      search += `exercise=${val.exerciseName}&level=${val.skillLevel}`;
+      search += `exercise=${val.exerciseName}&level=${val.skillLevel}&${sort}`;
     });
     return search;
   };
@@ -78,6 +80,7 @@ const Main = () => {
           filterArray={filterArray}
           setFilterArray={setFilterArray}
           onClickApplyFilter={onClickApplyFilter}
+          setSort={setSort}
         />
       </div>
       <div className="post-container">
