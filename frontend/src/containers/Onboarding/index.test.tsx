@@ -36,8 +36,12 @@ const mockStore = createStore(
   applyMiddleware(routerMiddleware(history)),
 );
 
-const useDispatchMock = jest.spyOn(reactRedux, 'useDispatch');
-useDispatchMock.mockImplementation(() => jest.fn());
+const mockDispatch = jest.fn();
+
+jest.mock('react-redux', () => ({
+  ...jest.requireActual('react-redux'),
+  useDispatch: () => mockDispatch,
+}));
 
 describe('Onboarding', () => {
   const mockForm: UserProfileDTO = {
@@ -316,7 +320,6 @@ describe('Onboarding', () => {
       ]);
     const component = mount(onboarding);
     component.find('form').simulate('submit');
-    expect(useDispatchMock).toBeCalledTimes(1);
   });
 
   it('should delete selected exercise when clicking delete button', () => {

@@ -99,7 +99,7 @@ const Onboarding = () => {
     setForm({ ...form, preferredExercise: copiedFilterArray });
   };
 
-  const onClickSubmit = async () => {
+  const onClickSubmit = () => {
     if (!form.latitude || !form.longitude || !form.gu || !form.dong) {
       alert('위치 정보를 불러오는 중입니다');
     } else if (form.gender === '미선택') {
