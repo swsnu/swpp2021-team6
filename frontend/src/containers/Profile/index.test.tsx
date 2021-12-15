@@ -1,40 +1,17 @@
 /* eslint-disable no-proto */
 import React from 'react';
 import { mount } from 'enzyme';
-import * as reactRedux from 'react-redux';
 import { Provider } from 'react-redux';
-import { connectRouter, routerMiddleware } from 'connected-react-router';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
 import axios from 'axios';
 import { act } from 'react-dom/test-utils';
+import * as API from '../../backend/api/api';
 import mockUserInfo from '../../mocks/userInfo.json';
 import Profile from '.';
-import { history } from '../../store/store';
-import { UserInfoEntity } from '../../backend/entity/user';
-
-const stubUserInfo: UserInfoEntity = {
-  userId: 1,
-  nickname: 'nickname',
-  latitude: 123,
-  longitude: 456,
-  gu: 'gu',
-  dong: 'dong',
-  gender: '여성',
-  introduction: '',
-  preferredExercise: [{ exerciseName: '축구', skillLevel: '상' }],
-  participatingPost: [],
-  hostingPost: [],
-};
+import mockStore, { history } from '../../store/store';
 
 window.alert = jest.fn().mockImplementation();
-const useStateMock = jest.spyOn(React, 'useState');
-const setUserInfoMock = jest.fn();
-const setUpdateProfileStateMock = jest.fn();
-const setSelectedExerciseMock = jest.fn();
-const setGuDongMock = jest.fn();
-const mockPush = jest.fn();
 
-const useSelectorMock = jest.spyOn(reactRedux, 'useSelector');
+const mockPush = jest.fn();
 
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
@@ -42,27 +19,12 @@ jest.mock('react-router', () => ({
   useParams: () => ({ id: '1' }),
 }));
 
-jest.mock('react', () => ({
-  ...jest.requireActual('react'),
-  useEffect: jest.fn(),
-}));
-
-const spyAlert = jest.spyOn(window, 'alert').mockImplementation();
-const spyHistoryPush = jest
-  .spyOn(history, 'push')
-  .mockImplementation(jest.fn());
-
-const mockStore = createStore(
-  combineReducers({
-    router: connectRouter(history),
-    user: (state = { user: null }, action) => state,
-  }),
-  applyMiddleware(routerMiddleware(history)),
-);
-
 describe('Profile', () => {
   let profile: any;
   let spyHistoryPush: any;
+
+  const useStateMock = jest.spyOn(React, 'useState');
+  const setUserInfoMock = jest.fn();
 
   beforeEach(() => {
     profile = (
@@ -71,7 +33,6 @@ describe('Profile', () => {
       </Provider>
     );
 
-    useSelectorMock.mockReturnValue({ loginUserId: 1 });
     spyHistoryPush = jest.spyOn(history, 'push');
     jest.spyOn(window.localStorage.__proto__, 'getItem').mockReturnValueOnce(1);
   });
@@ -134,5 +95,11 @@ describe('Profile', () => {
     await act(async () => {
       const component = mount(profile);
     });
+  });
+
+  it('should reject fetchUserInfo', async () => {
+    const axiosMock = jest.spyOn(API, 'readUserInfo').mockRejectedValue({});
+    useStateMock.mockReturnValueOnce([mockUserInfo, setUserInfoMock]);
+    const component = mount(profile);
   });
 });

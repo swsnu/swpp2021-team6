@@ -121,4 +121,13 @@ describe('PostCreate', () => {
     submitButton.simulate('click');
     expect(window.alert).toBeCalledTimes(6);
   });
+
+  it('should change date', () => {
+    const component = mount(postCreate);
+    const datepicker = component
+      .find('.datepicker')
+      .find('input')
+      .simulate('change', '2021-12-16');
+    expect(datepicker.length).toBe(1);
+  });
 });
